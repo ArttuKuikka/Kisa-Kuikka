@@ -86,13 +86,9 @@ app.UseAuthentication();
 
 app.MapControllerRoute(
         name: "default",
-        pattern: "{controller=Home}/{id?}/{action=Index}/");
+        pattern: "{controller=Home}/{action=Index}/{id?}");
 
-if (!app.Environment.IsDevelopment())
-{
-    app.MapGet("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
-    app.MapPost("/Identity/Account/Register", context => Task.Factory.StartNew(() => context.Response.Redirect("/Identity/Account/Login", true, true)));
-}
+
 
 app.MapRazorPages();
 app.MapControllers();

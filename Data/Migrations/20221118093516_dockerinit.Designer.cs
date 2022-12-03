@@ -4,6 +4,7 @@ using Kipa_plus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kipaplus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221118093516_dockerinit")]
+    partial class dockerinit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,6 +40,50 @@ namespace Kipaplus.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Kisa");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Rasti", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KisaId");
+
+                    b.ToTable("Rasti");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Vartio", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KisaId");
+
+                    b.ToTable("Vartio");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -241,6 +288,20 @@ namespace Kipaplus.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Kipa_plus.Models.Rasti", b =>
+                {
+                    b.HasOne("Kipa_plus.Models.Kisa", null)
+                        .WithMany("Rasti")
+                        .HasForeignKey("KisaId");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Vartio", b =>
+                {
+                    b.HasOne("Kipa_plus.Models.Kisa", null)
+                        .WithMany("Vartio")
+                        .HasForeignKey("KisaId");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -290,6 +351,13 @@ namespace Kipaplus.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Kisa", b =>
+                {
+                    b.Navigation("Rasti");
+
+                    b.Navigation("Vartio");
                 });
 #pragma warning restore 612, 618
         }

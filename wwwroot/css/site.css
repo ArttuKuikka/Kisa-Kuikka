@@ -23,9 +23,10 @@ body {
 
 .grid-container {
     display: grid;
-    grid-template-columns: auto auto auto;
     
     padding: 10px;
+    row-gap: 1em;
+    column-gap: 1em;
 }
 
 .grid-item {
@@ -35,6 +36,37 @@ body {
     font-size: 35px;
     text-align: left;
     border-radius: 25px;
-    width: 7em;
-    height: 5em;
+    width: 6em;
+    height: 6.5em;
+    text-align: center;
 }
+
+.grid-item-image{
+    max-width: 70%;
+    max-height: 100%;
+}
+
+@media (min-width: 600px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .grid-container {
+        grid-template-columns: repeat(3, 0.5fr);
+    }
+}
+
+@media (min-width: 1000px) {
+    .grid-container {
+        grid-template-columns: repeat(4, 0.5fr);
+    }
+}
+
+@media (min-width: 1100px) {
+    .grid-container {
+        grid-template-columns: repeat(5, 0.5fr);
+    }
+}
+

@@ -1,35 +1,18 @@
-﻿@model IEnumerable<Kipa_plus.Models.Kisa>
+﻿@model Models.Kisa
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Model.Name;
 }
 
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+
+<h1>@Model.Name</h1>
+<h3>@Model.Id</h3>
+
+<div class="grid-container">
+    <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Rastit</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Vartiot</div>
+    <div class="grid-item" onClick="location.href='/Rasti/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Uusi rasti</div>
+    <div class="grid-item" onClick="location.href='/Vartio/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Uusi Vartio</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Hallitse tietoja</div>
+</div>
