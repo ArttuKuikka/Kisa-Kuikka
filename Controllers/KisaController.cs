@@ -49,7 +49,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Create
-        [HttpGet("/Create")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             return View();
@@ -67,7 +67,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(kisa);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Redirect("/");
             }
             return View(kisa);
         }
