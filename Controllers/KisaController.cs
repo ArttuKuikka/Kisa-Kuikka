@@ -21,24 +21,25 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa
-        public async Task<IActionResult> Index()
+        [HttpGet("{kisaId:int}/")]
+        public async Task<IActionResult> Index(int kisaId)
         {
-              return _context.Kisa != null ? 
-                          View(await _context.Kisa.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Kisa'  is null.");
+            var kisa = await _context.Kisa
+                .FirstOrDefaultAsync(m => m.Id == kisaId);
+            return View(kisa);
         }
 
         // GET: Kisa/Details/5
-        [HttpGet("Details")]
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet("{kisaId:int}/Details")]
+        public async Task<IActionResult> Details(int kisaId)
         {
-            if (id == null || _context.Kisa == null)
+            if (kisaId == null || _context.Kisa == null)
             {
                 return NotFound();
             }
 
             var kisa = await _context.Kisa
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == kisaId);
             if (kisa == null)
             {
                 return NotFound();
@@ -48,7 +49,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Create
-        [HttpGet("Create")]
+        [HttpGet("/Create")]
         public IActionResult Create()
         {
             return View();
@@ -72,15 +73,15 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Edit/5
-        [HttpGet("Edit")]
-        public async Task<IActionResult> Edit(int? id)
+        [HttpGet("{kisaId:int}/Edit")]
+        public async Task<IActionResult> Edit(int kisaId)
         {
-            if (id == null || _context.Kisa == null)
+            if (kisaId == null || _context.Kisa == null)
             {
                 return NotFound();
             }
 
-            var kisa = await _context.Kisa.FindAsync(id);
+            var kisa = await _context.Kisa.FindAsync(kisaId);
             if (kisa == null)
             {
                 return NotFound();
@@ -91,7 +92,7 @@ namespace Kipa_plus.Controllers
         // POST: Kisa/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Edit")]
+        [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Kisa kisa)
         {
@@ -118,13 +119,13 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Kisa/" + kisa.Id.ToString());
             }
             return View(kisa);
         }
 
         // GET: Kisa/Delete/5
-        [HttpGet("Delete")]
+        [HttpGet("{kisaId:int}/Delete")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Kisa == null)
@@ -143,7 +144,7 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Kisa/Delete/5
-        [HttpPost("Delete"), ActionName("Delete")]
+        [HttpPost("{kisaId:int}/Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
