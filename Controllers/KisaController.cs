@@ -10,6 +10,7 @@ using Kipa_plus.Models;
 
 namespace Kipa_plus.Controllers
 {
+    [Route("[controller]")]
     public class KisaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,6 +29,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Details/5
+        [HttpGet("Details")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Kisa == null)
@@ -46,6 +48,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Create
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             return View();
@@ -54,10 +57,11 @@ namespace Kipa_plus.Controllers
         // POST: Kisa/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Kisa kisa)
         {
+           
             if (ModelState.IsValid)
             {
                 _context.Add(kisa);
@@ -68,6 +72,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Edit/5
+        [HttpGet("Edit")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Kisa == null)
@@ -86,7 +91,7 @@ namespace Kipa_plus.Controllers
         // POST: Kisa/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Kisa kisa)
         {
@@ -119,6 +124,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Delete/5
+        [HttpGet("Delete")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Kisa == null)
@@ -137,7 +143,7 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Kisa/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost("Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

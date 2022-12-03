@@ -21,8 +21,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-        - 8001:80
     depends_on:
         - db
     networks:
