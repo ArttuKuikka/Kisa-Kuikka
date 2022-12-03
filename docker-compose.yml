@@ -5,7 +5,7 @@ networks:
 
 services:
   db:
-    container_name: db
+    container_name: app-db
     image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
         - 8002:1433
