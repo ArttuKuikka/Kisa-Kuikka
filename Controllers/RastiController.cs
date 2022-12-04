@@ -11,87 +11,84 @@ using Kipa_plus.Models;
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
-    public class SarjaController : Controller
+    public class RastiController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SarjaController(ApplicationDbContext context)
+        public RastiController(ApplicationDbContext context)
         {
             _context = context;
         }
 
 
         [HttpGet("Details")]
+        // GET: Rasti/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Sarja == null)
+            if (id == null || _context.Rasti == null)
             {
                 return NotFound();
             }
 
-            var sarja = await _context.Sarja
+            var rasti = await _context.Rasti
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sarja == null)
+            if (rasti == null)
             {
                 return NotFound();
             }
 
-            return View(sarja);
+            return View(rasti);
         }
 
-        // GET: Sarja/Create
-        [HttpGet("Luo")]
-        public IActionResult Luo(int? kisaId)
+        [HttpGet("Create")]
+        // GET: Rasti/Create
+        public IActionResult Create(int kisaId)
         {
-            if(kisaId == null)
-            {
-                throw new Exception();
-            }
-            
-            return View(new Sarja() { KisaId = (int)kisaId });
+            ViewBag.Rastit = _context.Rasti.ToList();
+            return View(new Rasti() { KisaId = kisaId});
         }
 
-        // POST: Sarja/Create
+        // POST: Rasti/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Luo")]
+        [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,Nimi,kisaId,vartionMaksimiko,vartionMinimikoko")] Sarja sarja)
+        public async Task<IActionResult> Create([Bind("Id,sarjaId,kisaId,Nimi,OhjeId")] Rasti rasti)
         {
-            
             if (ModelState.IsValid)
             {
-                _context.Add(sarja);
+                _context.Add(rasti);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + sarja.KisaId);
+                return Redirect("/Kisa/" + rasti.KisaId);
             }
-            return View(sarja);
+            return View(rasti);
         }
+
+        // GET: Rasti/Edit/5
         [HttpGet("Edit")]
-        // GET: Sarja/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Sarja == null)
+            if (id == null || _context.Rasti == null)
             {
                 return NotFound();
             }
 
-            var sarja = await _context.Sarja.FindAsync(id);
-            if (sarja == null)
+            var rasti = await _context.Rasti.FindAsync(id);
+            if (rasti == null)
             {
                 return NotFound();
             }
-            return View(sarja);
+            return View(rasti);
         }
 
-        // POST: Sarja/Edit/5
+        // POST: Rasti/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,kisaId,vartionMaksimiko,vartionMinimikoko")] Sarja sarja)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,sarjaId,kisaId,Nimi,OhjeId")] Rasti rasti)
         {
-            if (id != sarja.Id)
+            if (id != rasti.Id)
             {
                 return NotFound();
             }
@@ -100,12 +97,12 @@ namespace Kipa_plus.Controllers
             {
                 try
                 {
-                    _context.Update(sarja);
+                    _context.Update(rasti);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SarjaExists(sarja.Id))
+                    if (!RastiExists(rasti.Id))
                     {
                         return NotFound();
                     }
@@ -116,49 +113,50 @@ namespace Kipa_plus.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(sarja);
+            return View(rasti);
         }
+
+        // GET: Rasti/Delete/5
         [HttpGet("Delete")]
-        // GET: Sarja/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Sarja == null)
+            if (id == null || _context.Rasti == null)
             {
                 return NotFound();
             }
 
-            var sarja = await _context.Sarja
+            var rasti = await _context.Rasti
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (sarja == null)
+            if (rasti == null)
             {
                 return NotFound();
             }
 
-            return View(sarja);
+            return View(rasti);
         }
 
-        // POST: Sarja/Delete/5
+        // POST: Rasti/Delete/5
         [HttpPost("Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
-            if (_context.Sarja == null)
+            if (_context.Rasti == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.Sarja'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Rasti'  is null.");
             }
-            var sarja = await _context.Sarja.FindAsync(id);
-            if (sarja != null)
+            var rasti = await _context.Rasti.FindAsync(id);
+            if (rasti != null)
             {
-                _context.Sarja.Remove(sarja);
+                _context.Rasti.Remove(rasti);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SarjaExists(int? id)
+        private bool RastiExists(int? id)
         {
-          return (_context.Sarja?.Any(e => e.Id == id)).GetValueOrDefault();
+          return (_context.Rasti?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

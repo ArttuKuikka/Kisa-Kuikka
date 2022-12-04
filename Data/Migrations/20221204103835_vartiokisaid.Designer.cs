@@ -4,6 +4,7 @@ using Kipa_plus.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kipaplus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221204103835_vartiokisaid")]
+    partial class vartiokisaid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +34,6 @@ namespace Kipaplus.Data.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -51,13 +53,13 @@ namespace Kipaplus.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("kisaId")
+                    b.Property<int?>("kisaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("vartionMaksimiko")
+                    b.Property<int>("vartionMaksimiko")
                         .HasColumnType("int");
 
-                    b.Property<int?>("vartionMinimikoko")
+                    b.Property<int>("vartionMinimikoko")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -73,23 +75,24 @@ namespace Kipaplus.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<int>("KisaId")
+                    b.Property<int?>("KisaId")
                         .HasColumnType("int");
 
                     b.Property<string>("Lippukunta")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nimi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Numero")
+                    b.Property<int?>("Numero")
                         .HasColumnType("int");
 
-                    b.Property<int>("SarjaId")
+                    b.Property<int?>("SarjaId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("tilanne")
+                    b.Property<int>("tilanne")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

@@ -1,4 +1,4 @@
-﻿@model Kipa_plus.Models.Sarja
+﻿@model Kipa_plus.Models.Rasti
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,7 +6,7 @@
 
 <h1>Edit</h1>
 
-<h4>Sarja</h4>
+<h4>Rasti</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,9 +14,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="Nimi" class="control-label"></label>
-                <input asp-for="Nimi" class="form-control" />
-                <span asp-validation-for="Nimi" class="text-danger"></span>
+                <label asp-for="SarjaId" class="control-label"></label>
+                <input asp-for="SarjaId" class="form-control" />
+                <span asp-validation-for="SarjaId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="KisaId" class="control-label"></label>
@@ -24,14 +24,14 @@
                 <span asp-validation-for="KisaId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VartionMaksimiko" class="control-label"></label>
-                <input asp-for="VartionMaksimiko" class="form-control" />
-                <span asp-validation-for="VartionMaksimiko" class="text-danger"></span>
+                <label asp-for="Nimi" class="control-label"></label>
+                <input asp-for="Nimi" class="form-control" />
+                <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="VartionMinimikoko" class="control-label"></label>
-                <input asp-for="VartionMinimikoko" class="form-control" />
-                <span asp-validation-for="VartionMinimikoko" class="text-danger"></span>
+                <label asp-for="OhjeId" class="control-label"></label>
+                <input asp-for="OhjeId" class="form-control" />
+                <span asp-validation-for="OhjeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

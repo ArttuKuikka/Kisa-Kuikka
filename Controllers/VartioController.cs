@@ -20,10 +20,10 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Vartio/Create
-        public IActionResult Create()
+        public IActionResult Create(int kisaId)
         {
             ViewBag.Sarjat = _context.Sarja.ToList();
-            return View();
+            return View(new Vartio() { KisaId = kisaId});
         }
 
         // POST: Vartio/Create
@@ -31,8 +31,9 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nimi,Numero,SarjaId,Lippukunta,tilanne")] Vartio vartio)
+        public async Task<IActionResult> Create([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,tilanne")] Vartio vartio)
         {
+            
             if (ModelState.IsValid)
             {
                 _context.Add(vartio);

@@ -1,4 +1,4 @@
-﻿@model Kipa_plus.Models.Sarja
+﻿@model Kipa_plus.Models.Rasti
 
 @{
     ViewData["Title"] = "Details";
@@ -7,14 +7,14 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Sarja</h4>
+    <h4>Rasti</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nimi)
+            @Html.DisplayNameFor(model => model.SarjaId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nimi)
+            @Html.DisplayFor(model => model.SarjaId)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.KisaId)
@@ -23,16 +23,16 @@
             @Html.DisplayFor(model => model.KisaId)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VartionMaksimiko)
+            @Html.DisplayNameFor(model => model.Nimi)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VartionMaksimiko)
+            @Html.DisplayFor(model => model.Nimi)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VartionMinimikoko)
+            @Html.DisplayNameFor(model => model.OhjeId)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VartionMinimikoko)
+            @Html.DisplayFor(model => model.OhjeId)
         </dd>
     </dl>
 </div>

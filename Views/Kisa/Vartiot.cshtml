@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Kipa_plus.Models.Sarja>
+﻿@model IEnumerable<Kipa_plus.Models.Vartio>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Vartiot";
 }
 
-<h1>Index</h1>
+<h1>Vartiot</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -19,10 +19,10 @@
                 @Html.DisplayNameFor(model => model.KisaId)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VartionMaksimiko)
+                @Html.DisplayNameFor(model => model.Lippukunta)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.VartionMinimikoko)
+                @Html.DisplayNameFor(model => model.Numero)
             </th>
            
             <th></th>
@@ -39,14 +39,14 @@
                     @Html.DisplayFor(modelItem => item.KisaId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VartionMaksimiko)
+                    @Html.DisplayFor(modelItem => item.Lippukunta)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VartionMinimikoko)
+                    @Html.DisplayFor(modelItem => item.Numero)
                 </td>
                 
                 <td>
-                    <a href="/Sarja/Edit?id=@item.Id">Edit</a> |
+                    <a href="/Vartio/Edit?id=@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>

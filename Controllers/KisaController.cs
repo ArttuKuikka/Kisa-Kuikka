@@ -170,13 +170,13 @@ namespace Kipa_plus.Controllers
         [HttpGet("{kisaId:int}/Sarjat")]
         public async Task<IActionResult> Sarjat(int kisaId)
         {
-            if (kisaId == null || _context.Sarja == null)
+            if (kisaId == 0 || _context.Sarja == null)
             {
                 return NotFound();
             }
 
             var sarjat = _context.Sarja
-                .Where(m => m.kisaId == kisaId);
+                .Where(m => m.KisaId == kisaId);
             if (sarjat == null)
             {
                 return NotFound();
@@ -188,19 +188,37 @@ namespace Kipa_plus.Controllers
         [HttpGet("{kisaId:int}/Vartiot")]
         public async Task<IActionResult> Vartiot(int kisaId)
         {
-            if (kisaId == null || _context.Vartio == null)
+            if (kisaId == 0 || _context.Vartio == null)
             {
                 return NotFound();
             }
 
             var vartiot = _context.Vartio
-                .Where(m => m.kisaId == kisaId);
-            if (sarjat == null)
+                .Where(m => m.KisaId == kisaId);
+            if (vartiot == null)
             {
                 return NotFound();
             }
 
-            return View(sarjat);
+            return View(vartiot);
+        }
+
+        [HttpGet("{kisaId:int}/Rastit")]
+        public async Task<IActionResult> Rastit(int kisaId)
+        {
+            if (kisaId == 0 || _context.Rasti == null)
+            {
+                return NotFound();
+            }
+
+            var rastit = _context.Rasti
+                .Where(m => m.KisaId == kisaId);
+            if (rastit == null)
+            {
+                return NotFound();
+            }
+
+            return View(rastit);
         }
     }
 }
