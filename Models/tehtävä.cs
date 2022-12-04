@@ -3,7 +3,7 @@
 
 namespace Kipa_plus.Models
 {
-    public class tehtävä
+    public class Tehtävä
     {
         public int? Id { get; set; }
         public int SarjaId { get; set; }

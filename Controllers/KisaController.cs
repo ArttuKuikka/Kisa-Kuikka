@@ -221,7 +221,9 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-
+            ViewData["Sarjat"] = _context.Sarja.ToList();
+            
+            
             return View(rastit);
         }
     }

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Rasti>
+@using Kipa_plus.Models
 
 @{
     ViewData["Title"] = "Rastit";
@@ -6,49 +7,33 @@
 
 <h1>Rastit</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
+<button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Create/?kisaId=@Model.FirstOrDefault().KisaId';">Luo uusi</button>
 <table class="table" style="color: white">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nimi)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KisaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.SarjaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OhjeId)
-            </th>
-           
-            <th></th>
-        </tr>
-    </thead>
+    <thead><tr></tr></thead>
     <tbody>
         @foreach (var item in Model)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nimi)
+                    
+                    @{
+                        var Sarjat = ViewData["Sarjat"] as List<Sarja>;
+                        var sarja = Sarjat.FirstOrDefault(x => x.Id == item.SarjaId);
+                        
+
+                    }
+                    <h4>@item.Nimi</h4>
+                    <h5>@sarja.Nimi</h5>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.KisaId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.SarjaId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.OhjeId)
-                </td>
+               
                 
                 <td>
-                    <a href="/Vartio/Edit?id=@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                   
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/?RastiId=@item.Id';">Tehtävät</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Delete/@item.Id';">Poista</button>
+                    
                 </td>
             </tr>
         }

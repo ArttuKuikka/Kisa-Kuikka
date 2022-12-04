@@ -23,6 +23,7 @@ namespace Kipa_plus.Controllers
         public IActionResult Create(int kisaId)
         {
             ViewBag.Sarjat = _context.Sarja.Where(k => k.KisaId== kisaId).ToList();
+            ViewBag.Kisat = _context.Kisa.ToList();
             return View(new Vartio() { KisaId = kisaId});
         }
 
