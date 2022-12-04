@@ -56,7 +56,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,Nimi,kisaId,vartionMaksimiko,vartionMinimikoko")] Sarja sarja)
+        public async Task<IActionResult> Luo([Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko")] Sarja sarja)
         {
             
             if (ModelState.IsValid)
@@ -89,7 +89,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,kisaId,vartionMaksimiko,vartionMinimikoko")] Sarja sarja)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko")] Sarja sarja)
         {
             if (id != sarja.Id)
             {

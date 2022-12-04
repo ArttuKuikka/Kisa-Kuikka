@@ -53,7 +53,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,sarjaId,kisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
         {
             if (ModelState.IsValid)
             {
@@ -86,7 +86,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,sarjaId,kisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
         {
             if (id != rasti.Id)
             {

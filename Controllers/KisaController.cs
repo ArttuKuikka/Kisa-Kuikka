@@ -24,6 +24,10 @@ namespace Kipa_plus.Controllers
         [HttpGet("{kisaId:int}/")]
         public async Task<IActionResult> Index(int kisaId)
         {
+            if(kisaId == 0)
+            {
+                return Redirect("/");
+            }
             var kisa = await _context.Kisa
                 .FirstOrDefaultAsync(m => m.Id == kisaId);
             return View(kisa);
@@ -60,7 +64,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Kisa kisa)
+        public async Task<IActionResult> Create([Bind("Id,Nimi")] Kisa kisa)
         {
            
             if (ModelState.IsValid)
@@ -94,7 +98,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
