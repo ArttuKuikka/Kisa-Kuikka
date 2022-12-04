@@ -166,5 +166,41 @@ namespace Kipa_plus.Controllers
         {
           return (_context.Kisa?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        [HttpGet("{kisaId:int}/Sarjat")]
+        public async Task<IActionResult> Sarjat(int kisaId)
+        {
+            if (kisaId == null || _context.Sarja == null)
+            {
+                return NotFound();
+            }
+
+            var sarjat = _context.Sarja
+                .Where(m => m.kisaId == kisaId);
+            if (sarjat == null)
+            {
+                return NotFound();
+            }
+
+            return View(sarjat);
+        }
+
+        [HttpGet("{kisaId:int}/Vartiot")]
+        public async Task<IActionResult> Vartiot(int kisaId)
+        {
+            if (kisaId == null || _context.Vartio == null)
+            {
+                return NotFound();
+            }
+
+            var vartiot = _context.Vartio
+                .Where(m => m.kisaId == kisaId);
+            if (sarjat == null)
+            {
+                return NotFound();
+            }
+
+            return View(sarjat);
+        }
     }
 }

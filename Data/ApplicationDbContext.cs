@@ -26,5 +26,7 @@ namespace Kipa_plus.Data
             }
         }
         public DbSet<Kipa_plus.Models.Kisa> Kisa { get; set; } = default!;
+        public DbSet<Kipa_plus.Models.Vartio> Vartio { get; set; } = default!;
+        public DbSet<Kipa_plus.Models.Sarja> Sarja { get; set; } = default!;
     }
 }
