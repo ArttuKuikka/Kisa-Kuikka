@@ -13,17 +13,18 @@
         <form asp-action="Luo">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
            
+            <div class="col-md-10">  
+                <label class="control-label">Kisa</label>
+                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
+            </div> 
             <div class="form-group">
                 
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="KisaId" class="control-label"></label>
-                <input asp-for="KisaId" class="form-control" />
-                <span asp-validation-for="KisaId" class="text-danger"></span>
-            </div>
+            
             
             <div class="form-group">
                 

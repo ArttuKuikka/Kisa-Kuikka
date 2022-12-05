@@ -20,11 +20,11 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Vartio/Create
-        public IActionResult Create(int kisaId)
+        public IActionResult Create(int kisaId, int SarjaId)
         {
             ViewBag.Sarjat = _context.Sarja.Where(k => k.KisaId== kisaId).ToList();
-            ViewBag.Kisat = _context.Kisa.ToList();
-            return View(new Vartio() { KisaId = kisaId});
+            ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
+            return View(new Vartio() { KisaId = kisaId, SarjaId = SarjaId});
         }
 
         // POST: Vartio/Create

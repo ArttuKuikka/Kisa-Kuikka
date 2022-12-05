@@ -12,6 +12,16 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="col-md-10">  
+                <label class="control-label">Kisa</label>
+                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
+            </div>  
+            <div class="col-md-10">  
+                <label class="control-label">Sarja</label>
+                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
+            </div>  
             <div class="form-group">
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
@@ -22,16 +32,8 @@
                 <input asp-for="Numero" class="form-control" />
                 <span asp-validation-for="Numero" class="text-danger"></span>
             </div>
-            <div class="col-md-10">  
-                <label class="control-label">Sarja</label>
-                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
-            </div>  
-            <div class="col-md-10">  
-                <label class="control-label">Kisa</label>
-                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
-            </div>  
+            
+            
             <div class="form-group">
                 <label asp-for="Lippukunta" class="control-label"></label>
                 <input asp-for="Lippukunta" class="form-control" />

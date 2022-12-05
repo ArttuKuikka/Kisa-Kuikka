@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Kipa_plus.Models.Kisa>
+
+@{
+    ViewData["Title"] = "Kisat";
+}
+
+<div class="grid-container">
+
+    @foreach (var item in Model)
+    {
+        <div class="grid-item" onClick="location.href='/Kisa/@item.Id'"><img class="grid-item-image" alt="Luo kisa" src="/images/competition.png">@item.Nimi</div>
+    
+    }
+    <div class="grid-item" onClick="location.href='/Kisa/Create'"><img class="grid-item-image" alt="Luo kisa" src="/images/plus.png">Luo kisa</div>
+</div>

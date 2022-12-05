@@ -49,9 +49,13 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtävä/Create
-        public IActionResult Create()
+        public IActionResult Create(int KisaId, int SarjaId, int RastiId)
         {
-            return View();
+
+            ViewBag.Sarjat = _context.Sarja.Where(x => x.KisaId == KisaId).ToList(); //check että mihkä on oikeudet //ottaa defaulttina kaikki kisan sarjat ja rastit mutta jos ei saa id:tä querystä niin fallback siihen että ei mitään ja tulee valitun kisan perusteel (TAI mihkä oikeudet)
+            ViewBag.Kisat = _context.Kisa.ToList();
+            ViewBag.Rastit = _context.Rasti.Where(x => x.KisaId == KisaId).ToList();
+            return View(new Tehtävä() { KisaId = KisaId, SarjaId = SarjaId, RastiId = RastiId});
         }
 
         // POST: Tehtävä/Create

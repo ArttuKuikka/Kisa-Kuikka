@@ -42,10 +42,13 @@ namespace Kipa_plus.Controllers
 
         [HttpGet("Create")]
         // GET: Rasti/Create
-        public IActionResult Create(int kisaId)
+        public IActionResult Create(int kisaId, int SarjaId)
         {
-            ViewBag.Rastit = _context.Rasti.ToList();
-            return View(new Rasti() { KisaId = kisaId});
+            // ViewBag.Rastit = _context.Rasti.ToList();
+            ViewBag.Sarjat = _context.Sarja.ToList();
+            ViewBag.Kisat = _context.Kisa.ToList();
+
+            return View(new Rasti() { KisaId = kisaId, SarjaId = SarjaId});
         }
 
         // POST: Rasti/Create

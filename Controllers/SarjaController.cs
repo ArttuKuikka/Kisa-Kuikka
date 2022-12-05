@@ -41,14 +41,12 @@ namespace Kipa_plus.Controllers
 
         // GET: Sarja/Create
         [HttpGet("Luo")]
-        public IActionResult Luo(int? kisaId)
+        public IActionResult Luo(int kisaId)
         {
-            if(kisaId == null)
-            {
-                throw new Exception();
-            }
             
-            return View(new Sarja() { KisaId = (int)kisaId });
+            ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
+            
+            return View(new Sarja() { KisaId = kisaId });
         }
 
         // POST: Sarja/Create

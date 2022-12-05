@@ -12,21 +12,22 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="SarjaId" class="control-label"></label>
-                <input asp-for="SarjaId" class="form-control" />
-                <span asp-validation-for="SarjaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="KisaId" class="control-label"></label>
-                <input asp-for="KisaId" class="form-control" />
-                <span asp-validation-for="KisaId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RastiId" class="control-label"></label>
-                <input asp-for="RastiId" class="form-control" />
-                <span asp-validation-for="RastiId" class="text-danger"></span>
-            </div>
+            <div class="col-md-10">  
+                <label class="control-label">Kisa</label>
+                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
+            </div> 
+            <div class="col-md-10">  
+                <label class="control-label">Sarja</label>
+                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
+            </div>  
+             
+            <div class="col-md-10">  
+                <label class="control-label">Rasti</label>
+                @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })  
+            </div>  
             <div class="form-group">
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
