@@ -19,6 +19,8 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+       
+
         // GET: Tehtävä
         public async Task<IActionResult> Index(int? RastiId)
         {

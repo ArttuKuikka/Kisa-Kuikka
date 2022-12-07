@@ -33,15 +33,14 @@
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Tarkistettu" /> @Html.DisplayNameFor(model => model.Tarkistettu)
-                </label>
-            </div>
+            
             <div class="form-group">
                 <label asp-for="TehtavaJson" class="control-label"></label>
                 <input asp-for="TehtavaJson" class="form-control" />
                 <span asp-validation-for="TehtavaJson" class="text-danger"></span>
+            </div>
+            <div class="json-editor">
+
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -49,6 +48,11 @@
         </form>
     </div>
 </div>
+<script>
+    jQuery(function($) {
+      $(document.getElementById('json-editor')).formBuilder();
+    });
+</script>
 
 <div>
     <a asp-action="Index">Back to List</a>
