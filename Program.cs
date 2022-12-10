@@ -77,7 +77,7 @@ else
 }
 
 app.UseHttpsRedirection();
-app.UseStaticFiles(new StaticFileOptions { ServeUnknownFileTypes = true});
+app.UseStaticFiles();
 
 app.UseRouting();
 
