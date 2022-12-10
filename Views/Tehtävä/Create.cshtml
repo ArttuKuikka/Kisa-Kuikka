@@ -4,6 +4,7 @@
     ViewData["Title"] = "Create";
 }
 
+
 <h1>Create</h1>
 
 <h4>Tehtävä</h4>
@@ -48,11 +49,7 @@
         </form>
     </div>
 </div>
-<script>
-    jQuery(function($) {
-      $(document.getElementById('json-editor')).formBuilder();
-    });
-</script>
+
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -60,4 +57,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function () {
+            jQuery(function ($) {
+                $(document.getElementById('json-editor')).formBuilder();
+                alert("Suoritettu");
+            });
+        });
+
+    </script>
 }
