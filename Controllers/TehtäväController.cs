@@ -29,6 +29,8 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
             var tehtävä = _context.Tehtävä.Where(k => k.RastiId == RastiId);
+            ViewBag.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
+            ViewBag.RastiId = RastiId;
             return View(tehtävä);
         }
 
