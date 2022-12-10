@@ -1,0 +1,55 @@
+﻿@model Kipa_plus.Models.Sarja
+
+@{
+    ViewData["Title"] = "Luo Sarja";
+}
+
+<h1>Luo sarja</h1>
+
+<h4>Sarja</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Luo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+           
+            <div class="col-md-10">  
+                <label class="control-label">Kisa</label>
+                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
+                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
+            </div> 
+            <div class="form-group">
+                
+                <label asp-for="Nimi" class="control-label"></label>
+                <input asp-for="Nimi" class="form-control" />
+                <span asp-validation-for="Nimi" class="text-danger"></span>
+            </div>
+            
+            
+            <div class="form-group">
+                
+                <label asp-for="VartionMaksimiko" class="control-label"></label>
+                <input asp-for="VartionMaksimiko" class="form-control" />
+                <span asp-validation-for="VartionMaksimiko" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                
+                <label asp-for="VartionMinimikoko" class="control-label"></label>
+                <input asp-for="VartionMinimikoko" class="form-control" />
+                <span asp-validation-for="VartionMinimikoko" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Luo sarja" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Kipa_plus.Models.Rasti>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Rastit</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table" style="color: white">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SarjaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KisaId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nimi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OhjeId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SarjaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KisaId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nimi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OhjeId)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

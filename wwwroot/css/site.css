@@ -30,20 +30,28 @@ body {
 }
 
 .grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(120, 120, 120, 0.8);
     border: 3px solid rgba(0, 0, 0, 0.8);
     padding: 20px;
-    font-size: 35px;
+    font-size: 2.5em;
     text-align: left;
     border-radius: 25px;
-    width: 6em;
-    height: 6.5em;
+    width: 5.5em;
+    height: 7em;
     text-align: center;
 }
 
 .grid-item-image{
     max-width: 70%;
     max-height: 100%;
+}
+
+@media(max-width: 600px){
+    .grid-item {
+        width: 98%;
+        justify-content: center;
+        align-content: center;
+    }
 }
 
 @media (min-width: 600px) {

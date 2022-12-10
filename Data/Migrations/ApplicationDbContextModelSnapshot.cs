@@ -30,13 +30,97 @@ namespace Kipaplus.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Nimi")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Kisa");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Rasti", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("OhjeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SarjaId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Rasti");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Sarja", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("VartionMaksimiko")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("VartionMinimikoko")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sarja");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Vartio", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Lippukunta")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nimi")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Numero")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SarjaId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("Tilanne")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vartio");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

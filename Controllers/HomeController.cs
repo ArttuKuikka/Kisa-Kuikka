@@ -6,17 +6,19 @@ namespace Kipa_plus.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ApplicationDbContext _context;
-
-        public HomeController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
+        
         public async Task<IActionResult> Index()
         {
-            return _context.Kisa != null ?
-                         View(await _context.Kisa.ToListAsync()) :
-                         Problem("Entity set 'ApplicationDbContext.Kisa'  is null.");
+            
+            if(User.Identity != null)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    
+                   
+                }
+            }
+            return Redirect("/Kisat");
         }
     }
 }

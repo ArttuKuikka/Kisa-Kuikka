@@ -1,18 +1,20 @@
 ﻿@model Models.Kisa
 
 @{
-    ViewData["Title"] = Model.Name;
+    ViewData["Title"] = Model.Nimi;
 }
 
 
 
-<h1>@Model.Name</h1>
+<h1>@Model.Nimi</h1>
 <h3>@Model.Id</h3>
 
 <div class="grid-container">
-    <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Rastit</div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Vartiot</div>
-    <div class="grid-item" onClick="location.href='/Rasti/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Uusi rasti</div>
-    <div class="grid-item" onClick="location.href='/Vartio/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Uusi Vartio</div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Rastit" src="/images/Nayta_rastit.png">Hallitse tietoja</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png">Rastit</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png">Vartiot</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Sarjat'"><img class="grid-item-image" alt="Sarjat" src="/images/no-photo.png">Sarjat</div>
+    <div class="grid-item" onClick="location.href='/Rasti/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Uusi rasti" src="/images/Lisaa_rasti.png">Uusi rasti</div>
+    <div class="grid-item" onClick="location.href='/Vartio/Create?kisaid=@Model.Id'"><img class="grid-item-image" alt="Uusi vartio" src="/images/lisaa_vartio.png">Uusi Vartio</div>
+    <div class="grid-item" onClick="location.href='/Sarja/Luo?kisaid=@Model.Id'"><img class="grid-item-image" alt="Uusi sarja" src="/images/no-photo.png">Uusi Sarja</div>
+    <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Rastit" src="/images/edit.png">Hallitse tietoja</div>
 </div>

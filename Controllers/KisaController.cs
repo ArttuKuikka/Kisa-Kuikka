@@ -24,6 +24,10 @@ namespace Kipa_plus.Controllers
         [HttpGet("{kisaId:int}/")]
         public async Task<IActionResult> Index(int kisaId)
         {
+            if(kisaId == 0)
+            {
+                return Redirect("/");
+            }
             var kisa = await _context.Kisa
                 .FirstOrDefaultAsync(m => m.Id == kisaId);
             return View(kisa);
@@ -49,7 +53,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Kisa/Create
-        [HttpGet("/Create")]
+        [HttpGet("Create")]
         public IActionResult Create()
         {
             return View();
@@ -60,14 +64,14 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Create")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Kisa kisa)
+        public async Task<IActionResult> Create([Bind("Id,Nimi")] Kisa kisa)
         {
            
             if (ModelState.IsValid)
             {
                 _context.Add(kisa);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Redirect("/");
             }
             return View(kisa);
         }
@@ -94,7 +98,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
@@ -165,6 +169,62 @@ namespace Kipa_plus.Controllers
         private bool KisaExists(int? id)
         {
           return (_context.Kisa?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpGet("{kisaId:int}/Sarjat")]
+        public async Task<IActionResult> Sarjat(int kisaId)
+        {
+            if (kisaId == 0 || _context.Sarja == null)
+            {
+                return NotFound();
+            }
+
+            var sarjat = _context.Sarja
+                .Where(m => m.KisaId == kisaId);
+            if (sarjat == null)
+            {
+                return NotFound();
+            }
+
+            return View(sarjat);
+        }
+
+        [HttpGet("{kisaId:int}/Vartiot")]
+        public async Task<IActionResult> Vartiot(int kisaId)
+        {
+            if (kisaId == 0 || _context.Vartio == null)
+            {
+                return NotFound();
+            }
+
+            var vartiot = _context.Vartio
+                .Where(m => m.KisaId == kisaId);
+            if (vartiot == null)
+            {
+                return NotFound();
+            }
+
+            return View(vartiot);
+        }
+
+        [HttpGet("{kisaId:int}/Rastit")]
+        public async Task<IActionResult> Rastit(int kisaId)
+        {
+            if (kisaId == 0 || _context.Rasti == null)
+            {
+                return NotFound();
+            }
+
+            var rastit = _context.Rasti
+                .Where(m => m.KisaId == kisaId);
+            if (rastit == null)
+            {
+                return NotFound();
+            }
+            ViewData["Sarjat"] = _context.Sarja.ToList();
+            
+            
+            return View(rastit);
         }
     }
 }

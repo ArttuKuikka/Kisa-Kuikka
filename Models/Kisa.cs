@@ -3,7 +3,7 @@
     public class Kisa
     {
         public int? Id { get; set; }
-        public string? Name { get; set; }
+        public string Nimi { get; set; }
        
 
         
