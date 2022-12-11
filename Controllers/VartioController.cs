@@ -39,7 +39,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(vartio);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + vartio.KisaId);
+                return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
             }
             return View(vartio);
         }
@@ -90,7 +90,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
             }
             return View(vartio);
         }
@@ -129,7 +129,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
         }
 
         private bool VartioExists(int? id)

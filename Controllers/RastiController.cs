@@ -62,7 +62,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + rasti.KisaId);
+                return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
             }
             return View(rasti);
         }
@@ -114,7 +114,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect(" / Kisa / " + rasti.KisaId + " / Rastit");
             }
             return View(rasti);
         }
@@ -154,7 +154,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
         }
 
         private bool RastiExists(int? id)

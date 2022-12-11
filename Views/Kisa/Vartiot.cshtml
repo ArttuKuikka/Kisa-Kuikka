@@ -7,7 +7,7 @@
 <h1>Vartiot</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Create?kisaid=@ViewBag.KisaId';">Luo vartio</button>
 </p>
 <table class="table" style="color: white">
     <thead>
@@ -46,9 +46,9 @@
                 </td>
                 
                 <td>
-                    <a href="/Vartio/Edit?id=@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
+                   
                 </td>
             </tr>
         }

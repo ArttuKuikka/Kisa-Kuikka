@@ -61,7 +61,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(sarja);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + sarja.KisaId);
+                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
             }
             return View(sarja);
         }
@@ -112,7 +112,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
             }
             return View(sarja);
         }
@@ -151,7 +151,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
         }
 
         private bool SarjaExists(int? id)

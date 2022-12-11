@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Kipaplus.Data.Migrations;
 
 namespace Kipa_plus.Controllers
 {
@@ -73,7 +74,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(tehtävä);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Teht%C3%A4v%C3%A4/?RastiId=" + tehtävä.RastiId);
             }
             return View(tehtävä);
         }
@@ -87,10 +88,15 @@ namespace Kipa_plus.Controllers
             }
 
             var tehtävä = await _context.Tehtävä.FindAsync(id);
+           
             if (tehtävä == null)
             {
                 return NotFound();
             }
+
+            ViewBag.Sarjat = _context.Sarja.Where(x => x.KisaId == tehtävä.KisaId).ToList(); //check että mihkä on oikeudet //ottaa defaulttina kaikki kisan sarjat ja rastit mutta jos ei saa id:tä querystä niin fallback siihen että ei mitään ja tulee valitun kisan perusteel (TAI mihkä oikeudet)
+            ViewBag.Kisat = _context.Kisa.ToList();
+            ViewBag.Rastit = _context.Rasti.Where(x => x.KisaId == tehtävä.KisaId).ToList();
             return View(tehtävä);
         }
 
@@ -124,7 +130,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Teht%C3%A4v%C3%A4/?RastiId=" + tehtävä.RastiId);
             }
             return View(tehtävä);
         }
@@ -163,7 +169,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Teht%C3%A4v%C3%A4/?RastiId=" + tehtävä.RastiId);
         }
 
         private bool TehtäväExists(int? id)

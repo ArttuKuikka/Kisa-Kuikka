@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Sarja>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Sarjat";
 }
 
-<h1>Index</h1>
+<h1>Sarjat</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+     <button type="button" class="btn btn-light" onclick="location.href = '/Sarja/Luo?kisaid=@ViewBag.KisaId';">Luo Sarja</button>
 </p>
 <table class="table" style="color: white">
     <thead>
@@ -46,9 +46,8 @@
                 </td>
                 
                 <td>
-                    <a href="/Sarja/Edit?id=@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Sarja/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Sarja/Delete?id=@item.Id';">Poista</button>
                 </td>
             </tr>
         }

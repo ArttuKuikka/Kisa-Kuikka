@@ -185,7 +185,7 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.KisaId = kisaId;
             return View(sarjat);
         }
 
@@ -203,7 +203,7 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.KisaId = kisaId;
             return View(vartiot);
         }
 
@@ -222,8 +222,8 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
             ViewData["Sarjat"] = _context.Sarja.ToList();
-            
-            
+
+            ViewBag.KisaId = kisaId;
             return View(rastit);
         }
     }

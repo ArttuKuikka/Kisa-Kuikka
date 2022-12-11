@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Tehtävä>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Rastin tehtävät";
 }
 
-<h1>Index</h1>
+<h1>Rastin tehtävät</h1>
 
 <p>
     
@@ -56,9 +56,8 @@
                 @Html.DisplayFor(modelItem => item.TehtavaJson)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtävä/Delete?id=@item.Id';">Poista</button>
             </td>
         </tr>
 }
