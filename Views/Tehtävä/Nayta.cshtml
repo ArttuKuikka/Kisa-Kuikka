@@ -1,0 +1,66 @@
+﻿@model Kipa_plus.Models.Tehtävä
+
+@{
+    ViewData["Title"] = "Rastin Tehtävä";
+}
+
+
+
+
+
+
+<h4>Tehtävä</h4>
+<hr />
+<dl class="row">
+    <dt class = "col-sm-2">
+       
+        
+        <dd class = "h1">
+            @Html.DisplayFor(model => model.Nimi)
+        </dd>
+        <div>
+            <input hidden="hidden" value="@Model.TehtavaJson" id="json-input" />
+        </div>
+        <div class="json-viewer" id="json-viewer"></div>
+       
+    <div class="form-group">
+        <input type="submit" id="submit-button" value="Tallenna" class="btn btn-primary" />
+    </div>
+</dl>
+
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="https://formbuilder.online/assets/js/form-render.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        jQuery(function ($) {
+            var fbeditor = document.getElementById('json-viewer');
+            var getdata = document.getElementById('json-input').value;
+            var fb = $(fbeditor).formRender({
+    dataType: 'json',
+    formData: getdata
+  });
+
+
+            document.getElementById('submit-button').addEventListener('click', function () {
+                var data = fb.actions.getData('json');
+                document.getElementById('json-input').value = data;
+
+            });
+        });
+
+
+    </script>
+}

@@ -35,20 +35,14 @@ namespace Kipa_plus.Controllers
             return View(tehtävä);
         }
 
-        // GET: Tehtävä/Details/5
-        public async Task<IActionResult> Details(int? id)
+       //GET: Nayta
+       public async Task<IActionResult> Nayta(int? TehtavaId)
         {
-            if (id == null || _context.Tehtävä == null)
+            if (TehtavaId == null || _context.Tehtävä == null)
             {
                 return NotFound();
             }
-
-            var tehtävä = await _context.Tehtävä
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tehtävä == null)
-            {
-                return NotFound();
-            }
+            var tehtävä = _context.Tehtävä.First(x => x.Id == TehtavaId);
 
             return View(tehtävä);
         }

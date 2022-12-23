@@ -48,7 +48,7 @@
             <br />
             
             <div class="form-group">
-                <input type="submit" id="submit-button" value="Create" class="btn btn-primary" />
+                <input type="submit" id="submit-button" value="Lähetä" class="btn btn-primary" />
             </div>
         </form>
         
@@ -68,6 +68,7 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -75,7 +76,30 @@
     <script>
         jQuery(function ($) {
            var fbeditor = document.getElementById('json-editor');
-           var fb = $(fbeditor).formBuilder();
+
+            var options = {
+                disableFields: ['hidden', 'button', 'file'],
+                disabledAttrs:['className', 'name', 'access'],
+                typeUserDisabledAttrs:{
+                media: ['required', 'placeholder', 'value', 'description']},
+                i18n: {
+                    locale: 'fi-Fi'
+                },
+                disabledActionButtons: ['save', 'data'],
+                actionButtons: [{
+    id: 'code',
+    className: 'btn btn-success',
+    label: '📄',
+    type: 'button',
+    events: {
+    click: function() {
+      alert(fb.actions.getData('json'));
+    }
+  }
+  }]
+            };
+
+           var fb = $(fbeditor).formBuilder(options);
 
 
             document.getElementById('submit-button').addEventListener('click', function () {
