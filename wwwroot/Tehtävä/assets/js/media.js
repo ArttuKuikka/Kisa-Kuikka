@@ -94,7 +94,7 @@ window.fbControls.push(function media(controlClass) {
                         label: "Src",
                         value: '',
                         type: 'textarea',
-                        readonly: true,
+                        //readonly: false,
                         //text inputs do not handle large data URI strings, need to use textarea to ensure the browser doesn't hang
                     },
                     'subtype': {

@@ -25,13 +25,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Nimi)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Tarkistettu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TehtavaJson)
-            </th>
-            <th></th>
+           
         </tr>
     </thead>
     <tbody>
@@ -49,12 +43,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Nimi)
             </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tarkistettu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TehtavaJson)
-            </td>
+           
             <td>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Nayta?TehtavaId=@item.Id';">Näytä</button>
                 <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Edit?id=@item.Id';">Muokkaa</button>
