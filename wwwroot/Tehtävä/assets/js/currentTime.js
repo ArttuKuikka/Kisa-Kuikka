@@ -1,17 +1,8 @@
 "use strict";
 
-const picker = require("./picker");
 
-/**
- * This file is part of the Media (Image,Video,Audio) Element for formBuilder.
- * https://github.com/lucasnetau/formBuilder-plugin-media
- *
- * (c) James Lucas <james@lucas.net.au>
- *
- * @license MIT
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+
+
 if (!window.fbControls) { window.fbControls = []; }
 window.fbControls.push(function media(controlClass) {
     class currentTime extends controlClass {
@@ -48,7 +39,7 @@ window.fbControls.push(function media(controlClass) {
             var btn = this.markup('button', 'Ota aika', { id: 'currentTimeButton', class: 'btn-primary btn', type: 'button', style: 'default' });
 
 
-            return this.markup('div', [dtf, btn]);
+            return this.markup('div', [dtf, btn], {data: 'PRoo data'});
 
             
         }
@@ -68,7 +59,7 @@ window.fbControls.push(function media(controlClass) {
                 
             });
 
-          
+            
 
           currentTimeButton.addEventListener('click', () =>{
             const currentDate = new Date();
