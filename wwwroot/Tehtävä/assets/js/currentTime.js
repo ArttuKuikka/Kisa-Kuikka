@@ -1,4 +1,7 @@
 "use strict";
+
+const picker = require("./picker");
+
 /**
  * This file is part of the Media (Image,Video,Audio) Element for formBuilder.
  * https://github.com/lucasnetau/formBuilder-plugin-media
@@ -41,11 +44,11 @@ window.fbControls.push(function media(controlClass) {
          */
         build() {
 
-            var dtf = this.markup('input', null, { type: 'datetime-local', id: 'dateTimePicker', class: 'dateTimePicker', title: 'aika', value: 'date-value' });
+            var dtf = this.markup('input', null, { type: 'text', id: 'dateTimePicker', class: 'form-control dateTimePicker', title: 'aika', value: 'Valitse aika painamalla tästä' });
             var btn = this.markup('button', 'Ota aika', { id: 'currentTimeButton', class: 'btn-primary btn', type: 'button', style: 'default' });
 
 
-            return this.markup('div', [dtf, btn], {value: 'div-value'});
+            return this.markup('div', [dtf, btn]);
 
             
         }
@@ -56,18 +59,27 @@ window.fbControls.push(function media(controlClass) {
         onRender() {
           const dateTimePicker = document.getElementById('dateTimePicker');
           const currentTimeButton = document.getElementById('currentTimeButton')
+            //dateTimePicker.value = new Date();
+
+            var picker = new Picker(dateTimePicker, {
+                controls: true,
+                format: 'YYYY-MM-DD HH:mm:ss',
+                headers: true,
+                
+            });
+
           
-          var value = this.config.value || 0;
-          dateTimePicker.value = value;
 
           currentTimeButton.addEventListener('click', () =>{
             const currentDate = new Date();
 
-            dateTimePicker.value = currentDate.toISOString().slice(0, -1);
-              this.config.value = currentDate.toISOString().slice(0, -1);
+              dateTimePicker.value = currentDate;
+              
               
 
           });
+
+            
       
         }
     }

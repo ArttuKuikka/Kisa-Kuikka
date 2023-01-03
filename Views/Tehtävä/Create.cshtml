@@ -43,6 +43,7 @@
                 <span asp-validation-for="TehtavaJson" class="text-danger"></span>
             </div>
             <div class="json-editor" id="json-editor" style="color:black">
+                
 
             </div>
             <br />
@@ -70,11 +71,16 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="assets/js/media.js"></script>
 <script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script>
+
+        
+
         jQuery(function ($) {
            var fbeditor = document.getElementById('json-editor');
 
