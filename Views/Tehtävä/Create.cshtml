@@ -69,6 +69,7 @@
 <script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -90,16 +91,16 @@
                 },
                 disabledActionButtons: ['save', 'data'],
                 actionButtons: [{
-    id: 'code',
-    className: 'btn btn-success',
-    label: '📄',
-    type: 'button',
-    events: {
-    click: function() {
-      alert(fb.actions.getData('json'));
-    }
-  }
-  }]
+                    id: 'code',
+                    className: 'btn btn-success',
+                    label: '📄',
+                    type: 'button',
+                    events: {
+                    click: function() {
+                      alert(fb.actions.getData('json'));
+                    }
+                  }
+                  }]
             };
 
            var fb = $(fbeditor).formBuilder(options);

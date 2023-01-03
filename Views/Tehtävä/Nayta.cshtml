@@ -24,9 +24,14 @@
         <div class="json-viewer" id="json-viewer"></div>
        
     <div class="form-group">
-        <input type="submit" id="submit-button" value="Tallenna" class="btn btn-primary" />
+        <input type="submit" id="submit-button" value="Tallenna" class="btn btn-primary noPrint" />
+       
     </div>
+    
 </dl>
+<button onclick="window.print();" class="btn btn-dark noPrint">
+    Tulosta
+</button>
 
 
 
@@ -37,7 +42,8 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://formbuilder.online/assets/js/form-render.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
-<script src="assets/js/media.js"></"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
 
 @section Scripts {
     @{
@@ -55,8 +61,9 @@
 
 
             document.getElementById('submit-button').addEventListener('click', function () {
-                var data = fb.actions.getData('json');
+                var data = JSON.stringify(fb.userData);
                 document.getElementById('json-input').value = data;
+                alert(data);
 
             });
         });

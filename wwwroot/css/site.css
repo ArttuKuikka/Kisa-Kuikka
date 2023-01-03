@@ -85,3 +85,21 @@ body {
     }
 }
 
+@media print {
+    .noPrint {
+        display: none;
+    }
+    .pb-3{
+        background-color: white !important;
+        color: black !important;
+    }
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+    .navbar {
+        background-color: white !important;
+        color: black !important;
+    }
+}
+
