@@ -61,10 +61,10 @@ window.fbControls.push(function media(controlClass) {
          * onRender callback
          */
         onRender() {
-            console.log(this.btnarray);
+            
             for (let i = 0; i < this.btnarray.length; i++) {
                 var btn = this.btnarray[i];
-                console.log(btn);
+                
                 btn.addEventListener('click', () => {
                     console.log('click on ' + (i + 1).toString()); //tähän jotai siit mitä tulee userdataks
                 });

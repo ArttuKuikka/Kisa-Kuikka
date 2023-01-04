@@ -65,8 +65,9 @@ window.fbControls.push(function media(controlClass) {
             const currentDate = new Date();
 
               dateTimePicker.value = currentDate;
+              this.config.value = dateTimePicker.value;
               
-              
+              this.config.userData = [currentDate.toISOString()]
 
           });
 
