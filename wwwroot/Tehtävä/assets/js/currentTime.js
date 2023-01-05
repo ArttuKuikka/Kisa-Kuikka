@@ -38,8 +38,8 @@ window.fbControls.push(function media(controlClass) {
             var dtf = this.markup('input', null, { type: 'text', id: 'dateTimePicker', class: 'form-control dateTimePicker', title: 'aika', value: 'Valitse aika painamalla tästä' });
             var btn = this.markup('button', 'Ota aika', { id: 'currentTimeButton', class: 'btn-primary btn', type: 'button', style: 'default' });
 
-
-            return this.markup('div', [dtf, btn], {data: 'PRoo data'});
+            this.div = this.markup('div', [dtf, btn], );
+            return this.div;
 
             
         }
@@ -51,12 +51,12 @@ window.fbControls.push(function media(controlClass) {
           const dateTimePicker = document.getElementById('dateTimePicker');
           const currentTimeButton = document.getElementById('currentTimeButton')
             //dateTimePicker.value = new Date();
-
+            var div = this.div;
             var picker = new Picker(dateTimePicker, {
                 controls: true,
                 format: 'YYYY-MM-DD HH:mm:ss',
                 headers: true,
-                
+                pick: function (e) { div.value = picker.getDate()}
             });
 
             
@@ -64,10 +64,9 @@ window.fbControls.push(function media(controlClass) {
           currentTimeButton.addEventListener('click', () =>{
             const currentDate = new Date();
 
-              dateTimePicker.value = currentDate;
-              this.config.value = dateTimePicker.value;
-              
-              this.config.userData = [currentDate.toISOString()]
+              picker.setDate(currentDate);
+              dateTimePicker.value = picker.getDate();
+              this.div.value = picker.getDate();
 
           });
 

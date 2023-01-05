@@ -5,7 +5,7 @@
 
 if (!window.fbControls) { window.fbControls = []; }
 window.fbControls.push(function media(controlClass) {
-    class arviontivali extends controlClass {
+    class arviointivali extends controlClass {
 
         /**
          * Load embedded Javascript
@@ -22,7 +22,7 @@ window.fbControls.push(function media(controlClass) {
             return {
                 icon: '5️⃣',
                 i18n: {
-                    default: 'Arviontiväli',
+                    default: 'Arviointiväli',
                 },
                 defaultAttrs: {
                     'min': {
@@ -49,11 +49,12 @@ window.fbControls.push(function media(controlClass) {
             const { ...attrs } = this.config;
             var btnarray = [];
             for (let i = attrs.min; i < attrs.max + 1; i++) {
-                var btn = this.markup('button', i.toString(), {id: 'arviontivalibtn-' + i.toString(), class: 'btn-primary btn', type: 'button', style: 'default' });
+                var btn = this.markup('button', i.toString(), {id: 'arviontivalibtn-' + i.toString(), class: 'btn-primary btn', type: 'button', style: 'default', value: 88 });
                 btnarray.push(btn);
             };
             this.btnarray = btnarray;
-            return this.markup('div', btnarray, );
+            this.div = this.markup('div', btnarray,);
+            return this.div;
 
         }
 
@@ -66,7 +67,9 @@ window.fbControls.push(function media(controlClass) {
                 var btn = this.btnarray[i];
                 
                 btn.addEventListener('click', () => {
-                    console.log('click on ' + (i + 1).toString()); //tähän jotai siit mitä tulee userdataks
+                    //console.log('click on ' + (i + 1).toString());
+                     
+                     this.div.value = (i + 1).toString();
                 });
             }
            
@@ -76,7 +79,7 @@ window.fbControls.push(function media(controlClass) {
     }
 
     // register this control for the following types & text subtypes
-    controlClass.register('arviontivali', arviontivali);
+    controlClass.register('arviointivali', arviointivali);
     
-    return arviontivali;
+    return arviointivali;
 });
