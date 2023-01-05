@@ -3,6 +3,9 @@ version: '3.4'
 networks:
   KipaNet:
 
+volumes:
+  UploadFiles:
+
 services:
   db:
     container_name: app-db
@@ -25,6 +28,10 @@ services:
         - db
     networks:
         - KipaNet
+    volumes:
+        - type: volume
+          source: UploadFiles
+          target: /UploadedFiles
 
    
         
