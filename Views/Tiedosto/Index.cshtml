@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Kipa_plus.Models.Tiedosto>
+
+@{
+    ViewData["Title"] = "Tiedostot";
+}
+
+<h1>Tiedostot</h1>
+
+
+<table class="table" style="color:white">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FileName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Extension)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MimeType)
+            </th>
+            
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Extension)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MimeType)
+                </td>
+               
+                <td>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tiedosto/Get?id=@item.Id';">Lataa</button>
+                    
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
