@@ -75,7 +75,30 @@ namespace Kipa_plus.Controllers
             }
             catch (Exception ex)
             {
-                return Problem(ex.Message);
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        public async Task<IActionResult> Delete(int id)
+        {
+            var path = Path.GetFullPath("/UploadedFiles");
+            if (!Path.Exists(path)) { return Problem(path + " Ei ole olemassa. kai mounttasit volumen"); }
+
+            var Ti = await _context.FindAsync<Tiedosto>(id);
+            if (Ti == null)
+            {
+                return NotFound();
+            }
+
+
+            try
+            {
+                System.IO.File.Delete(Path.Combine(path, Ti.FileName));
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 

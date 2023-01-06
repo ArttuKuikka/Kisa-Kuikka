@@ -38,8 +38,7 @@ window.fbControls.push(function media(controlClass) {
             this.fileinput = this.markup('input', null, { type: 'file', class: 'form-control ', title: 'Lataa tiedosto' });
             this.form = this.markup('form', this.fileinput, { method: 'post', enctype: 'multipart/form-data', action:'/Tiedosto/Post'})
             this.statustext = this.markup('p', 'odotetaan tiedostoa')
-            this.btn = this.markup('input', 'Lähetä', {type:'button', class:'btn btn-default'})
-            this.div = this.markup('div', [this.form, this.statustext, this.btn]);
+            this.div = this.markup('div', [this.form, this.statustext]);
             return this.div;
             
 
@@ -49,20 +48,29 @@ window.fbControls.push(function media(controlClass) {
          * onRender callback
          */
         onRender() {
-            this.btn.addEventListener('click', () => {
-                this.statustext.innerHTML = 'Tiedostoa ladataan palvelimelle'
-
-                fetch('/Tiedosto/Post', {
-                    method: 'POST',
+            this.fileinput.addEventListener('change', () => {
+                try {
+                    this.statustext.innerHTML = 'Tiedostoa ladataan palvelimelle'
                     
-                    
-                    body: this.form
-                })
-                    .then(response => response.json())
-                    .then(response => console.log(JSON.stringify(response)))
+                    let formData = new FormData();
+                    var file = this.fileinput.files[0];
+                    formData.append('File', file)
+                    fetch('/Tiedosto/Post', {
+                        method: 'POST',
 
-                this.div.value = "1"
-                this.statustext.innerHTML = 'Ladattu'
+
+                        body: formData
+                    })
+                        .then(response => response.json())
+                        .then(response => this.div.value = JSON.stringify(response))
+
+
+                   
+                    this.statustext.innerHTML = 'Ladattu'
+                }
+                catch (error) {
+                    this.statustext.innerHTML = 'Virhe ladatessa tiedostoa'
+                }
             });
             
 
