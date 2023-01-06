@@ -31,5 +31,6 @@ namespace Kipa_plus.Data
         public DbSet<Kipa_plus.Models.Rasti> Rasti { get; set; } = default!;
         public DbSet<Kipa_plus.Models.Tehtävä> Tehtävä { get; set; } = default!;
         public DbSet<Kipa_plus.Models.Tiedosto> Tiedosto { get; set;} = default!;
+        public DbSet<Kipa_plus.Models.TehtäväVastaus> TehtäväVastaus { get; set;} = default!;
     }
 }
