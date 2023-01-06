@@ -16,7 +16,7 @@ namespace Kipa_plus.Controllers
         [Route("[controller]")]
         public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,RastiId,TehtäväId,Kesken,TehtavaJson")] TehtäväVastaus tehtäväVastaus)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid) 
             {
                 _context.Add(tehtäväVastaus);
                 await _context.SaveChangesAsync();

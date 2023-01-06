@@ -24,7 +24,7 @@
         <div class="json-viewer" id="json-viewer"></div>
        
     <div class="form-group">
-        <input type="submit" id="submit-button" value="Tallenna" class="btn btn-primary noPrint" />
+        <input type="button" id="submit-button" value="Tallenna" class="btn btn-primary noPrint" />
        
     </div>
     
@@ -56,6 +56,7 @@
     }
 
     <script>
+        //luo formrender käyttämällä piilokentässä olevaa jsonia joka tehtiin formbuilderilla
         jQuery(function ($) {
             var fbeditor = document.getElementById('json-viewer');
             var getdata = document.getElementById('json-input').value;
@@ -64,11 +65,32 @@
     formData: getdata
   });
 
-
+  //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata 
             document.getElementById('submit-button').addEventListener('click', function () {
-                var data = JSON.stringify(fb.userData);
-                document.getElementById('json-input').value = data;
-                alert(data);
+                var data = fb.userData;
+
+                //tarkista että kaikkissa required fieldeissä on userdataa
+                for(let i = 0; i < data.length; i++){
+                    var field = data[i]
+                    console.log(field);
+                    if (field.required == true) {
+                        if (!field.hasOwnProperty('userData')) {
+                            alert('Täytä kaikki pakolliset kentät');
+                            return;
+                        }
+                        else {
+                            if (field.userData[0].length < 1) {  //en tiedä onko jossai elemteissä enemmän userdataa ku vaan yks array item joten väliaikainen
+                                alert('Täytä kaikki pakolliset kentät');
+                                return;
+                            }
+                        }
+                    }
+                }
+
+                //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää
+                var jsondata = JSON.stringify(data);
+                document.getElementById('json-input').value = jsondata;
+                alert(jsondata);// vaihda että submittaa formin
 
             });
         });

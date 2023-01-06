@@ -24,6 +24,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
+
+//lis‰‰ bearer authentication api varten
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "MultiAuthSchemes";
@@ -57,6 +59,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//lis‰‰ swagger api a varten
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(e => { e.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Kipa-plus API", Version = "v1" }); });
 
@@ -79,6 +82,7 @@ else
 
 app.UseHttpsRedirection();
 
+//lis‰‰ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings.Add(".lang", "language");
 app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider }) ;

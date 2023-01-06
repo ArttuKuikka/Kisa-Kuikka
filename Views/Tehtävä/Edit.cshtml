@@ -68,6 +68,7 @@
 
     <script>
         jQuery(function ($) {
+            //lisää formbuilder
             var fbeditor = document.getElementById('json-editor');
             var fb = null;
             $(fbeditor).formBuilder().promise.then(formBuilder => {
@@ -79,7 +80,7 @@
             
             
 
-
+            //Lähetä nappia painaessa formbuilderin data siirretään json muodossa piilotettuun kentään formissa jonka kautta se lähetetään palvelimelle
             document.getElementById('submit-button').addEventListener('click', function () {
                 var data = fb.actions.getData('json');
                 document.getElementById('json-input').value = data;
