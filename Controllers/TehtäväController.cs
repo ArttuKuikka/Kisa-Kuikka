@@ -47,6 +47,8 @@ namespace Kipa_plus.Controllers
             return View(tehtävä);
         }
 
+        
+
         // GET: Tehtävä/Create
         public IActionResult Create(int KisaId, int SarjaId, int RastiId)
         {

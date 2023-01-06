@@ -5,6 +5,7 @@ networks:
 
 volumes:
   UploadFiles:
+  DataBaseFiles:
 
 services:
   db:
@@ -17,7 +18,10 @@ services:
         - SA_PASSWORD=S3cur3P@ssW0rd!
     networks:
         - KipaNet
-
+    volumes:
+        - type: volume
+          source: DataBaseFiles
+          target: /var/opt/mssql
 
   kipa-plus:
     image: ${DOCKER_REGISTRY-}kipaplus
