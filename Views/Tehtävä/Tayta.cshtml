@@ -84,7 +84,7 @@
 
     <script>
         //luo formrender käyttämällä piilokentässä olevaa jsonia joka tehtiin formbuilderilla
-        jQuery(function($) {
+        jQuery(function ($) {
             var fbeditor = document.getElementById('json-viewer');
             var getdata = document.getElementById('json-input').value;
             var fb = $(fbeditor).formRender({
@@ -92,15 +92,18 @@
                 formData: getdata
             });
 
-            //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata 
+            //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata
             function Submittaa(Kesken) {
                 var data = fb.userData;
 
                 //tarkista että kaikkissa required fieldeissä on userdataa
                 for (let i = 0; i < data.length; i++) {
+
                     var field = data[i]
                     console.log(field.userData);
+
                     if (field.required == true) {
+
                         if (!field.hasOwnProperty('userData')) {
                             //luo teksti ja siihen liittyvät asiat
                             var elem = document.createElement('span');
@@ -120,55 +123,33 @@
 
                             });
                             return;
-                        } else {
-                            if(field.userData != null){
-                               if(field.userData.isArray()){
-                                    if (field.userData[0].length < 1) { //en tiedä onko jossai elemteissä enemmän userdataa ku vaan yks array item joten väliaikainen
+                        }
+                        else {
+                            if (field.userData != null) {
+                                if (Array.isArray(field.userData)) {
+                                    if (field.userData[0].length < 1) {
+                                        //luo teksti ja siihen liittyvät asiat
+                                        var elem = document.createElement('span');
+                                        var parent = document.getElementsByName(field.name)[0].parentElement;
+                                        elem.textContent = 'Tämä kenttä on pakollinen';
+                                        elem.style.color = 'red';
+                                        elem.id = 'elementti';
 
-                                    //luo teksti ja siihen liittyvät asiat
-                                    var elem = document.createElement('span');
-                                    var parent = document.getElementsByName(field.name)[0].parentElement;
-                                    elem.textContent = 'Tämä kenttä on pakollinen';
-                                    elem.style.color = 'red';
-                                    elem.id = 'elementti';
+                                        //lisää teksti vain jos sitä ei ole jo
+                                        if (parent.querySelector('#elementti') == null) {
+                                            parent.appendChild(elem);
+                                        }
 
-                                    //lisää teksti vain jos sitä ei ole jo
-                                    if (parent.querySelector('#elementti') == null) {
-                                        parent.appendChild(elem);
+                                        //lisää fade elementtiin
+                                        $(elem).fadeOut(6000, function () {
+                                            elem.remove();
+
+                                        });
+                                        return;
                                     }
-
-                                    //lisää fade elementtiin
-                                    $(elem).fadeOut(6000, function() {
-                                        elem.remove();
-
-                                    });
-                                    return;
-                               }
-                               else{
-                                        if (field.userData.length < 1) { //en tiedä onko jossai elemteissä enemmän userdataa ku vaan yks array item joten väliaikainen
-
-                                            //luo teksti ja siihen liittyvät asiat
-                                            var elem = document.createElement('span');
-                                            var parent = document.getElementsByName(field.name)[0].parentElement;
-                                            elem.textContent = 'Tämä kenttä on pakollinen';
-                                            elem.style.color = 'red';
-                                            elem.id = 'elementti';
-
-                                            //lisää teksti vain jos sitä ei ole jo
-                                            if (parent.querySelector('#elementti') == null) {
-                                                parent.appendChild(elem);
-                                            }
-
-                                            //lisää fade elementtiin
-                                            $(elem).fadeOut(6000, function () {
-                                                elem.remove();
-
-                                            });
-                                            return;
-                               }
-                            }
-                            else{
-                                    
+                                }
+                                else if (field.userData.length < 1) {
+                                    //luo teksti ja siihen liittyvät asiat
                                     var elem = document.createElement('span');
                                     var parent = document.getElementsByName(field.name)[0].parentElement;
                                     elem.textContent = 'Tämä kenttä on pakollinen';
@@ -186,12 +167,30 @@
 
                                     });
                                     return;
+                                }
                             }
+                            else {
+                                var elem = document.createElement('span');
+                                var parent = document.getElementsByName(field.name)[0].parentElement;
+                                elem.textContent = 'Tämä kenttä on pakollinen';
+                                elem.style.color = 'red';
+                                elem.id = 'elementti';
+
+                                //lisää teksti vain jos sitä ei ole jo
+                                if (parent.querySelector('#elementti') == null) {
+                                    parent.appendChild(elem);
+                                }
+
+                                //lisää fade elementtiin
+                                $(elem).fadeOut(6000, function () {
+                                    elem.remove();
+
+                                });
+                                return;
                             }
                         }
                     }
                 }
-
                 //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää
                 var jsondata = JSON.stringify(data);
                 document.getElementById('json-input').value = jsondata;
@@ -201,19 +200,18 @@
                 };
 
                 document.getElementById('Formi').submit();
-
-            };
-    
+            }
 
 
 
-    document.getElementById('submit-button').addEventListener('click', function() {
-        Submittaa(false);
-    });
 
-    document.getElementById('submit-kesken-button').addEventListener('click', function() {
-        Submittaa(true);
-    });
-        })
+                document.getElementById('submit-button').addEventListener('click', function () {
+                    Submittaa(false);
+                });
+
+                document.getElementById('submit-kesken-button').addEventListener('click', function () {
+                    Submittaa(true);
+                });
+            })
     </script>
 }
