@@ -20,7 +20,7 @@ window.fbControls.push(function media(controlClass) {
          */
         static get definition() {
             return {
-                icon: '5️⃣',
+                
                 i18n: {
                     default: 'Arviointiväli',
                 },

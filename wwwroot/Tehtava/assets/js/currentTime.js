@@ -20,7 +20,7 @@ window.fbControls.push(function media(controlClass) {
          */
         static get definition() {
             return {
-                icon: '🕒',
+                
                 i18n: {
                     default: 'Aika',
                 },
