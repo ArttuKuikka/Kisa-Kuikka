@@ -29,8 +29,8 @@ namespace Kipa_plus.Data
         public DbSet<Kipa_plus.Models.Vartio> Vartio { get; set; } = default!;
         public DbSet<Kipa_plus.Models.Sarja> Sarja { get; set; } = default!;
         public DbSet<Kipa_plus.Models.Rasti> Rasti { get; set; } = default!;
-        public DbSet<Kipa_plus.Models.Tehtävä> Tehtävä { get; set; } = default!;
+        public DbSet<Kipa_plus.Models.Tehtava> Tehtava { get; set; } = default!;
         public DbSet<Kipa_plus.Models.Tiedosto> Tiedosto { get; set;} = default!;
-        public DbSet<Kipa_plus.Models.TehtäväVastaus> TehtäväVastaus { get; set;} = default!;
+        public DbSet<Kipa_plus.Models.TehtavaVastaus> TehtavaVastaus { get; set;} = default!;
     }
 }

@@ -5,24 +5,24 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kipa_plus.Controllers
 {
-    public class TehtäväVastausController : Controller
+    public class TehtavaVastausController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TehtäväVastausController(ApplicationDbContext context)
+        public TehtavaVastausController(ApplicationDbContext context)
         {
             _context = context;
         }
         [Route("[controller]")]
-        public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,RastiId,TehtäväId,Kesken,TehtavaJson")] TehtäväVastaus tehtäväVastaus)
+        public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,RastiId,TehtavaId,Kesken,TehtavaJson")] TehtavaVastaus TehtavaVastaus)
         {
             if (ModelState.IsValid) 
             {
-                _context.Add(tehtäväVastaus);
+                _context.Add(TehtavaVastaus);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + tehtäväVastaus.KisaId + "/Vartiot");
+                return Redirect("/Kisa/" + TehtavaVastaus.KisaId + "/Vartiot");
             }
-            return View(tehtäväVastaus);
+            return View(TehtavaVastaus);
         }
         public IActionResult Index()
         {

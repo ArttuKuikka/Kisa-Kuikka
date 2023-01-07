@@ -1,14 +1,14 @@
-﻿@model IEnumerable<Kipa_plus.Models.Tehtävä>
+﻿@model IEnumerable<Kipa_plus.Models.Tehtava>
 
 @{
-    ViewData["Title"] = "Rastin tehtäväpohjat";
+    ViewData["Title"] = "Rastin Tehtavapohjat";
 }
 
-<h1>Rastin tehtävät</h1>
+<h1>Rastin Tehtavat</h1>
 
 <p>
     
-    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Create?KisaId=@ViewBag.KisaId&RastiId=@ViewBag.RastiId';">Luo tehtävä</button>
+    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Create?KisaId=@ViewBag.KisaId&RastiId=@ViewBag.RastiId';">Luo Tehtävä</button>
 </p>
 <table class="table" style="color: white">
     <thead>
@@ -45,9 +45,9 @@
             </td>
            
             <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Tayta?TehtavaId=@item.Id';">Täytä</button>
-                <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Edit?id=@item.Id';">Muokkaa</button>
-                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtävä/Delete?id=@item.Id';">Poista</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id';">Täytä</button>
+                <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id';">Poista</button>
             </td>
         </tr>
 }
