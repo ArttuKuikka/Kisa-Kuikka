@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Tehtävä>
 
 @{
-    ViewData["Title"] = "Rastin tehtävät";
+    ViewData["Title"] = "Rastin tehtäväpohjat";
 }
 
 <h1>Rastin tehtävät</h1>
@@ -45,7 +45,7 @@
             </td>
            
             <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Nayta?TehtavaId=@item.Id';">Näytä</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Tayta?TehtavaId=@item.Id';">Täytä</button>
                 <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/Edit?id=@item.Id';">Muokkaa</button>
                     <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtävä/Delete?id=@item.Id';">Poista</button>
             </td>

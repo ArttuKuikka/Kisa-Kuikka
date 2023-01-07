@@ -3,6 +3,7 @@
     public class TehtäväVastaus
     {
         public int Id { get; set; }
+        public int VartioId { get; set; }
         public int SarjaId { get; set; }
         public int KisaId { get; set; }
         public int RastiId { get; set; }

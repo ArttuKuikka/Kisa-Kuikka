@@ -35,8 +35,8 @@ namespace Kipa_plus.Controllers
             return View(tehtävä);
         }
 
-       //GET: Nayta
-       public async Task<IActionResult> Nayta(int? TehtavaId)
+       //GET: Tayta
+       public async Task<IActionResult> Tayta(int? TehtavaId)
         {
             if (TehtavaId == null || _context.Tehtävä == null)
             {
@@ -44,7 +44,43 @@ namespace Kipa_plus.Controllers
             }
             var tehtävä = _context.Tehtävä.First(x => x.Id == TehtavaId);
 
-            return View(tehtävä);
+            ViewBag.Vartiot = _context.Vartio.Where(x => x.SarjaId == tehtävä.SarjaId);
+
+            var vt = new Tayta() { Nimi = tehtävä.Nimi, PohjaJson = tehtävä.TehtavaJson, TehtavaId = TehtavaId };
+            return View(vt);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Tayta([Bind("Nimi, VartioId, Kesken, PohjaJson, TehtavaId")] Tayta vastausTemp)
+        {
+            int? TehtavaId = vastausTemp.TehtavaId; //varmista että on oikeudet
+            if(TehtavaId == null)
+            {
+                return BadRequest();
+            }
+            if (ModelState.IsValid) //varmista että on userdataa json required
+            {
+                var TV = new TehtäväVastaus() { VartioId = vastausTemp.VartioId, Kesken = vastausTemp.Kesken, TehtavaJson = vastausTemp.PohjaJson };
+
+                var TehtäväPohja = await _context.Tehtävä.FindAsync(TehtavaId);
+
+                if(TehtäväPohja== null)
+                {
+                    return StatusCode(500);
+                }
+
+                TV.TehtäväId = TehtäväPohja.Id;
+                TV.SarjaId = TehtäväPohja.SarjaId;
+                TV.KisaId = TehtäväPohja.KisaId;
+                
+                _context.TehtäväVastaus.Add(TV);
+                _context.SaveChanges();
+
+                return (Redirect("/Kisa/" + TehtäväPohja.KisaId + "/Tehtävät"));
+            }
+            return BadRequest();
+            
         }
 
         

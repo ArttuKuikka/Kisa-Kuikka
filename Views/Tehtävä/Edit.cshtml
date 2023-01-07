@@ -9,7 +9,7 @@
 <h4>Tehtävä</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div>
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
@@ -58,8 +58,14 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-<script src="https://formbuilder.online/assets/js/form-builder.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="assets/js/form-builder.min.js"></script>
+<script src="/js/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
+<script src="assets/js/arviointivali.js"></script>
+<script src="assets/js/fileUpload.js"></script>
 
 @section Scripts {
     @{
