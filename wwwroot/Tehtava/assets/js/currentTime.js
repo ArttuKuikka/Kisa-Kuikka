@@ -61,8 +61,18 @@ window.fbControls.push(function media(controlClass) {
 
             
 
-          currentTimeButton.addEventListener('click', () =>{
-            const currentDate = new Date();
+            currentTimeButton.addEventListener('click', () => {
+
+                var currentDate = new Date();
+                fetch('/Aika').then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    console.log(data);
+                    currentDate = data.aika;
+                }).catch(function (err) {
+                    console.log('Server Time Fetch Error :-S', err);
+                });
+            
 
               picker.setDate(currentDate);
               dateTimePicker.value = picker.getDate();

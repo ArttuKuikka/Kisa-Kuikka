@@ -103,7 +103,8 @@
 
                     if (field.required == true) {
 
-                        if (!field.hasOwnProperty('userData')) {
+                        try{
+                                if (!field.hasOwnProperty('userData')) {
                             //luo teksti ja siihen liittyvät asiat
                             var elem = document.createElement('span');
                             var parent = document.getElementsByName(field.name)[0].parentElement;
@@ -187,6 +188,11 @@
                                 });
                                 return;
                             }
+                        }
+                        }
+                        catch(error){
+                            alert('täytä kaikki pakolliset punaisella tähdellä merkityt kohdat!')
+                            return;
                         }
                     }
                 }
