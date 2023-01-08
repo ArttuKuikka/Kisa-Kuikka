@@ -54,12 +54,12 @@ namespace Kipa_plus.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Tayta([Bind("Nimi, VartioId, Kesken, PohjaJson, TehtavaId")] Tayta vastausTemp)
         {
-            int? TehtavaId = vastausTemp.TehtavaId; //varmista että on oikeudet
+            int? TehtavaId = vastausTemp.TehtavaId; //TODO: varmista että on oikeudet
             if(TehtavaId == null)
             {
                 return BadRequest();
             }
-            if (ModelState.IsValid) //varmista että on userdatas on json required
+            if (ModelState.IsValid) 
             {
                 var TV = new TehtavaVastaus() { VartioId = vastausTemp.VartioId, Kesken = vastausTemp.Kesken, TehtavaJson = vastausTemp.PohjaJson };
 
@@ -69,6 +69,13 @@ namespace Kipa_plus.Controllers
                 {
                     return StatusCode(500);
                 }
+
+                if(TV.TehtavaJson.Length < TehtavaPohja.TehtavaJson.Length)
+                {
+                    return BadRequest();
+                }
+                //TODO: varmista että on userdatas on json required
+
 
                 TV.TehtavaId = TehtavaPohja.Id;
                 TV.SarjaId = TehtavaPohja.SarjaId;
