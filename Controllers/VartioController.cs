@@ -19,6 +19,56 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+        public async Task<IActionResult> LiitaTag(int? VartioId)
+        {
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+
+            if(VartioId != null)
+            {
+                var vartio = await _context.Vartio.FindAsync(VartioId);
+                if (vartio == null)
+                {
+                    return NotFound();
+                }
+
+                ViewBag.Vartiot = _context.Vartio.Where(x => x.KisaId == vartio.KisaId);
+
+                return View(new LiitaTagModel() { VartioId = (int)vartio.Id});
+            }
+
+
+            return BadRequest("Ei VartioIdtä");
+
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LiitaTag([Bind("VartioId, TagSerial")] LiitaTagModel liitaTagModel)
+        {
+
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+
+            var vartio = await _context.Vartio.FindAsync(liitaTagModel.VartioId);
+            if (vartio == null)
+            {
+                return NotFound();
+            }
+
+            vartio.TagSerial = liitaTagModel.TagSerial;
+            _context.Update(vartio);
+            _context.SaveChanges();
+
+            return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+
+        }
+
         // GET: Vartio/Create
         public IActionResult Create(int kisaId, int SarjaId)
         {

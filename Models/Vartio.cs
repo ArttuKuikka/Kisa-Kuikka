@@ -13,5 +13,6 @@ namespace Kipa_plus.Models
         [NotMapped]
         public string NumeroJaNimi { get { return Numero + " " + Nimi; } }
         public int? Tilanne { get; set; } //0 = kisassa, 1 = Keskeytetty, 2 = ulkopuolella
+        public string? TagSerial { get; set; }
     }
 }
