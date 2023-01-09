@@ -103,14 +103,29 @@
                 actionButtons: [{
                     id: 'code',
                     className: 'btn btn-success',
-                    label: '📄',
+                    label: 'Kopioi',
                     type: 'button',
                     events: {
                     click: function() {
                       alert(fb.actions.getData('json'));
                     }
                   }
-                  }]
+                   
+                  },
+                {
+                    id: 'setcode',
+                    className: 'btn btn-success',
+                    label: 'Liitä',
+                    type: 'button',
+                    events: {
+                        click: function () {
+                            var koodi = prompt("Liitä tähän kopioimasi JSON koodi");
+                            if (koodi != null) {
+                                fb.actions.setData(koodi);
+                            }
+                        }
+                    }
+                    }]
             };
 
            var fb = $(fbeditor).formBuilder(options);
