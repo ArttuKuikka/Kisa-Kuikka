@@ -1,0 +1,46 @@
+﻿@model bool
+@{
+    
+}
+
+@if(ViewBag.RastiId != null)
+{
+    <p>RastiId: </p> <p id="RastiIdP">@ViewBag.RastiId</p>
+}
+@if (Model)
+{
+    <div class="SkannausTulos row">
+    <img src="~/images/check-mark.png"  />
+    <br />
+    <h3>@ViewBag.SkannattuVartio</h3>
+    <br />
+    <h3>Automaattinen uudelleensiirtyminen 5:ssa sekunnissa</h3>
+    
+    </div>
+}
+else
+{
+    <div class="SkannausTulos row">
+        <img src="~/images/error.png"  />
+     <br />
+     <h3>Virhe Skannatessa tagia</h3>
+     <br />
+     <h3>Automaattinen uudelleensiirtyminen 5:ssa sekunnissa</h3>
+    </div>
+}
+
+<script>
+    setTimeout(myURL, 5000);
+
+      function myURL() {
+
+          try{
+              var rid = document.getElementById("RastiIdP").innerHTML;
+            document.location.href = '/Tag?RastiId=' + rid;
+          }catch(error){
+            document.location.href = '/';
+          }
+
+         
+      }
+</script>

@@ -29,6 +29,7 @@ body {
     column-gap: 1em;
 }
 
+
 .grid-item {
     background-color: rgba(120, 120, 120, 0.8);
     border: 3px solid rgba(0, 0, 0, 0.8);
@@ -48,6 +49,11 @@ body {
 
 .grid-item-text{
     font-size: 1em;
+}
+
+.SkannausTulos{
+    text-align: center;
+    
 }
 
 @media(max-width: 600px) {
