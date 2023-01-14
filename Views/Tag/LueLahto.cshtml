@@ -1,0 +1,56 @@
+﻿@model Kipa_plus.Models.TagSkannaus
+@{
+    ViewData["Title"] = "Lue tulo";
+}
+
+<h2>Lue Lähtö tag</h2>
+<hr />
+<div class="row">
+
+    <h1 id="statustext">Odotetaan tagin luentaa...</h1>
+    <input hidden="hidden" type="button" value="yritä uudelleen" class="btn btn-light" id="tryagain" />
+
+
+</div>
+
+<script async>
+
+    const params = new Proxy(new URLSearchParams(window.location.search), {
+        get: (searchParams, prop) => searchParams.get(prop),
+    });
+    // Get the value of "some_key" in eg "https://example.com/?some_key=some_value"
+    let value = params.RastiId; // "some_value"
+    console.log(value);
+
+    document.getElementById('tryagain').addEventListener('click', () => { nfc(); })
+
+    if (document.readyState === 'interactive' || document.readyState === 'complete') {
+    nfc();
+} else {
+    document.addEventListener('DOMContentLoaded', nfc);
+}
+
+    async function nfc(){
+         try {
+    const ndef = new NDEFReader();
+    await ndef.scan();
+    console.log("> Scan started");
+    document.getElementById('statustext').innerHTML = "Odotetaan tagin luentaa...";
+            document.getElementById('tryagain').setAttribute('hidden', 'hidden');
+
+    ndef.addEventListener("readingerror", () => {
+      alert("Virhe lukiessa Tagia, yritä uudelleen");
+    });
+
+    ndef.addEventListener("reading", ({ message, serialNumber }) => {
+      alert("Rasti:" + value.toString() + " " + serialNumber.toString());
+    });
+  } catch (error) {
+    alert("Virhe aloittessa NFC lukua, kai käytät chromea androidilla ja annoit sivustolle luvan käyttää NFC sensoria" );
+    document.getElementById('statustext').innerHTML = "Virhe aloittaessa NFC lukua";
+    document.getElementById('tryagain').removeAttribute('hidden');
+  }
+    }
+
+
+</script>

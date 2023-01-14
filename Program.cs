@@ -80,7 +80,7 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 //lis‰‰ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
 var provider = new FileExtensionContentTypeProvider();
