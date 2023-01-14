@@ -44,7 +44,7 @@ namespace Kipa_plus.Controllers
 
                         if (vartio == null)
                         {
-                            return View("SkannausTulos", HyvaSkannusTulos); //vaihda et returnaa view 
+                            return View("SkannausTulos", HyvaSkannusTulos); 
                         }
 
                         tagSkannaus.VartioId = vartio.Id;
@@ -105,7 +105,7 @@ namespace Kipa_plus.Controllers
 
                         if (vartio == null)
                         {
-                            return View("SkannausTulos", HyvaSkannusTulos); //vaihda et returnaa view 
+                            return View("SkannausTulos", HyvaSkannusTulos); 
                         }
 
                         tagSkannaus.VartioId = vartio.Id;
