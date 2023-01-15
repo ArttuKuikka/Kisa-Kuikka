@@ -4,30 +4,36 @@
 @model Kipa_plus.Models.TagTilastoModel;
 
 @{
+    Layout = null;
     ViewData["Title"] = "Tag tilastot";
+
 }
 <script src="/js/TagTilastot/jquery-3.6.3.min.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/datatables.min.css" />
 <script type="text/javascript" src="/js/TagTilastot/datatables.min.js"></script>
+<style>
+    table, th, td {
+          border: 1px solid black;
+    }
+</style>
 
-<h1>Tag tilastot</h1>
-<div class="container" style="overflow-x: scroll">
+<div class="container">
     <br />
-    
+
     <div style="width:100%; margin:0 auto;">
         @{
             var dt = new DataTable();
 
             
             dt.Columns.Add("Vartio");
-            if(Model.SarjanRastit == null)
+            if (Model.SarjanRastit == null)
             {
                 @Html.DisplayText("Virhe ladatessa vartioita")
                 return;
             }
-            foreach(var item in Model.SarjanRastit)
+            foreach (var item in Model.SarjanRastit)
             {
-                
+
                 dt.Columns.Add(item.Nimi + " " + item.Id);
             }
 
@@ -35,7 +41,7 @@
 
             StringBuilder sb = new StringBuilder();
             //Table start.
-            sb.Append("<table id='example' cellspacing='0' width='100%' style='color: white;' class='table cell-border table-striped table-bordered dt-responsive nowrap'>");
+            sb.Append("<table id='example' cellspacing='0' width='100%' >");
 
 
             sb.Append("<thead>");
@@ -43,19 +49,19 @@
             sb.Append("<tr>");
             foreach (DataColumn column in dt.Columns)
             {
-                sb.Append("<th style='color: white;'>" + column.ColumnName + "</th>");
+                sb.Append("<th>" + column.ColumnName + "</th>");
             }
             sb.Append("</tr>");
             sb.Append("</thead>");
 
             sb.Append("<tbody>");
             
-            if(Model.Vartio == null)
+            if (Model.Vartio == null)
             {
                 @Html.DisplayText("Virhe ladatessa vartioita")
                 return;
             }
-            if(Model.Skannaukset == null)
+            if (Model.Skannaukset == null)
             {
                 @Html.DisplayText("Virhe ladatessa Tag skannauksia")
                 return;
@@ -63,40 +69,40 @@
             foreach (var vartio in Model.Vartio)
             {
                 sb.Append("<tr>");
-                sb.Append("<td style='color: white;'>" + vartio.Numero + " " + vartio.Nimi + "</td>");
+                sb.Append("<td>" + vartio.Numero + " " + vartio.Nimi + "</td>");
                 foreach (DataColumn column in dt.Columns)
                 {
-                    if(column.ColumnName != "Vartio")
+                    if (column.ColumnName != "Vartio")
                     {
-                        var rasti = Model.SarjanRastit.Where(x => x.Nimi + " " + x.Id == column.ColumnName); 
-                        
+                        var rasti = Model.SarjanRastit.Where(x => x.Nimi + " " + x.Id == column.ColumnName);
+
                         var ajat = Model.Skannaukset.Where(x => x.RastiId == rasti.FirstOrDefault().Id);
 
                         var tulo = ajat.Where(x => x.isTulo == true).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
                         var lahto = ajat.Where(x => x.isTulo == false).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
 
-                        
 
-                        if(tulo != null && lahto != null)
+
+                        if (tulo != null && lahto != null)
                         {
-                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
-                            
+                            sb.Append("<td>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+
                         }
                         else if (tulo != null && lahto == null)
                         {
-                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + "Ei dataa" + "</td>");
+                            sb.Append("<td>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + "Ei dataa" + "</td>");
                         }
-                        else if(tulo == null && lahto != null)
+                        else if (tulo == null && lahto != null)
                         {
-                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+                            sb.Append("<td>" + "Ei dataa" + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
                         }
                         else
                         {
-                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
-                            
+                            sb.Append("<td>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+
                         }
 
-                        
+
                     }
                 }
                 sb.Append("</tr>");
@@ -110,13 +116,8 @@
 
         }
 
-
-        
-
     </div>
 </div>
-<br />
-<input type="button" value="Näytä raakaversio" class="btn btn-light" onclick="location.href='TagTilastot/Raw?id=@Model.id'" />
 
 
 
@@ -124,14 +125,14 @@
 <script>
 
 
-    $(document).ready(function () {
-        $("#example").DataTable({
-            "pageLength": 25
-        });
-    });
+    //$(document).ready(function () {
+    //    $("#example").DataTable({
+    //        "pageLength": 100
+    //    });
+    //});
 
 
-   
+
 
 </script>
 

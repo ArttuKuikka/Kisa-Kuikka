@@ -6,5 +6,6 @@
         public List<TagSkannaus>? Skannaukset { get; set; }
 
         public List<Vartio>? Vartio { get; set;}
+        public int id { get; set; }
     }
 }

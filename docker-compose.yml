@@ -32,6 +32,8 @@ services:
         - db
     networks:
         - KipaNet
+    environment:
+      TZ: "Europe/Helsinki"
     volumes:
         - type: volume
           source: UploadFiles

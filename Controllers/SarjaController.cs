@@ -36,10 +36,25 @@ namespace Kipa_plus.Controllers
             var skannaukset = _context.TagSkannaus.ToList();
             var vartiot = _context.Vartio.Where(x => x.SarjaId == id).ToList();
 
-            return View(new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot});
+            return View(new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id});
         }
 
-        
+        [HttpGet("TagTilastot/Raw")]
+        public IActionResult TagTilastotRaw(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var rastit = _context.Rasti.Where(r => r.SarjaId == id).ToList();
+            var skannaukset = _context.TagSkannaus.ToList();
+            var vartiot = _context.Vartio.Where(x => x.SarjaId == id).ToList();
+
+            return View("TagTilastotRaw",new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id });
+        }
+
+
 
 
 
