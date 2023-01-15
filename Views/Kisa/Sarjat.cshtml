@@ -13,17 +13,9 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nimi)
+                Nimi
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KisaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VartionMaksimiko)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VartionMinimikoko)
-            </th>
+            
            
             <th></th>
         </tr>
@@ -33,17 +25,9 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nimi)
+                    <h4>@item.Nimi</h4>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.KisaId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VartionMaksimiko)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VartionMinimikoko)
-                </td>
+               
                 
                 <td>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Sarja/TagTilastot?id=@item.Id';">Tag tilastot</button>

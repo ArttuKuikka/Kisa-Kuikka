@@ -115,7 +115,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,Numero,SarjaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,KisaId,Nimi,Numero,SarjaId,Lippukunta,Tilanne")] Vartio vartio)
         {
             if (id != vartio.Id)
             {

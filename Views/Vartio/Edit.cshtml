@@ -29,15 +29,22 @@
                 <span asp-validation-for="SarjaId" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="KisaId" class="control-label"></label>
+                <input asp-for="KisaId" class="form-control" />
+                <span asp-validation-for="KisaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Lippukunta" class="control-label"></label>
                 <input asp-for="Lippukunta" class="form-control" />
                 <span asp-validation-for="Lippukunta" class="text-danger"></span>
             </div>
+            <!--
             <div class="form-group">
                 <label asp-for="Tilanne" class="control-label"></label>
                 <input asp-for="Tilanne" class="form-control" />
                 <span asp-validation-for="Tilanne" class="text-danger"></span>
             </div>
+            -->
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

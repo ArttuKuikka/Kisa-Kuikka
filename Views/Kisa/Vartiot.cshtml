@@ -13,17 +13,10 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nimi)
+                Nimi, numero ja lippukunta
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KisaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lippukunta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Numero)
-            </th>
+           
+           
            
             <th></th>
         </tr>
@@ -33,17 +26,12 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nimi)
+                    <h4>@item.Nimi</h4>
+                    <h3>@item.Numero</h3>
+                    <h3>@item.Lippukunta</h3>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.KisaId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lippukunta)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Numero)
-                </td>
+                
+               
                 
                 <td>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>

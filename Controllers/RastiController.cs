@@ -114,7 +114,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return Redirect(" / Kisa / " + rasti.KisaId + " / Rastit");
+                return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
             }
             return View(rasti);
         }

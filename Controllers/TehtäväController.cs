@@ -203,13 +203,14 @@ namespace Kipa_plus.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Tehtava'  is null.");
             }
             var Tehtava = await _context.Tehtava.FindAsync(id);
+            var rid = Tehtava.RastiId;
             if (Tehtava != null)
             {
                 _context.Tehtava.Remove(Tehtava);
             }
             
             await _context.SaveChangesAsync();
-            return Redirect("/Teht%C3%A4v%C3%A4/?RastiId=" + Tehtava.RastiId);
+            return Redirect("/Tehtava/?RastiId=" + rid);
         }
 
         private bool TehtavaExists(int? id)
