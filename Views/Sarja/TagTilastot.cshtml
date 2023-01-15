@@ -126,7 +126,10 @@
 
     $(document).ready(function () {
         $("#example").DataTable({
-            "pageLength": 25
+            "pageLength": 25,
+            language:{
+                url: '/datatable-lang-fi.json'
+            }
         });
     });
 
