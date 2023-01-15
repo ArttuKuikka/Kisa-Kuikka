@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics.Metrics;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace Kipa_plus.Controllers
 {
@@ -19,6 +23,24 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
+
+        [HttpGet("TagTilastot")]
+        public IActionResult TagTilastot(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var rastit = _context.Rasti.Where(r => r.SarjaId == id).ToList(); 
+            var skannaukset = _context.TagSkannaus.ToList();
+            var vartiot = _context.Vartio.Where(x => x.SarjaId == id).ToList();
+
+            return View(new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot});
+        }
+
+        
+
 
 
         [HttpGet("Details")]

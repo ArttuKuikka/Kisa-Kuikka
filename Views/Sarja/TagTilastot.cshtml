@@ -1,0 +1,100 @@
+﻿@using System.Data;
+@using System.Text;
+@model Kipa_plus.Models.TagTilastoModel;
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+
+<link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" />
+
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap4.min.js "></script>
+
+<div class="container">
+    <br />
+    <div style="width:90%; margin:0 auto;">
+        @{
+            var dt = new DataTable();
+
+            //dt.Columns.AddRange(new DataColumn[3] { new DataColumn("Id", typeof(int)),new DataColumn("Name", typeof(string)),new DataColumn("Country",typeof(string)) });
+            dt.Columns.Add("Vartio");
+            foreach(var item in Model.SarjanRastit)
+            {
+                dt.Columns.Add(item.Nimi);
+            }
+
+
+
+            StringBuilder sb = new StringBuilder();
+            //Table start.
+            sb.Append("<table id='example' cellspacing='0' width='100%' style='color: white;' class='table table-striped table-bordered dt-responsive nowrap'>");
+
+
+            sb.Append("<thead>");
+            //Adding HeaderRow.
+            sb.Append("<tr>");
+            foreach (DataColumn column in dt.Columns)
+            {
+                sb.Append("<th style='color: white;'>" + column.ColumnName + "</th>");
+            }
+            sb.Append("</tr>");
+            sb.Append("</thead>");
+
+            sb.Append("<tbody>");
+            //Adding DataRow.
+            //foreach (DataRow row in dt.Rows)
+            //{
+            //    sb.Append("<tr>");
+            //    foreach (DataColumn column in dt.Columns)
+            //    {
+            //        sb.Append("<td style='color: white;'>" + row[column.ColumnName].ToString() + "</td>");
+            //    }
+            //    sb.Append("</tr>");
+            //}
+            foreach (var vartio in Model.Vartio)
+            {
+                sb.Append("<tr>");
+                sb.Append("<td style='color: white;'>" + vartio.Nimi + "</td>");
+                foreach (DataColumn column in dt.Columns)
+                {
+                    if(column.ColumnName != "Vartio")
+                    {
+                        var rasti = Model.SarjanRastit.Where(x => x.Nimi == column.ColumnName); //skip 1
+                        var roska2 = Model.SarjanRastit;
+                        var roska = rasti.FirstOrDefault();
+                        Console.WriteLine(roska2.FirstOrDefault().Id);
+                        var ajat = Model.Skannaukset.Where(x => x.RastiId == rasti.FirstOrDefault().Id);
+                        sb.Append("<td style='color: white;'>" + ajat.Where(x => x.isTulo == true).Where(x => x.VartioId == vartio.Id).FirstOrDefault().TimeStamp.ToLocalTime().ToString("HH.mm.ss") + " - " + ajat.Where(x => x.isTulo == false).Where(x => x.VartioId == vartio.Id).FirstOrDefault().TimeStamp.ToLocalTime().ToString("HH.mm.ss") + "</td>");
+                    }
+                }
+                sb.Append("</tr>");
+            }
+            sb.Append("</tbody>");
+
+            //Table end.
+            sb.Append("</table>");
+            @Html.Raw(sb.ToString())
+            ;
+
+        }
+
+    </div>
+</div>
+
+
+
+
+<script>
+
+
+    $(document).ready(function () {
+        $("#example").DataTable();
+    });
+
+
+   
+
+</script>
+

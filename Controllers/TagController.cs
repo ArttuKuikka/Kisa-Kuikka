@@ -37,7 +37,7 @@ namespace Kipa_plus.Controllers
                     ViewBag.RastiId = tagSkannaus.RastiId;
                     if (tagSkannaus.TagSerial != null)
                     {
-                        tagSkannaus.TimeStamp = DateTime.Now.ToString();
+                        tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = false;
 
                         var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == tagSkannaus.TagSerial);
@@ -98,7 +98,7 @@ namespace Kipa_plus.Controllers
                     ViewBag.RastiId = tagSkannaus.RastiId;
                     if (tagSkannaus.TagSerial != null)
                     {
-                        tagSkannaus.TimeStamp = DateTime.Now.ToString();
+                        tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = true;
 
                         var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == tagSkannaus.TagSerial);
