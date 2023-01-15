@@ -1,5 +1,6 @@
 ﻿@using System.Data;
 @using System.Text;
+@using System.Linq;
 @model Kipa_plus.Models.TagTilastoModel;
 
 
@@ -20,6 +21,11 @@
 
             //dt.Columns.AddRange(new DataColumn[3] { new DataColumn("Id", typeof(int)),new DataColumn("Name", typeof(string)),new DataColumn("Country",typeof(string)) });
             dt.Columns.Add("Vartio");
+            if(Model.SarjanRastit == null)
+            {
+                @Html.DisplayText("Virhe ladatessa vartioita")
+                return;
+            }
             foreach(var item in Model.SarjanRastit)
             {
                 dt.Columns.Add(item.Nimi);
@@ -53,6 +59,16 @@
             //    }
             //    sb.Append("</tr>");
             //}
+            if(Model.Vartio == null)
+            {
+                @Html.DisplayText("Virhe ladatessa vartioita")
+                return;
+            }
+            if(Model.Skannaukset == null)
+            {
+                @Html.DisplayText("Virhe ladatessa Tag skannauksia")
+                return;
+            }
             foreach (var vartio in Model.Vartio)
             {
                 sb.Append("<tr>");
@@ -61,12 +77,35 @@
                 {
                     if(column.ColumnName != "Vartio")
                     {
-                        var rasti = Model.SarjanRastit.Where(x => x.Nimi == column.ColumnName); //skip 1
-                        var roska2 = Model.SarjanRastit;
-                        var roska = rasti.FirstOrDefault();
-                        Console.WriteLine(roska2.FirstOrDefault().Id);
+                        var rasti = Model.SarjanRastit.Where(x => x.Nimi == column.ColumnName); 
+                        
                         var ajat = Model.Skannaukset.Where(x => x.RastiId == rasti.FirstOrDefault().Id);
-                        sb.Append("<td style='color: white;'>" + ajat.Where(x => x.isTulo == true).Where(x => x.VartioId == vartio.Id).FirstOrDefault().TimeStamp.ToLocalTime().ToString("HH.mm.ss") + " - " + ajat.Where(x => x.isTulo == false).Where(x => x.VartioId == vartio.Id).FirstOrDefault().TimeStamp.ToLocalTime().ToString("HH.mm.ss") + "</td>");
+
+                        var tulo = ajat.Where(x => x.isTulo == true).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                        var lahto = ajat.Where(x => x.isTulo == false).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+
+                        
+
+                        if(tulo != null && lahto != null)
+                        {
+                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+                            
+                        }
+                        else if (tulo != null && lahto == null)
+                        {
+                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + "Ei dataa" + "</td>");
+                        }
+                        else if(tulo == null && lahto != null)
+                        {
+                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+                        }
+                        else
+                        {
+                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+                            
+                        }
+
+                        
                     }
                 }
                 sb.Append("</tr>");
