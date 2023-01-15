@@ -40,9 +40,9 @@ namespace Kipa_plus.Controllers
             return View(rasti);
         }
 
-        [HttpGet("Create")]
-        // GET: Rasti/Create
-        public IActionResult Create(int kisaId, int SarjaId)
+        [HttpGet("Luo")]
+        // GET: Rasti/Luo
+        public IActionResult Luo(int kisaId, int SarjaId)
         {
             // ViewBag.Rastit = _context.Rasti.ToList();
             ViewBag.Sarjat = _context.Sarja.ToList();
@@ -51,12 +51,12 @@ namespace Kipa_plus.Controllers
             return View(new Rasti() { KisaId = kisaId, SarjaId = SarjaId});
         }
 
-        // POST: Rasti/Create
+        // POST: Rasti/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Create")]
+        [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> Luo([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
         {
             if (ModelState.IsValid)
             {

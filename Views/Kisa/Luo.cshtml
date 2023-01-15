@@ -1,16 +1,16 @@
 ﻿@model Kipa_plus.Models.Kisa
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Luo";
 }
 
-<h1>Create</h1>
+<h1>Luo</h1>
 
 <h4>Kisa</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Luo">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nimi" class="control-label"></label>
@@ -18,14 +18,14 @@
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Luo" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+   
 </div>
 
 @section Scripts {

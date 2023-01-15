@@ -93,8 +93,8 @@ namespace Kipa_plus.Controllers
 
         
 
-        // GET: Tehtava/Create
-        public IActionResult Create(int KisaId, int SarjaId, int RastiId)
+        // GET: Tehtava/Luo
+        public IActionResult Luo(int KisaId, int SarjaId, int RastiId)
         {
 
             ViewBag.Sarjat = _context.Sarja.Where(x => x.KisaId == KisaId).ToList(); //check että mihkä on oikeudet //ottaa defaulttina kaikki kisan sarjat ja rastit mutta jos ei saa id:tä querystä niin fallback siihen että ei mitään ja tulee valitun kisan perusteel (TAI mihkä oikeudet)
@@ -103,12 +103,12 @@ namespace Kipa_plus.Controllers
             return View(new Tehtava() { KisaId = KisaId, SarjaId = SarjaId, RastiId = RastiId});
         }
 
-        // POST: Tehtava/Create
+        // POST: Tehtava/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,SarjaId,KisaId,RastiId,Nimi,Tarkistettu,TehtavaJson")] Tehtava Tehtava)
+        public async Task<IActionResult> Luo([Bind("Id,SarjaId,KisaId,RastiId,Nimi,Tarkistettu,TehtavaJson")] Tehtava Tehtava)
         {
             if (ModelState.IsValid)
             {

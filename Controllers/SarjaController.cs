@@ -76,7 +76,7 @@ namespace Kipa_plus.Controllers
             return View(sarja);
         }
 
-        // GET: Sarja/Create
+        // GET: Sarja/Luo
         [HttpGet("Luo")]
         public IActionResult Luo(int kisaId)
         {
@@ -86,7 +86,7 @@ namespace Kipa_plus.Controllers
             return View(new Sarja() { KisaId = kisaId });
         }
 
-        // POST: Sarja/Create
+        // POST: Sarja/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]

@@ -69,20 +69,20 @@ namespace Kipa_plus.Controllers
 
         }
 
-        // GET: Vartio/Create
-        public IActionResult Create(int kisaId, int SarjaId)
+        // GET: Vartio/Luo
+        public IActionResult Luo(int kisaId, int SarjaId)
         {
             ViewBag.Sarjat = _context.Sarja.Where(k => k.KisaId== kisaId).ToList();
             ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
             return View(new Vartio() { KisaId = kisaId, SarjaId = SarjaId});
         }
 
-        // POST: Vartio/Create
+        // POST: Vartio/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Luo([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,Tilanne")] Vartio vartio)
         {
             
             if (ModelState.IsValid)
