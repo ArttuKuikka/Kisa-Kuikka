@@ -28,9 +28,17 @@
             <td>
                <h3>@item.Nimi</h3>
                     @{
-                            var sarjat = (List<Sarja>)ViewBag.Sarjat;
-                            var nimet = sarjat.Where(x => x.Id == item.SarjaId);
-                            var nimi = nimet.FirstOrDefault().Nimi;
+                        var sarjat = (List<Sarja>)ViewBag.Sarjat;
+                        var nimet = sarjat.Where(x => x.Id == item.SarjaId);
+                        var nimi = "";
+                        if(nimet != null)
+                        {
+                            nimi = nimet.FirstOrDefault().Nimi;
+                        }
+                        else
+                        {
+                            nimi = item.SarjaId.ToString();
+                        }
 
                         }
                         <h5>@nimi</h5>
