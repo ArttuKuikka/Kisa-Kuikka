@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Tehtava>
+@using Kipa_plus.Models;
 
 @{
     ViewData["Title"] = "Rastin Tehtavapohjat";
@@ -14,34 +15,25 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SarjaId)
+                Nimi ja sarja
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.KisaId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.RastiId)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nimi)
-            </th>
+           <th></th>
            
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            
             <td>
-                @Html.DisplayFor(modelItem => item.SarjaId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.KisaId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.RastiId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nimi)
+               <h3>@item.Nimi</h3>
+                    @{
+                            var sarjat = (List<Sarja>)ViewBag.Sarjat;
+                            var nimet = sarjat.Where(x => x.Id == item.SarjaId);
+                            var nimi = nimet.FirstOrDefault().Nimi;
+
+                        }
+                        <h5>@nimi</h5>
             </td>
            
             <td>

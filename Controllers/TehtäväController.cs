@@ -32,6 +32,7 @@ namespace Kipa_plus.Controllers
             var Tehtava = _context.Tehtava.Where(k => k.RastiId == RastiId);
             ViewBag.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
             ViewBag.RastiId = RastiId;
+            ViewBag.Sarjat = _context.Sarja.ToList();
             return View(Tehtava);
         }
 
