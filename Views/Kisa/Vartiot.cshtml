@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Vartio>
+@using Kipa_plus.Models;
 
 @{
     ViewData["Title"] = "Vartiot";
@@ -15,6 +16,9 @@
             <th>
                 Nimi, numero ja lippukunta
             </th>
+            <th>
+                Sarja ja lippukunta
+            </th>
            
            
            
@@ -28,6 +32,20 @@
                 <td>
                     <h3>@item.Nimi</h3>
                     <h5>@item.Numero</h5>
+                    
+                </td>
+                <td>
+                    @{
+                        var nimi = "";
+                        List<Sarja> lista = ViewBag.Sarjat;
+                        var items = lista.Where(x => x.Id == item.SarjaId);
+                        if(items != null)
+                        {
+                            var sarja = items.FirstOrDefault();
+                            nimi = sarja.Nimi;
+                        }
+                    }
+                    <h5>@nimi</h5>
                     <h5>@item.Lippukunta</h5>
                 </td>
                 

@@ -204,6 +204,7 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
             ViewBag.KisaId = kisaId;
+            ViewBag.Sarjat = _context.Sarja.Where(x=> x.KisaId == kisaId).ToList();
             return View(vartiot);
         }
 
