@@ -54,6 +54,7 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
+           
 
             var vartio = await _context.Vartio.FindAsync(liitaTagModel.VartioId);
             if (vartio == null)
@@ -66,6 +67,37 @@ namespace Kipa_plus.Controllers
             _context.SaveChanges();
 
             return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+
+        }
+
+        public IActionResult KenenTag()
+        {
+            return View("KenenTag");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult KenenTag([Bind("TagSerial")] KenenTagModel kenenTagModel)
+        {
+
+            if (_context.Vartio == null)
+            {
+                return View("KenenTagTulos");
+            }
+
+            var vartio = _context.Vartio.Where(x => x.TagSerial == kenenTagModel.TagSerial);
+            if (vartio == null)
+            {
+                return View("KenenTagTulos");
+            }
+            if(vartio.FirstOrDefault() == null)
+            {
+                return View("KenenTagTulos");
+            }
+
+            
+
+            return View("KenenTagTulos", vartio.FirstOrDefault());
 
         }
 

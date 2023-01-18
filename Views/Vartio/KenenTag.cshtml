@@ -1,0 +1,67 @@
+﻿@using Kipa_plus.Models;
+@model KenenTagModel
+@{
+    ViewData["Title"] = "Kenen Tag";
+}
+
+
+<h1>Kenen Tag</h1>
+
+<h4>Vartio</h4>
+<hr />
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="KenenTag">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label class="control-label">Tag Serial</label>
+                <input asp-for="TagSerial" id="SerialInput" class="form-control" />
+                <input type="button" class="btn btn-light" id="StartScan" value="Aloita skannaus" />
+                <span asp-validation-for="TagSerial" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Lähetä" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+</div>
+
+<script>
+
+    document.getElementById('StartScan').addEventListener("click", async () => {
+
+
+        try {
+            const ndef = new NDEFReader();
+            await ndef.scan();
+            console.log("> Scan started");
+
+            ndef.addEventListener("readingerror", () => {
+                alert("Virhe lukiessa Tagia, yritä uudelleen");
+            });
+
+            ndef.addEventListener("reading", ({ message, serialNumber }) => {
+                document.getElementById('SerialInput').value = serialNumber.toString();
+            });
+        } catch (error) {
+            alert("Virhe aloittessa NFC lukua, kai käytät chromea androidilla ja annoit sivustolle luvan käyttää NFC sensoria");
+        }
+    });
+
+
+
+
+
+</script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

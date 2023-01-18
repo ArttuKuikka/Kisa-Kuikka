@@ -1,0 +1,14 @@
+﻿@using Kipa_plus.Models;
+@model Vartio;
+
+@if(Model != null)
+{
+    <h1>Nimi: @Model.Nimi</h1>
+    <h1>Numero: @Model.Numero</h1>
+    <h1>Lippukunta: @Model.Lippukunta</h1>
+    <h1>SarjaId: @Model.SarjaId</h1>
+}
+else
+{
+    <h1>Tag ei löytynyt tietokannasta</h1>
+}
