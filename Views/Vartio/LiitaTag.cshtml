@@ -11,7 +11,7 @@
 <p class="text-danger">HUOM! jos vartiolle on jo liitetty tägi, tämän uudelleenkirjoittaa sen</p>
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="LiitaTag">
+        <form asp-action="LiitaTag" id="LiitaTagForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="col-md-10" style="max-width:500px">
                 <label class="control-label">Vartio</label>
@@ -27,7 +27,7 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Lisää tag" class="btn btn-primary" />
+                <input type="button" id="ValmisButton" value="Lisää tag" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -38,6 +38,14 @@
 </div>
 
 <script>
+
+    document.getElementById("ValmisButton").addEventListener("click", async () => {
+
+
+
+
+    })
+
 
     document.getElementById('StartScan').addEventListener("click", async () => {
   

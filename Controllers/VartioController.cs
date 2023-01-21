@@ -54,7 +54,14 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-           
+            var poistettavat = _context.Vartio.Where(x => x.TagSerial == liitaTagModel.TagSerial);
+           if (poistettavat != null)
+            {
+                foreach(var item in poistettavat)
+                {
+                    item.TagSerial = null;
+                }
+            }
 
             var vartio = await _context.Vartio.FindAsync(liitaTagModel.VartioId);
             if (vartio == null)
@@ -67,6 +74,30 @@ namespace Kipa_plus.Controllers
             _context.SaveChanges();
 
             return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult OnkoTagLiitetty([FromForm] string TagSerial)
+        {
+
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+            var vartiot = _context.Vartio.Where(x => x.TagSerial == TagSerial);
+            var vartio = vartiot.FirstOrDefault();
+            if (vartio == null)
+            {
+                return Ok("Ei ole");
+            }
+            else
+            {
+                return Ok(vartio.Nimi);
+            }
+
+           
 
         }
 
