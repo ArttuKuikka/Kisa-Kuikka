@@ -34,6 +34,11 @@ services:
         - KipaNet
     environment:
       TZ: "Europe/Helsinki"
+      DB_HOST: "db"
+      DB_PORT: "1433"
+      DB_NAME: "KipaPlus"
+      DB_USER: "sa"
+      DB_USER_PASSWORD: "S3cur3P@ssW0rd!"
     volumes:
         - type: volume
           source: UploadFiles
