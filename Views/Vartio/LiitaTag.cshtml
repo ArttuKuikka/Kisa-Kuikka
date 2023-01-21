@@ -24,6 +24,7 @@
                 <input asp-for="TagSerial" id="SerialInput" class="form-control" />
                 <input type="button" class="btn btn-light" id="StartScan" value="Aloita skannaus" />
                 <span asp-validation-for="TagSerial" class="text-danger"></span>
+                <span hidden="hidden" id="Varoitus" class="text-danger"></span>
             </div>
             <br />
             <div class="form-group">
@@ -38,10 +39,44 @@
 </div>
 
 <script>
+    var varmistettu = false;
 
     document.getElementById("ValmisButton").addEventListener("click", async () => {
 
+        formi = document.getElementById("LiitaTagForm");
+        document.getElementById("SerialInput").readOnly = true;
 
+        let formdata = new FormData();
+        
+        var resp = "";
+        formdata.append("TagSerial", document.getElementById("SerialInput").value)
+
+        var post = await fetch('/Vartio/OnkoTagLiitetty', {
+            method: 'POST',
+
+
+            body: formdata
+        });
+        resp = await post.text();
+            
+
+        if(resp == "Ei ole"){
+            //submit
+            formi.submit();
+        }
+        else{
+           if(varmistettu == false){
+                var varoitus = document.getElementById("Varoitus");
+            varoitus.hidden = false;
+            varoitus.textContent = "Tag on liittetty vartioon '" + resp + "' Jos haluat jatkaa paina lisää tag uudelleen (HUOM! tämä poistaa tagin vartiosta jossa se on jo)";
+            varmistettu = true;
+           }
+           else{
+               //submit
+
+               formi.submit();
+           }
+        }
 
 
     })

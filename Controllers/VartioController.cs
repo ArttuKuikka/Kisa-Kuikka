@@ -78,9 +78,10 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public IActionResult OnkoTagLiitetty([FromForm] string TagSerial)
         {
+            
 
             if (_context.Vartio == null)
             {
@@ -94,7 +95,7 @@ namespace Kipa_plus.Controllers
             }
             else
             {
-                return Ok(vartio.Nimi);
+                return Ok(vartio.NumeroJaNimi);
             }
 
            
