@@ -36,8 +36,33 @@ namespace Kipa_plus.Controllers
             return View(Tehtava);
         }
 
-       //GET: Tayta
-       public async Task<IActionResult> Tayta(int? TehtavaId)
+        public IActionResult Vastaukset(int? TehtavaId)
+        {
+            if(TehtavaId == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Vartiot = _context.Vartio.ToList();
+            var tehtavat = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId);
+            return View(tehtavat);
+        }
+
+        public IActionResult Nayta(int? TehtavaVastausId)
+        {
+            if (TehtavaVastausId == null)
+            {
+                return NotFound();
+            }
+
+            
+            var tehtava = _context.TehtavaVastaus.Where(x => x.Id == TehtavaVastausId).FirstOrDefault();
+            ViewBag.VartioNimi = _context.Vartio.Where(x => x.Id == tehtava.VartioId).FirstOrDefault().Nimi;
+            return View(tehtava);
+        }
+
+        //GET: Tayta
+        public async Task<IActionResult> Tayta(int? TehtavaId)
         {
             if (TehtavaId == null || _context.Tehtava == null)
             {

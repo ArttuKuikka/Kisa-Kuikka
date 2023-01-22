@@ -5,7 +5,7 @@
     ViewData["Title"] = "Rastin Tehtavapohjat";
 }
 
-<h1>Rastin Tehtavat</h1>
+<h1>Rastin Tehtävät</h1>
 
 <p>
     
@@ -46,6 +46,7 @@
            
             <td>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id';">Täytä</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Vastaukset?TehtavaId=@item.Id';">Vastaukset</button>
                 <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Edit?id=@item.Id';">Muokkaa</button>
                     <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id';">Poista</button>
             </td>
