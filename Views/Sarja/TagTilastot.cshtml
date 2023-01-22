@@ -14,10 +14,12 @@
 <div class="container" style="overflow-x: scroll">
     <br />
     
+   
+    
     <div style="width:100%; margin:0 auto;">
         @{
             var dt = new DataTable();
-
+            
             
             dt.Columns.Add("Vartio");
             if(Model.SarjanRastit == null)
@@ -79,16 +81,16 @@
 
                         if(tulo != null && lahto != null)
                         {
-                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString("HH.mm") + " - " + lahto.TimeStamp.ToString("HH.mm") + "</td>");
+                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
                             
                         }
                         else if (tulo != null && lahto == null)
                         {
-                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString("HH.mm") + " - " + "Ei dataa" + "</td>");
+                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Ei dataa" + "</td>");
                         }
                         else if(tulo == null && lahto != null)
                         {
-                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToString("HH.mm") + "</td>");
+                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
                         }
                         else
                         {
@@ -118,6 +120,16 @@
 <br />
 <input type="button" value="Näytä raakaversio" class="btn btn-light" onclick="location.href='TagTilastot/Raw?id=@Model.id'" />
 
+<select name="aikaformaatit" id="dateformatselect" class="form-control" style="max-width:200px;">
+    <option value="0">Valitse aikaformaatti</option>
+    <option value="1">tunnin.minuutit (oletus)</option>
+    <option value="2">päiva.kuukausi.vuosi tunnin.minuutit</option>
+    <option value="3">päiva.kuukausi tunnin.minuutit</option>
+    <option value="4">päiva tunnin.minuutit</option>
+</select>
+
+
+
 
 
 
@@ -132,6 +144,14 @@
             }
         });
     });
+
+    document.getElementById("dateformatselect").addEventListener("change", () => {
+        var val = document.getElementById("dateformatselect").value;
+        document.cookie = "datetimeformat=" + val;
+        location.reload();
+    })
+
+   
 
 
    
