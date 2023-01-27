@@ -58,8 +58,16 @@ namespace Kipa_plus.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Luo([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
         {
+            ViewBag.Sarjat = _context.Sarja.ToList();
+            ViewBag.Kisat = _context.Kisa.ToList();
             if (ModelState.IsValid)
             {
+                if(_context.Rasti.Where(x => x.Nimi== rasti.Nimi).Where(x=> x.KisaId == rasti.KisaId).Any())
+                {
+                    ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
+                    return View(rasti);
+                }
+
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
                 return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");

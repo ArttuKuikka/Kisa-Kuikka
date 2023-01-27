@@ -27,6 +27,10 @@
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
+            @if(ViewBag.Error != null)
+            {
+                <span class="text-danger">@ViewBag.Error</span>
+            }
             <!---
             <div class="form-group">
                 <label asp-for="OhjeId" class="control-label"></label>
