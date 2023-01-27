@@ -80,7 +80,19 @@ window.fbControls.push(function media(controlClass) {
 
           });
 
-            
+            console.log(this);
+
+            try {
+                var userDataAika = this.config.userData[0];
+                
+
+                picker.setDate(new Date(userDataAika));
+                dateTimePicker.value = picker.getDate();
+                this.div.value = picker.getDate();
+            }
+            catch (err) {
+                console.log(err);
+            }
       
         }
     }
