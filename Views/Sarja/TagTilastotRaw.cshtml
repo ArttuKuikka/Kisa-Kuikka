@@ -34,7 +34,7 @@
             foreach (var item in Model.SarjanRastit)
             {
 
-                dt.Columns.Add(item.Nimi + " " + item.Id);
+                dt.Columns.Add(item.Nimi);
             }
 
 
@@ -69,12 +69,12 @@
             foreach (var vartio in Model.Vartio)
             {
                 sb.Append("<tr>");
-                sb.Append("<td>" + vartio.Numero + " " + vartio.Nimi + "</td>");
+                sb.Append("<td style='color: black;'>" + vartio.Numero + " " + vartio.Nimi + " " + Model.Sarja.Where(x => x.Id == vartio.SarjaId).FirstOrDefault().Nimi+ "-sarja" + "</td>");
                 foreach (DataColumn column in dt.Columns)
                 {
                     if (column.ColumnName != "Vartio")
                     {
-                        var rasti = Model.SarjanRastit.Where(x => x.Nimi + " " + x.Id == column.ColumnName);
+                        var rasti = Model.SarjanRastit.Where(x => x.Nimi.ToString() == column.ColumnName);
 
                         var ajat = Model.Skannaukset.Where(x => x.RastiId == rasti.FirstOrDefault().Id);
 

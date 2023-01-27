@@ -8,5 +8,6 @@
         public List<Vartio>? Vartio { get; set;}
         public int id { get; set; }
         public string? DateTimeFormat { get; set; }
+        public List<Sarja>? Sarja { get; set;}
     }
 }

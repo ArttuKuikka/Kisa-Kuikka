@@ -69,7 +69,7 @@ namespace Kipa_plus.Controllers
                 }
             }
 
-            return View("TagTilastot", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat });
+            return View("TagTilastot", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
         }
 
         [HttpGet("TagTilastot/Raw")]
@@ -116,7 +116,7 @@ namespace Kipa_plus.Controllers
                 }
             }
 
-            return View("TagTilastotRaw",new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat });
+            return View("TagTilastotRaw",new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
         }
 
 
