@@ -20,6 +20,8 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+        
+
         // GET: Kisa
         [HttpGet("{kisaId:int}/")]
         public async Task<IActionResult> Index(int kisaId)

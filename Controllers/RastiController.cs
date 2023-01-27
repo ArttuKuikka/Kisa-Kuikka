@@ -44,11 +44,10 @@ namespace Kipa_plus.Controllers
         // GET: Rasti/Luo
         public IActionResult Luo(int kisaId, int SarjaId)
         {
-            // ViewBag.Rastit = _context.Rasti.ToList();
-            ViewBag.Sarjat = _context.Sarja.ToList();
+            
             ViewBag.Kisat = _context.Kisa.ToList();
 
-            return View(new Rasti() { KisaId = kisaId, SarjaId = SarjaId});
+            return View(new Rasti() { KisaId = kisaId });
         }
 
         // POST: Rasti/Luo
