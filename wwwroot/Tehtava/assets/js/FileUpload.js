@@ -35,8 +35,8 @@ window.fbControls.push(function media(controlClass) {
          */
         build() {
 
-            this.fileinput = this.markup('input', null, { type: 'file', class: 'form-control ', title: 'Lataa tiedosto' });
-            this.form = this.markup('form', this.fileinput, { method: 'post', enctype: 'multipart/form-data', action:'/Tiedosto/Post'})
+            this.fileinput = this.markup('input', null, { type: 'file', class: 'form-control', title: 'Lataa tiedosto' });
+            this.form = this.markup('form', [this.fileinput], { method: 'post', enctype: 'multipart/form-data', action:'/Tiedosto/Post', class:'form'})
             this.statustext = this.markup('p', 'odotetaan tiedostoa')
             this.div = this.markup('div', [this.form, this.statustext]);
             return this.div;
@@ -48,25 +48,32 @@ window.fbControls.push(function media(controlClass) {
          * onRender callback
          */
         onRender() {
-            this.fileinput.addEventListener('change', () => {
+            this.fileinput.addEventListener('change', async () => {
                 try {
                     this.statustext.innerHTML = 'Tiedostoa ladataan palvelimelle'
-                    
+                    var resp = null;
+
                     let formData = new FormData();
                     var file = this.fileinput.files[0];
                     formData.append('File', file)
-                    fetch('/Tiedosto/Post', {
+                    var fetch = await fetch('/Tiedosto/Post', {
                         method: 'POST',
 
 
                         body: formData
                     })
-                        .then(response => response.json())
-                        .then(response => this.div.value = JSON.stringify(response))
+                    resp = await fetch.text();
 
+                    this.div.value = resp;
 
+                    console.log(resp);
                    
-                    this.statustext.innerHTML = 'Ladattu'
+                    if (resp == null) {
+                        throw new Error("resp oli null");
+                    }
+                    else {
+                        this.statustext.innerHTML = 'Ladattu'
+                    }
                 }
                 catch (error) {
                     this.statustext.innerHTML = 'Virhe ladatessa tiedostoa'
@@ -74,7 +81,18 @@ window.fbControls.push(function media(controlClass) {
             });
             
 
+            try {
+                var userData = this.config.userData[0];
 
+                var text = this.markup('a', 'Lataa tiedosto', {href: '/Tiedosto/Get?id=' + userData})
+
+                this.div.value = this.markup('div', [text]);
+                
+
+            }
+            catch (err) {
+                console.log("Ei dataa FileUpload elementillä");
+            }
 
             
 
