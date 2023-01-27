@@ -20,7 +20,17 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
-        
+        [HttpGet("{kisaId:int}/Lataukset")]
+        public async Task<IActionResult> Lataukset(int kisaId)
+        {
+            if (kisaId == null || _context.Kisa == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(kisaId);
+        }
 
         // GET: Kisa
         [HttpGet("{kisaId:int}/")]
