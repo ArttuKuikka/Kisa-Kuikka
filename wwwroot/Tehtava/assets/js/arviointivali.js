@@ -48,12 +48,20 @@ window.fbControls.push(function media(controlClass) {
         build() {
             const { ...attrs } = this.config;
             var btnarray = [];
+            
             for (let i = attrs.min; i < attrs.max + 1; i++) {
-                var btn = this.markup('button', i.toString(), {id: 'arviontivalibtn-' + i.toString(), class: 'btn-primary btn', type: 'button', style: 'default', value: 88 });
+                var btn = this.markup('button', i.toString(), {id: 'arviontivalibtn-' + i.toString(), class: 'btn-primary btn', type: 'button', style: 'default' });
                 btnarray.push(btn);
             };
             this.btnarray = btnarray;
-            this.div = this.markup('div', btnarray,);
+            var btndiv = this.markup('div', btnarray)
+
+            var items = []
+            items.push(btndiv);
+            this.statustext = this.markup('span', 'Ei valittu')
+            items.push(this.statustext);
+
+            this.div = this.markup('div', items,);
             return this.div;
 
         }
@@ -69,11 +77,21 @@ window.fbControls.push(function media(controlClass) {
                 btn.addEventListener('click', () => {
                     //console.log('click on ' + (i + 1).toString());
                      
-                     this.div.value = (i + 1).toString();
+                    this.div.value = (i + 1).toString();
+                    this.statustext.textContent = "Valittu: " + (i + 1).toString();
                 });
             }
            
-            
+            try {
+                var userData = this.config.userData[0];
+
+                this.div.value = userData;
+                this.statustext.textContent = "Valittu: " + userData.toString();
+                
+            }
+            catch (err) {
+                console.log("Ei dataa arvionintivali elementillä");
+            }
       
         }
     }

@@ -80,7 +80,7 @@ window.fbControls.push(function media(controlClass) {
 
           });
 
-            console.log(this);
+            
 
             try {
                 var userDataAika = this.config.userData[0];
@@ -91,7 +91,7 @@ window.fbControls.push(function media(controlClass) {
                 this.div.value = picker.getDate();
             }
             catch (err) {
-                console.log(err);
+                console.log("Ei dataa currentTime elementillä");
             }
       
         }
