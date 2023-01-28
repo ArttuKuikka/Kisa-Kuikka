@@ -196,6 +196,14 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
+
+                var poista = _context.TehtavaVastaus.Where(x => x.TehtavaId == Tehtava.Id);
+                foreach(var item in poista)
+                {
+                    _context.TehtavaVastaus.Remove(item);
+                }
+                await _context.SaveChangesAsync();
+
                 return Redirect("/Tehtava/?RastiId=" + Tehtava.RastiId);
             }
             return View(Tehtava);
