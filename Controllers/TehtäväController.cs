@@ -196,7 +196,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return Redirect("/Teht%C3%A4v%C3%A4/?RastiId=" + Tehtava.RastiId);
+                return Redirect("/Tehtava/?RastiId=" + Tehtava.RastiId);
             }
             return View(Tehtava);
         }
