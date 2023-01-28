@@ -1,4 +1,5 @@
 ﻿using Kipa_plus.Data;
+using Kipa_plus.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using NPOI.HSSF.UserModel;
@@ -116,41 +117,35 @@ namespace Kipa_plus.Controllers
                     IRow VartioDataRow = sheet.CreateRow(VartioDataRowlastindex);
                     VartioDataRow.CreateCell(0).SetCellValue(vartio.Numero.ToString() + " " + vartio.Nimi);
                     var rowindex = 1;
-                    foreach (var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
-                    {
-                        if(vastaus.TehtavaJson == null)
-                        {
-                            continue;
-                        }
-                        foreach(var item in JArray.Parse(vastaus.TehtavaJson))
-                        {
-                            var cell = VartioDataRow.CreateCell(rowindex);
-                            var data = item["userData"];
-                            if(data != null)
-                            {
-                                var data0 = data[0];
-                                if (data0 != null)
-                                {
-                                    switch (item["type"].ToString()){
-                                        case "currentTime":
-                                            cell.SetCellValue(DateTime.Parse(data0.ToString()));
-                                            break;
-                                        case "fileUpload":
-                                            cell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
-                                            break;
-                                        default:
-                                            cell.SetCellValue(data0.ToString());
-                                            break;
 
-                                    }
-                                      
-                                    
+
+                    var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).ToList();
+
+                    foreach(var tehtävä in SarjanTehtävätrastisssa)
+                    {
+
+                        var tehtäväpohjat = JArray.Parse(tehtävä.TehtavaJson);
+
+                        var tehtindex = 0;
+                        foreach(var teht in tehtäväpohjat)
+                        {
+                            var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                            if (vast != null)
+                            {
+
+                                var data = JArray.Parse(vast.TehtavaJson)[tehtindex]["userData"];
+                                if(data != null)
+                                {
+                                    VartioDataRow.CreateCell(rowindex).SetCellValue(data[0].ToString());
                                 }
+                                
                             }
                             
-
                             rowindex++;
+                            tehtindex++;
                         }
+
+
                     }
 
                     VartioDataRowlastindex++;
