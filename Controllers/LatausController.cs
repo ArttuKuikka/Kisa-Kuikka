@@ -67,7 +67,7 @@ namespace Kipa_plus.Controllers
                         var TehtäväNimiHeaderPituus = 0;
 
 
-                        var tehtäväpohjat = JArray.Parse(item.TehtavaJson); //ota vaan ne joihin voi inputtaa
+                        var tehtäväpohjat = JArray.Parse(item.TehtavaJson); 
 
                         foreach(var tehtava in tehtäväpohjat)
                         {
@@ -109,6 +109,7 @@ namespace Kipa_plus.Controllers
 
                 }
 
+                //aseta kaikki userData riveiihin
                 var VartioDataRowlastindex = 3;
                 foreach(var vartio in _context.Vartio.Where(x => x.SarjaId == sarja.Id))
                 {
