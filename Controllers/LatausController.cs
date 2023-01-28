@@ -131,7 +131,20 @@ namespace Kipa_plus.Controllers
                                 var data0 = data[0];
                                 if (data0 != null)
                                 {
-                                    cell.SetCellValue(data0.ToString());
+                                    switch (item["type"].ToString()){
+                                        case "currentTime":
+                                            cell.SetCellValue(DateTime.Parse(data0.ToString()));
+                                            break;
+                                        case "fileUpload":
+                                            cell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
+                                            break;
+                                        default:
+                                            cell.SetCellValue(data0.ToString());
+                                            break;
+
+                                    }
+                                      
+                                    
                                 }
                             }
                             
