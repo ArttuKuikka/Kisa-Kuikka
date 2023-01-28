@@ -134,6 +134,11 @@ namespace Kipa_plus.Controllers
 
                     foreach(var tehtävä in SarjanTehtävätrastisssa)
                     {
+                        if(tehtävä.TehtavaJson == null)
+                        {
+                            continue;
+                        }
+
                         //tehtäväpohjan json tiedosto(ei sisällä vastauksia)
                         var tehtäväpohja = JArray.Parse(tehtävä.TehtavaJson);
 
