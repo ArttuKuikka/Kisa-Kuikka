@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
+using NPOI.OpenXmlFormats.Wordprocessing;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
+using System.IO;
 
 namespace Kipa_plus.Controllers
 {
@@ -72,7 +74,14 @@ namespace Kipa_plus.Controllers
                             TehtäväNimiHeaderPituus++;
 
                             var formitemname = FormItemRow.CreateCell(FormItemRowlastindex);
-                            formitemname.SetCellValue(tehtava["label"].ToString());
+
+                            var label = tehtava["label"];
+                            if (label != null)
+                            {
+                                formitemname.SetCellValue(label.ToString());
+                            }
+                            
+                            
                             FormItemRowlastindex++;
                         }
 
@@ -99,17 +108,25 @@ namespace Kipa_plus.Controllers
                 foreach(var vartio in _context.Vartio.Where(x => x.SarjaId == sarja.Id))
                 {
                     IRow VartioDataRow = sheet.CreateRow(VartioDataRowlastindex);
-                    VartioDataRow.CreateCell(0).SetCellValue(vartio.Nimi);
+                    VartioDataRow.CreateCell(0).SetCellValue(vartio.Numero.ToString() + " " + vartio.Nimi);
                     var rowindex = 1;
                     foreach (var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
                     {
+                        if(vastaus.TehtavaJson == null)
+                        {
+                            continue;
+                        }
                         foreach(var item in JArray.Parse(vastaus.TehtavaJson))
                         {
                             var cell = VartioDataRow.CreateCell(rowindex);
-                            var data = item["userData"][0];
+                            var data = item["userData"];
                             if(data != null)
                             {
-                                cell.SetCellValue(data.ToString());
+                                var data0 = data[0];
+                                if (data0 != null)
+                                {
+                                    cell.SetCellValue(data0.ToString());
+                                }
                             }
                             
 
@@ -124,13 +141,24 @@ namespace Kipa_plus.Controllers
 
             }
 
-            using (var fs = new FileStream("test.xlsx", FileMode.Create, FileAccess.Write))
+            
+
+            using (var fs = new FileStream("output.xlsx", FileMode.Create, FileAccess.Write))
             {
                 workbook.Write(fs);
             }
 
 
-            return Ok("OK");
+            return File(System.IO.File.ReadAllBytes("output.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Kisa.Nimi + "-Export.xlsx");
+
+
+
+
+
+
+
+
+
         }
 
         
