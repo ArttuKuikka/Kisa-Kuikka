@@ -42,6 +42,7 @@ namespace Kipa_plus.Controllers
             ICellStyle centertext = workbook.CreateCellStyle();
             centertext.Alignment = HorizontalAlignment.Center;
 
+            //etsi kisan sarjat ja luo jokaiselle oma sivu työkirjassa
             foreach (var sarja in Sarjat)
             {
                 ISheet sheet = workbook.CreateSheet(sarja.Nimi);
@@ -50,12 +51,15 @@ namespace Kipa_plus.Controllers
                 //etsi joka rasti ja laske niiden kaikkien tehtävien formitemeiden määrä ja laita se rastin headerin pituudeksi
                 IRow RastinNimetRow = sheet.CreateRow(0);
                 IRow RastinTehtävätRow = sheet.CreateRow(1);
-                IRow FormItemRow = sheet.CreateRow(2);
+                IRow FormItemRow = sheet.CreateRow(2); //rivi jossa jokaisen asian joka on lisäty form builderissa, nimi
                 var lastindex = 1;
                 var RastinTehtävätRowlastindex = 1;
                 var FormItemRowlastindex = 1;
+
+                //etsi joka rasti kisasta
                 foreach (var rasti in _context.Rasti.Where(x => x.KisaId == Kisa.Id))
                 {
+                    //hae kaikki rastin tehtäväpohjat
                     var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).ToList();
                     int rastinpituus = 0;
 
@@ -68,15 +72,19 @@ namespace Kipa_plus.Controllers
                         }
                         var TehtäväNimiHeaderPituus = 0;
 
-
+                        //tehtäväpohjan json tiedosto(ei sisällä vastauksia)
                         var tehtäväpohjat = JArray.Parse(item.TehtavaJson); 
 
+                        //käy läpi jokainen form item lisäten niiden pitudet otsikoita varten 
                         foreach(var tehtava in tehtäväpohjat)
                         {
+                            //lisää pituudet
                             rastinpituus++;
                             TehtäväNimiHeaderPituus++;
                             kokosheetpituus++;
 
+
+                            //luo cell missä lukee form item nimi
                             var formitemname = FormItemRow.CreateCell(FormItemRowlastindex);
 
                             var label = tehtava["label"];
@@ -98,6 +106,7 @@ namespace Kipa_plus.Controllers
 
                     }
 
+                    //lisää rasti vain jossa siinä on 1 tai enemmän tehtävää
                     if(SarjanTehtävätrastisssa.Count >= 1)
                     {
                         sheet.AddMergedRegion(new CellRangeAddress(0, 0, lastindex, lastindex + rastinpituus - 1));
@@ -115,34 +124,42 @@ namespace Kipa_plus.Controllers
                 var VartioDataRowlastindex = 3;
                 foreach(var vartio in _context.Vartio.Where(x => x.SarjaId == sarja.Id))
                 {
+                    //luo joka vartiolle oma rivi jossa vartion nimi
                     IRow VartioDataRow = sheet.CreateRow(VartioDataRowlastindex);
                     VartioDataRow.CreateCell(0).SetCellValue(vartio.Numero.ToString() + " " + vartio.Nimi);
                     var rowindex = 1;
 
-
+                    //hae kaikki sarjan tehtäväpohjat että kaikkien vastausten paikat olisi oikeat
                     var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).ToList();
 
                     foreach(var tehtävä in SarjanTehtävätrastisssa)
                     {
+                        //tehtäväpohjan json tiedosto(ei sisällä vastauksia)
+                        var tehtäväpohja = JArray.Parse(tehtävä.TehtavaJson);
 
-                        var tehtäväpohjat = JArray.Parse(tehtävä.TehtavaJson);
+                        //hanki kaikki tehtäväpohjan vastaukset
+                        var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
 
+                        //aseta tehtäväindex että voi käydä läpi tehtäväpohjaa ja vastausta samassa tahdissa
                         var tehtindex = 0;
-                        foreach(var teht in tehtäväpohjat)
+                        foreach(var formitem in tehtäväpohja)
                         {
-                            var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                            
                             if (vast != null)
                             {
                                 if(vast.TehtavaJson != null)
                                 {
+                                    //luo cell tehtäväpohjan paikan perustellaa
                                     var cell = VartioDataRow.CreateCell(rowindex);
+
+                                    //etsi tehtävän vastauksesta tämän cellin vastaus
                                     var data = JArray.Parse(vast.TehtavaJson)[tehtindex]["userData"];
                                     if (data != null)
                                     {
                                         var data0 = data[0];
                                         if (data0 != null)
                                         {
-                                            switch (teht["type"].ToString())
+                                            switch (formitem["type"].ToString())
                                             {
                                                 case "currentTime":
                                                     cell.SetCellValue(DateTime.Parse(data0.ToString()));
@@ -173,6 +190,7 @@ namespace Kipa_plus.Controllers
                     VartioDataRowlastindex++;
                 }
 
+                //vaihda joka columnin leveyttä isommaksi
                 for (int i = 0; i < kokosheetpituus; i++)
                 {
                     sheet.SetColumnWidth(i, 20 * 256);
