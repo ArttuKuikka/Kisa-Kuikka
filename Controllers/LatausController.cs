@@ -142,8 +142,8 @@ namespace Kipa_plus.Controllers
                         //tehtäväpohjan json tiedosto(ei sisällä vastauksia)
                         var tehtäväpohja = JArray.Parse(tehtävä.TehtavaJson);
 
-                        //hanki kaikki tehtäväpohjan vastaukset
-                        var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                        //hanki kaikki tehtäväpohjan vastaukset jotka on syötetty 2 kertaa eli tarkistettu
+                        var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).Where(x => x.Tarkistettu == true).FirstOrDefault();
 
                         //aseta tehtäväindex että voi käydä läpi tehtäväpohjaa ja vastausta samassa tahdissa
                         var tehtindex = 0;
