@@ -94,9 +94,31 @@ namespace Kipa_plus.Controllers
 
 
                 }
-                
-                
 
+                var VartioDataRowlastindex = 3;
+                foreach(var vartio in _context.Vartio.Where(x => x.SarjaId == sarja.Id))
+                {
+                    IRow VartioDataRow = sheet.CreateRow(VartioDataRowlastindex);
+                    VartioDataRow.CreateCell(0).SetCellValue(vartio.Nimi);
+                    var rowindex = 1;
+                    foreach (var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
+                    {
+                        foreach(var item in JArray.Parse(vastaus.TehtavaJson))
+                        {
+                            var cell = VartioDataRow.CreateCell(rowindex);
+                            var data = item["userData"][0];
+                            if(data != null)
+                            {
+                                cell.SetCellValue(data.ToString());
+                            }
+                            
+
+                            rowindex++;
+                        }
+                    }
+
+                    VartioDataRowlastindex++;
+                }
 
 
 
