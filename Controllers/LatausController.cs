@@ -43,6 +43,7 @@ namespace Kipa_plus.Controllers
             foreach (var sarja in Sarjat)
             {
                 ISheet sheet = workbook.CreateSheet(sarja.Nimi);
+                var kokosheetpituus = 1;
 
                 //etsi joka rasti ja laske niiden kaikkien tehtävien formitemeiden määrä ja laita se rastin headerin pituudeksi
                 IRow RastinNimetRow = sheet.CreateRow(0);
@@ -72,6 +73,7 @@ namespace Kipa_plus.Controllers
                         {
                             rastinpituus++;
                             TehtäväNimiHeaderPituus++;
+                            kokosheetpituus++;
 
                             var formitemname = FormItemRow.CreateCell(FormItemRowlastindex);
 
@@ -140,7 +142,10 @@ namespace Kipa_plus.Controllers
                     VartioDataRowlastindex++;
                 }
 
-
+                for (int i = 0; i < kokosheetpituus; i++)
+                {
+                    sheet.SetColumnWidth(i, 20 * 256);
+                }
 
             }
 
