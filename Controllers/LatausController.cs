@@ -53,7 +53,7 @@ namespace Kipa_plus.Controllers
                 var FormItemRowlastindex = 1;
                 foreach (var rasti in _context.Rasti.Where(x => x.KisaId == Kisa.Id))
                 {
-                    var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id);
+                    var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).ToList();
                     int rastinpituus = 0;
 
                     
@@ -66,7 +66,7 @@ namespace Kipa_plus.Controllers
                         var TehtäväNimiHeaderPituus = 0;
 
 
-                        var tehtäväpohjat = JArray.Parse(item.TehtavaJson);
+                        var tehtäväpohjat = JArray.Parse(item.TehtavaJson); //ota vaan ne joihin voi inputtaa
 
                         foreach(var tehtava in tehtäväpohjat)
                         {
@@ -94,12 +94,15 @@ namespace Kipa_plus.Controllers
 
                     }
 
-                    sheet.AddMergedRegion(new CellRangeAddress(0, 0, lastindex, lastindex + rastinpituus - 1));
-                    var RastinCell = RastinNimetRow.CreateCell(lastindex);
-                    RastinCell.SetCellValue(rasti.Nimi);
-                    RastinCell.CellStyle = centertext;
+                    if(SarjanTehtävätrastisssa.Count >= 1)
+                    {
+                        sheet.AddMergedRegion(new CellRangeAddress(0, 0, lastindex, lastindex + rastinpituus - 1));
+                        var RastinCell = RastinNimetRow.CreateCell(lastindex);
+                        RastinCell.SetCellValue(rasti.Nimi);
+                        RastinCell.CellStyle = centertext;
 
-                    lastindex = lastindex + rastinpituus;
+                        lastindex = lastindex + rastinpituus;
+                    }
 
 
                 }
