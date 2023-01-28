@@ -8,6 +8,7 @@ using NPOI.OpenXmlFormats.Wordprocessing;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
+using NPOI.XWPF.UserModel;
 using System.IO;
 
 namespace Kipa_plus.Controllers
@@ -132,11 +133,32 @@ namespace Kipa_plus.Controllers
                             var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == tehtävä.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
                             if (vast != null)
                             {
-
-                                var data = JArray.Parse(vast.TehtavaJson)[tehtindex]["userData"];
-                                if(data != null)
+                                if(vast.TehtavaJson != null)
                                 {
-                                    VartioDataRow.CreateCell(rowindex).SetCellValue(data[0].ToString());
+                                    var cell = VartioDataRow.CreateCell(rowindex);
+                                    var data = JArray.Parse(vast.TehtavaJson)[tehtindex]["userData"];
+                                    if (data != null)
+                                    {
+                                        var data0 = data[0];
+                                        if (data0 != null)
+                                        {
+                                            switch (teht["type"].ToString())
+                                            {
+                                                case "currentTime":
+                                                    cell.SetCellValue(DateTime.Parse(data0.ToString()));
+                                                    break;
+                                                case "fileUpload":
+                                                    cell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
+                                                    break;
+                                                default:
+                                                    cell.SetCellValue(data0.ToString());
+                                                    break;
+
+                                            }
+
+
+                                        }
+                                    }
                                 }
                                 
                             }
