@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
+using Kipa_plus.Models.ViewModels;
 
 namespace Kipa_plus.Controllers
 {
@@ -29,11 +30,21 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            var Tehtava = _context.Tehtava.Where(k => k.RastiId == RastiId);
-            ViewBag.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
-            ViewBag.RastiId = RastiId;
-            ViewBag.Sarjat = _context.Sarja.ToList();
-            return View(Tehtava);
+
+            
+
+            var ViewModel = new RastinTehtävätViewModel();
+            ViewModel.TehtäväPohjat = _context.Tehtava.Where(k => k.RastiId == RastiId).ToList();
+            ViewModel.TehtavaVastausKesken = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Kesken == true).ToList();
+            ViewModel.TehtavaVastausTarkistus = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == false).Where(x => x.Kesken == false).ToList();
+            ViewModel.TehtavaVastausTarkistetut = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == true).Where(x => x.Kesken == false).ToList();
+            ViewModel.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
+            ViewModel.RastiId = RastiId;
+            ViewModel.Sarjat = _context.Sarja.ToList();
+
+           
+
+            return View(ViewModel);
         }
 
         public IActionResult Vastaukset(int? TehtavaId)
