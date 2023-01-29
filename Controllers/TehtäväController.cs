@@ -48,17 +48,7 @@ namespace Kipa_plus.Controllers
             return View(ViewModel);
         }
 
-        public IActionResult Vastaukset(int? TehtavaId)
-        {
-            if(TehtavaId == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.Vartiot = _context.Vartio.ToList();
-            var tehtavat = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId);
-            return View(tehtavat);
-        }
+       
 
         public IActionResult Nayta(int? TehtavaVastausId)
         {
@@ -279,7 +269,7 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Tehtava/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Poista")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
@@ -294,6 +284,43 @@ namespace Kipa_plus.Controllers
                 _context.Tehtava.Remove(Tehtava);
             }
             
+            await _context.SaveChangesAsync();
+            return Redirect("/Tehtava/?RastiId=" + rid);
+        }
+
+        public async Task<IActionResult> PoistaVastaus(int? id)
+        {
+            if (id == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+
+            var Tehtava = await _context.TehtavaVastaus
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (Tehtava == null)
+            {
+                return NotFound();
+            }
+
+            return View(Tehtava);
+        }
+
+        // POST: Tehtava/Delete/5
+        [HttpPost, ActionName("PoistaVastaus")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PoistaVastausConf(int? id)
+        {
+            if (_context.Tehtava == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Tehtava'  is null.");
+            }
+            var Tehtava = await _context.TehtavaVastaus.FindAsync(id);
+            var rid = Tehtava.RastiId;
+            if (Tehtava != null)
+            {
+                _context.TehtavaVastaus.Remove(Tehtava);
+            }
+
             await _context.SaveChangesAsync();
             return Redirect("/Tehtava/?RastiId=" + rid);
         }
