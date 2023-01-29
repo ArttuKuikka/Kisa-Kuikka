@@ -41,6 +41,7 @@ namespace Kipa_plus.Controllers
             ViewModel.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
             ViewModel.RastiId = RastiId;
             ViewModel.Sarjat = _context.Sarja.ToList();
+            ViewModel.Vartiot = _context.Vartio;
 
            
 
@@ -85,6 +86,45 @@ namespace Kipa_plus.Controllers
 
             var vt = new Tayta() { Nimi = Tehtava.Nimi, PohjaJson = Tehtava.TehtavaJson, TehtavaId = TehtavaId };
             return View(vt);
+        }
+
+        
+        public async Task<IActionResult> Jatka(int? TehtavaId)
+        {
+            if (TehtavaId == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+            var Tehtava = _context.TehtavaVastaus.First(x => x.Id == TehtavaId);
+
+            var ViewModel = new JatkaTehtävääViewModel();
+            ViewModel.VartioNimi = _context.Vartio.First(x => x.Id == Tehtava.VartioId).Nimi;
+            ViewModel.TehtäväNimi = _context.Tehtava.First(x => x.Id == Tehtava.TehtavaId).Nimi;
+            ViewModel.TehtäväVastausId = (int)TehtavaId;
+            ViewModel.TehtäväJson = Tehtava.TehtavaJson;
+            ViewModel.RastiId = Tehtava.RastiId;
+
+            
+            return View(ViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Jatka([Bind("TehtäväVastausId, TehtäväJson, RastiId")] JatkaTehtävääViewModel jatkaTehtävääViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var tehtvastaus = _context.TehtavaVastaus.First(x => x.Id == jatkaTehtävääViewModel.TehtäväVastausId);
+
+                tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
+                tehtvastaus.Kesken = false;
+
+                _context.Update(tehtvastaus);
+                _context.SaveChanges();
+
+                return Redirect("/Tehtava/?RastiId=" + jatkaTehtävääViewModel.RastiId);
+            }
+            return BadRequest();
         }
 
         [HttpPost]

@@ -78,29 +78,22 @@
                 <tr>
 
                     <td>
-                        <h4>@item</h4>
                         @{
-                            var sarjat = (List<Sarja>)Model.Sarjat;
-                            var nimet = sarjat.Where(x => x.Id == item.SarjaId);
-                            var nimi = "";
-                            if (nimet != null)
-                            {
-                                nimi = nimet.FirstOrDefault().Nimi + "-sarja";
-                            }
-                            else
-                            {
-                                nimi = item.SarjaId.ToString();
-                            }
-
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().Nimi;
                         }
-                        <h5>@nimi</h5>
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
                         <h5 class="text-warning">Kesken</h5>
                     </td>
 
                     <td>
                         <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id';">Jatka</button>
                        
-                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/DeleteVastaus?id=@item.Id';">Poista</button>
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id';">Poista</button>
                     </td>
                 </tr>
             }
@@ -130,22 +123,15 @@
                 <tr>
 
                     <td>
-                        <h4>@item</h4>
-                        @{
-                            var sarjat = (List<Sarja>)Model.Sarjat;
-                            var nimet = sarjat.Where(x => x.Id == item.SarjaId);
-                            var nimi = "";
-                            if (nimet != null)
-                            {
-                                nimi = nimet.FirstOrDefault().Nimi + "-sarja";
-                            }
-                            else
-                            {
-                                nimi = item.SarjaId.ToString();
-                            }
-
+                       @{
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().Nimi;
                         }
-                        <h5>@nimi</h5>
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
                         <h5 class="text-warning">Odottaa tarkistusta</h5>
                     </td>
 
@@ -179,22 +165,15 @@
                 <tr>
 
                     <td>
-                        <h4>@item</h4>
                         @{
-                            var sarjat = (List<Sarja>)Model.Sarjat;
-                            var nimet = sarjat.Where(x => x.Id == item.SarjaId);
-                            var nimi = "";
-                            if (nimet != null)
-                            {
-                                nimi = nimet.FirstOrDefault().Nimi + "-sarja";
-                            }
-                            else
-                            {
-                                nimi = item.SarjaId.ToString();
-                            }
-
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().Nimi;
                         }
-                        <h5>@nimi</h5>
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
                         <h5 class="text-success">Tarkistettu</h5>
                     </td>
 

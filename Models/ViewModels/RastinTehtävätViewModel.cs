@@ -9,5 +9,6 @@
         public int KisaId { get; set; }
         public int? RastiId { get; set; }
         public List<Sarja>? Sarjat { get; set; }
+        public IQueryable<Vartio>? Vartiot { get; set;}
     }
 }
