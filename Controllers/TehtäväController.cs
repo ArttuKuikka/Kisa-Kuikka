@@ -9,6 +9,7 @@ using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
 using Kipa_plus.Models.ViewModels;
+using Newtonsoft.Json.Linq;
 
 namespace Kipa_plus.Controllers
 {
@@ -78,7 +79,94 @@ namespace Kipa_plus.Controllers
             return View(vt);
         }
 
-        
+
+        //GET: Tarkista
+        public async Task<IActionResult> Tarkista(int? TehtavaId, int? VartioId)
+        {
+            if (TehtavaId == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+            if (VartioId == null || _context.Vartio == null)
+            {
+                return NotFound();
+            }
+            var Tehtava = _context.Tehtava.First(x => x.Id == TehtavaId);
+            var Vartio = await _context.Vartio.FindAsync(VartioId);
+            if(Vartio == null)
+            {
+                return BadRequest();
+            }
+
+            var Malli = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId).Where(x => x.VartioId == VartioId).First();
+            if(Malli == null)
+            {
+                return BadRequest("Tätä tehtävää ei ole syötetty vielä, joten sitä ei voi tarkistaa");
+            }
+
+            var vm = new TarkistaTehtäväViewModel();
+
+            vm.TehtavaJson = Tehtava.TehtavaJson;
+            vm.VartioId = (int)Vartio.Id;
+            vm.VartionNumeroJaNimi = Vartio.NumeroJaNimi;
+            vm.VertausMalli = Malli;
+            vm.TehtavaNimi = Tehtava.Nimi;
+            vm.TehtavaId = (int)TehtavaId;
+
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Tarkista([Bind("VartioId, TehtavaJson, TehtavaId")] TarkistaTehtäväViewModel ViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var aiempitehtva = _context.TehtavaVastaus.Where(x => x.TehtavaId == ViewModel.TehtavaId).Where(x => x.VartioId == ViewModel.VartioId).First();
+                var tehtäväpohja = await _context.Tehtava.FindAsync(ViewModel.TehtavaId);
+
+                var json = JArray.Parse(ViewModel.TehtavaJson);
+                foreach (var row in json)
+                {
+                    var rowobj = row as JObject;
+                    if(rowobj != null)
+                    {
+                        var userdata = rowobj.Property("userData");
+                        if (userdata != null)
+                        {
+                            userdata.Remove();
+                        }
+                    }
+                }
+
+                var newjson = json.ToString();
+                
+
+               if(tehtäväpohja.TehtavaJson != null)
+                {
+                    if (newjson != JArray.Parse(tehtäväpohja.TehtavaJson).ToString())
+                    {
+                        return BadRequest("Palautettu Json on virheellisessä muodossa");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Palautettu Json on virheellistä");
+                }
+
+                aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
+                aiempitehtva.Tarkistettu = true;
+                _context.SaveChanges();
+
+                return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
+            }
+            return BadRequest();
+
+        }
+
+
+
         public async Task<IActionResult> Jatka(int? TehtavaId)
         {
             if (TehtavaId == null || _context.Tehtava == null)
