@@ -23,7 +23,7 @@ namespace Kipa_plus.Controllers
 
             var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
             var skannaukset = _context.TagSkannaus.ToList();
-            var vartiot = _context.Vartio.Where(x => x.SarjaId == id).ToList();
+            var vartiot = _context.Vartio.Where(x => x.KisaId == id).ToList();
 
             string datetimeformat = "HH.mm";
 
@@ -71,7 +71,7 @@ namespace Kipa_plus.Controllers
 
             var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
             var skannaukset = _context.TagSkannaus.ToList();
-            var vartiot = _context.Vartio.Where(x => x.SarjaId == id).ToList();
+            var vartiot = _context.Vartio.Where(x => x.KisaId == id).ToList();
             string datetimeformat = "HH.mm";
 
             var cookie = Request.Cookies["datetimeformat"];
