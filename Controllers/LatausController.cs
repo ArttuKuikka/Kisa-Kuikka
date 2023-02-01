@@ -203,8 +203,12 @@ namespace Kipa_plus.Controllers
 
             }
 
-            
 
+            var xssfworkbook = workbook as NPOI.XSSF.UserModel.XSSFWorkbook;
+            var properties = xssfworkbook.GetProperties();
+            var coreProperties = properties.CoreProperties;
+            coreProperties.Creator = "Kipa-Plus";
+            
             using (var fs = new FileStream("output.xlsx", FileMode.Create, FileAccess.Write))
             {
                 workbook.Write(fs);
