@@ -10,7 +10,6 @@ namespace Kipa_plus.Models
         public int KisaId { get; set; }
         public int RastiId { get; set; }
         public string Nimi { get; set; }
-        public bool Tarkistettu { get; set; } //ota ehk pois
         public string? TehtavaJson { get; set; }
 
     }

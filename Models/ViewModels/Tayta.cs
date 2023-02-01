@@ -1,4 +1,4 @@
-﻿namespace Kipa_plus.Models
+﻿namespace Kipa_plus.Models.ViewModels
 {
     public class Tayta
     {
@@ -6,6 +6,6 @@
         public string? Nimi { get; set; }
         public int VartioId { get; set; }
         public bool Kesken { get; set; }
-        public string? PohjaJson { get; set; } 
+        public string? PohjaJson { get; set; }
     }
 }

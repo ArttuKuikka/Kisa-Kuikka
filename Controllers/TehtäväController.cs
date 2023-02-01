@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
+using Kipa_plus.Models.ViewModels;
+using Newtonsoft.Json.Linq;
 
 namespace Kipa_plus.Controllers
 {
@@ -29,24 +31,25 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            var Tehtava = _context.Tehtava.Where(k => k.RastiId == RastiId);
-            ViewBag.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
-            ViewBag.RastiId = RastiId;
-            ViewBag.Sarjat = _context.Sarja.ToList();
-            return View(Tehtava);
+
+            
+
+            var ViewModel = new RastinTehtävätViewModel();
+            ViewModel.TehtäväPohjat = _context.Tehtava.Where(k => k.RastiId == RastiId).ToList();
+            ViewModel.TehtavaVastausKesken = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Kesken == true).ToList();
+            ViewModel.TehtavaVastausTarkistus = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == false).Where(x => x.Kesken == false).ToList();
+            ViewModel.TehtavaVastausTarkistetut = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == true).Where(x => x.Kesken == false).ToList();
+            ViewModel.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
+            ViewModel.RastiId = RastiId;
+            ViewModel.Sarjat = _context.Sarja.ToList();
+            ViewModel.Vartiot = _context.Vartio;
+
+           
+
+            return View(ViewModel);
         }
 
-        public IActionResult Vastaukset(int? TehtavaId)
-        {
-            if(TehtavaId == null)
-            {
-                return NotFound();
-            }
-
-            ViewBag.Vartiot = _context.Vartio.ToList();
-            var tehtavat = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId);
-            return View(tehtavat);
-        }
+       
 
         public IActionResult Nayta(int? TehtavaVastausId)
         {
@@ -74,6 +77,132 @@ namespace Kipa_plus.Controllers
 
             var vt = new Tayta() { Nimi = Tehtava.Nimi, PohjaJson = Tehtava.TehtavaJson, TehtavaId = TehtavaId };
             return View(vt);
+        }
+
+
+        //GET: Tarkista
+        public async Task<IActionResult> Tarkista(int? TehtavaId, int? VartioId)
+        {
+            if (TehtavaId == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+            if (VartioId == null || _context.Vartio == null)
+            {
+                return NotFound();
+            }
+            var Tehtava = _context.Tehtava.First(x => x.Id == TehtavaId);
+            var Vartio = await _context.Vartio.FindAsync(VartioId);
+            if(Vartio == null)
+            {
+                return BadRequest();
+            }
+
+            var Malli = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId).Where(x => x.VartioId == VartioId).First();
+            if(Malli == null)
+            {
+                return BadRequest("Tätä tehtävää ei ole syötetty vielä, joten sitä ei voi tarkistaa");
+            }
+
+            var vm = new TarkistaTehtäväViewModel();
+
+            vm.TehtavaJson = Tehtava.TehtavaJson;
+            vm.VartioId = (int)Vartio.Id;
+            vm.VartionNumeroJaNimi = Vartio.NumeroJaNimi;
+            vm.VertausMalli = Malli;
+            vm.TehtavaNimi = Tehtava.Nimi;
+            vm.TehtavaId = (int)TehtavaId;
+
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Tarkista([Bind("VartioId, TehtavaJson, TehtavaId")] TarkistaTehtäväViewModel ViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var aiempitehtva = _context.TehtavaVastaus.Where(x => x.TehtavaId == ViewModel.TehtavaId).Where(x => x.VartioId == ViewModel.VartioId).First();
+                var tehtäväpohja = await _context.Tehtava.FindAsync(ViewModel.TehtavaId);
+
+                var json = JArray.Parse(ViewModel.TehtavaJson);
+                foreach (var row in json)
+                {
+                    var rowobj = row as JObject;
+                    if(rowobj != null)
+                    {
+                        var userdata = rowobj.Property("userData");
+                        if (userdata != null)
+                        {
+                            userdata.Remove();
+                        }
+                    }
+                }
+
+                var newjson = json.ToString();
+                
+
+               if(tehtäväpohja.TehtavaJson != null)
+                {
+                    if (newjson != JArray.Parse(tehtäväpohja.TehtavaJson).ToString())
+                    {
+                        return BadRequest("Palautettu Json on virheellisessä muodossa");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Palautettu Json on virheellistä");
+                }
+
+                aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
+                aiempitehtva.Tarkistettu = true;
+                _context.SaveChanges();
+
+                return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
+            }
+            return BadRequest();
+
+        }
+
+
+
+        public async Task<IActionResult> Jatka(int? TehtavaId)
+        {
+            if (TehtavaId == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+            var Tehtava = _context.TehtavaVastaus.First(x => x.Id == TehtavaId);
+
+            var ViewModel = new JatkaTehtävääViewModel();
+            ViewModel.VartioNimi = _context.Vartio.First(x => x.Id == Tehtava.VartioId).Nimi;
+            ViewModel.TehtäväNimi = _context.Tehtava.First(x => x.Id == Tehtava.TehtavaId).Nimi;
+            ViewModel.TehtäväVastausId = (int)TehtavaId;
+            ViewModel.TehtäväJson = Tehtava.TehtavaJson;
+            ViewModel.RastiId = Tehtava.RastiId;
+
+            
+            return View(ViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Jatka([Bind("TehtäväVastausId, TehtäväJson, RastiId")] JatkaTehtävääViewModel jatkaTehtävääViewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var tehtvastaus = _context.TehtavaVastaus.First(x => x.Id == jatkaTehtävääViewModel.TehtäväVastausId);
+
+                tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
+                tehtvastaus.Kesken = false;
+
+                _context.Update(tehtvastaus);
+                _context.SaveChanges();
+
+                return Redirect("/Tehtava/?RastiId=" + jatkaTehtävääViewModel.RastiId);
+            }
+            return BadRequest();
         }
 
         [HttpPost]
@@ -228,7 +357,7 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Tehtava/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, ActionName("Poista")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
@@ -243,6 +372,43 @@ namespace Kipa_plus.Controllers
                 _context.Tehtava.Remove(Tehtava);
             }
             
+            await _context.SaveChangesAsync();
+            return Redirect("/Tehtava/?RastiId=" + rid);
+        }
+
+        public async Task<IActionResult> PoistaVastaus(int? id)
+        {
+            if (id == null || _context.Tehtava == null)
+            {
+                return NotFound();
+            }
+
+            var Tehtava = await _context.TehtavaVastaus
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (Tehtava == null)
+            {
+                return NotFound();
+            }
+
+            return View(Tehtava);
+        }
+
+        // POST: Tehtava/Delete/5
+        [HttpPost, ActionName("PoistaVastaus")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PoistaVastausConf(int? id)
+        {
+            if (_context.Tehtava == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Tehtava'  is null.");
+            }
+            var Tehtava = await _context.TehtavaVastaus.FindAsync(id);
+            var rid = Tehtava.RastiId;
+            if (Tehtava != null)
+            {
+                _context.TehtavaVastaus.Remove(Tehtava);
+            }
+
             await _context.SaveChangesAsync();
             return Redirect("/Tehtava/?RastiId=" + rid);
         }
