@@ -77,8 +77,8 @@ window.fbControls.push(function media(controlClass) {
                 btn.addEventListener('click', () => {
                     //console.log('click on ' + (i + 1).toString());
                      
-                    this.div.value = (i + 1).toString();
-                    this.statustext.textContent = "Valittu: " + (i + 1).toString();
+                    this.div.value = this.btnarray[i].innerText;
+                    this.statustext.textContent = "Valittu: " + this.btnarray[i].innerText;
                 });
             }
            
@@ -90,7 +90,7 @@ window.fbControls.push(function media(controlClass) {
                 
             }
             catch (err) {
-                console.log("Ei dataa arvionintivali elementillä");
+                console.log("Ei dataa arviointivali elementillä");
             }
       
         }
