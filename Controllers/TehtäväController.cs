@@ -283,6 +283,10 @@ namespace Kipa_plus.Controllers
         {
             if (ModelState.IsValid)
             {
+                if(Tehtava.Nimi == null || Tehtava.Nimi == "")
+                {
+                    Tehtava.Nimi = _context.Sarja.First(x => x.Id == Tehtava.SarjaId).Nimi + "-sarjan tehtävä";
+                }
                 _context.Add(Tehtava);
                 await _context.SaveChangesAsync();
                 return Redirect("/Tehtava/?RastiId=" + Tehtava.RastiId);
