@@ -229,7 +229,7 @@ namespace Kipa_plus.Controllers
             {
                 if(_context.TehtavaVastaus.Where(x => x.TehtavaId == vastausTemp.TehtavaId).Where(X => X.VartioId == vastausTemp.VartioId).Any())
                 {
-                    return BadRequest("Vartiolla on jo tehtävä vastaus, jatka olemassaolevaa vastausta tai tarkista odottava vastaus.");
+                    return BadRequest("Vartiolla on jo tehtävä vastaus, jatka olemassa olevaa vastausta tai tarkista odottava vastaus.");
                 }
 
                 var TV = new TehtavaVastaus() { VartioId = vastausTemp.VartioId, Kesken = vastausTemp.Kesken, TehtavaJson = vastausTemp.PohjaJson };
