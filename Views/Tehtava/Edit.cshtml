@@ -77,7 +77,58 @@
             //lisää formbuilder
             var fbeditor = document.getElementById('json-editor');
             var fb = null;
-            $(fbeditor).formBuilder().promise.then(formBuilder => {
+
+            var options = {
+                disableFields: ['hidden', 'button', 'media', 'file', 'date'],
+                disabledAttrs: ['className', 'name', 'access'],
+                typeUserDisabledAttrs: {
+                    media: ['required', 'placeholder', 'value', 'description'],
+                    'checkbox-group': ['toggle'],
+                    'date': ['placeholder', 'value'],
+                    'textarea': ['subtype']
+                },
+                i18n: {
+                    locale: 'fi-Fi'
+                },
+                disabledActionButtons: ['save', 'data'],
+                actionButtons: [{
+                    id: 'code',
+                    className: 'btn btn-success',
+                    label: 'Kopioi',
+                    type: 'button',
+                    events: {
+                        click: function () {
+                            navigator.clipboard.writeText(fb.actions.getData('json')).then(
+                                () => {
+                                    alert("Data kopioitu leikepöydälle");
+                                },
+                                () => {
+                                    alert("Virhe kopioidessa leikepöydälle, varmista että olet antanut sivulle 'clipboard-write' oikeuden");
+                                }
+                            );
+
+
+                        }
+                    }
+
+                },
+                {
+                    id: 'setcode',
+                    className: 'btn btn-success',
+                    label: 'Liitä',
+                    type: 'button',
+                    events: {
+                        click: function () {
+                            var koodi = prompt("Liitä tähän kopioimasi JSON koodi");
+                            if (koodi != null) {
+                                fb.actions.setData(koodi);
+                            }
+                        }
+                    }
+                }]
+            };
+
+            $(fbeditor).formBuilder(options).promise.then(formBuilder => {
                 var formData = document.getElementById('json-input').value;
                 formBuilder.actions.setData(formData);
                 fb = formBuilder;

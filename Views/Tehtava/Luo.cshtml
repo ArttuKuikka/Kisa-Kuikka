@@ -107,7 +107,16 @@
                     type: 'button',
                     events: {
                     click: function() {
-                      alert(fb.actions.getData('json'));
+                            navigator.clipboard.writeText(fb.actions.getData('json')).then(
+                                () => {
+                                    alert("Data kopioitu leikepöydälle");
+                                },
+                                () => {
+                                    alert("Virhe kopioidessa leikepöydälle, varmista että olet antanut sivulle 'clipboard-write' oikeuden");
+                                }
+                            );
+
+                      
                     }
                   }
                    
