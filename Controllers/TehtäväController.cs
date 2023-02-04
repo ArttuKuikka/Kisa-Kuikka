@@ -73,9 +73,20 @@ namespace Kipa_plus.Controllers
             }
             var Tehtava = _context.Tehtava.First(x => x.Id == TehtavaId);
 
-            ViewBag.Vartiot = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId);
-
             var vt = new Tayta() { Nimi = Tehtava.Nimi, PohjaJson = Tehtava.TehtavaJson, TehtavaId = TehtavaId };
+
+            vt.VartioList = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId).ToList();
+
+            var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId).ToList();
+            var VIdList = new List<int>();  
+            foreach(var v in vast)
+            {
+                VIdList.Add(v.VartioId);
+            }
+
+            vt.VartioList.RemoveAll( x => VIdList.Contains((int)x.Id));
+
+
             return View(vt);
         }
 

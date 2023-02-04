@@ -1,4 +1,6 @@
-﻿namespace Kipa_plus.Models.ViewModels
+﻿using Microsoft.EntityFrameworkCore.Query;
+
+namespace Kipa_plus.Models.ViewModels
 {
     public class Tayta
     {
@@ -7,5 +9,6 @@
         public int VartioId { get; set; }
         public bool Kesken { get; set; }
         public string? PohjaJson { get; set; }
+        public List<Vartio>? VartioList { get; set;}
     }
 }
