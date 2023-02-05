@@ -54,9 +54,9 @@ window.fbControls.push(function media(controlClass) {
             var div = this.div;
             var picker = new Picker(dateTimePicker, {
                 controls: true,
-                format: 'YYYY-MM-DD HH:mm:ss',
+                format: 'DD.MM.YYYY HH:mm:ss',
                 headers: true,
-                pick: function (e) { div.value = picker.getDate()}
+                pick: function (e) { var aika = picker.getDate(); aika.setMilliseconds(0); div.value = JSON.stringify(aika); console.log(div.value); }
             });
 
             
@@ -75,9 +75,13 @@ window.fbControls.push(function media(controlClass) {
             
 
               picker.setDate(currentDate);
-              dateTimePicker.value = picker.getDate();
-              this.div.value = picker.getDate();
+              var dtoptions = {day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}
+              dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
+              var aika = picker.getDate();
+              aika.setMilliseconds(0);
+              this.div.value = aika.toString();
 
+              console.log(this.div.value);
           });
 
             
@@ -87,8 +91,11 @@ window.fbControls.push(function media(controlClass) {
                 
 
                 picker.setDate(new Date(userDataAika));
-                dateTimePicker.value = picker.getDate();
-                this.div.value = picker.getDate();
+                var dtoptions = { day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }
+                dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
+                var aika = picker.getDate();
+                aika.setMilliseconds(0);
+                this.div.value = aika.toString();
             }
             catch (err) {
                 console.log("Ei dataa currentTime elementillä");

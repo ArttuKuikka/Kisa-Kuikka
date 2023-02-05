@@ -232,6 +232,29 @@
                                 return;
                             }
 
+                            //kello antaa jostain syystä tupla heittomerkit joten sille oma if
+                            if(data[index].type == "currentTime"){
+                                if (data[index].userData.toString() != VertausJson[index].userData.toString().replaceAll('"', '')) {
+
+                                    console.log(data[index].userData.toString() + " != " + VertausJson[index].userData.toString().replaceAll('"', ''))
+
+                                    if (document.getElementById('json-viewer').firstChild.children[index].querySelector('.checktext') == null) {
+                                        var span = document.createElement('span');
+                                        span.textContent = "Kohta ei täsmää aiemman vastauksen kanssa!";
+                                        span.classList.add('text-danger');
+                                        span.classList.add('checktext');
+
+                                        document.getElementById('json-viewer').firstChild.children[index].appendChild(span);
+
+                                        setTimeout(function () {
+                                            $(span).remove();
+                                        }, 9000);
+                                    }
+
+                                }
+                                return;
+                            }
+
                             //vertaa jokaista form fieldiä ja jos ongelmia lisää teksti
                             if (data[index].userData.toString() != VertausJson[index].userData.toString()) {
 
