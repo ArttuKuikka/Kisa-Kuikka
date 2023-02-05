@@ -205,12 +205,19 @@
                     }
                 });
 
+                VertausJson.forEach((currentValue, index) => {
+                    if (VertausJson[index].type == "currentTime") {
+                        VertausJson[index].userData[0] = VertausJson[index].userData[0].replaceAll('"', '');
+                    }
+                });
+
 
                 var jsondata = JSON.stringify(data);
 
                 var teecheck = true;
 
-                if(firstclickdone == true){
+                if (jsondata != JSON.stringify(VertausJson)) {
+                    if(firstclickdone == true){
                     var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
 
                     if(confirm == true){
@@ -218,6 +225,8 @@
                     }
                    
                 }
+                }
+                
 
                 firstclickdone = true;
 

@@ -79,7 +79,7 @@ window.fbControls.push(function media(controlClass) {
               dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
               var aika = picker.getDate();
               aika.setMilliseconds(0);
-              this.div.value = aika.toString();
+              this.div.value = JSON.stringify(aika);
 
               console.log(this.div.value);
           });
@@ -95,7 +95,7 @@ window.fbControls.push(function media(controlClass) {
                 dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
                 var aika = picker.getDate();
                 aika.setMilliseconds(0);
-                this.div.value = aika.toString();
+                this.div.value = JSON.stringify(aika);
             }
             catch (err) {
                 console.log("Ei dataa currentTime elementillä");
