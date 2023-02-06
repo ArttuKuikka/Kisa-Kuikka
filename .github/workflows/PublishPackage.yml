@@ -11,13 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2 # Checking out the repo
-
-      - name: Build and Publish latest Docker image
-        uses: docker/build-push-action@v1
-        with:
-          registry: ghcr.io
-          username: ${GITHUB_ACTOR}
-          password: ${{ secrets.GITHUB_TOKEN }}
-          repository: arttukuikka/kipa-plus
-          tags: latest
-          platforms: linux/amd64,linux/arm64
+      - name: Docker login
+        env:
+          DOCKER_USER: ${{secrets.DOCKER_USER}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+        run: |
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          
+      - name: Build image
+        run: docker compose build 
+        
+      - name: Docker Push
+        run: Docker Push
+        
