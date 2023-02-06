@@ -18,10 +18,9 @@ jobs:
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           
-          -
-            name: Build and push
-            uses: docker/build-push-action@v4
-            with:
-              push: true
-              tags: ${{secrets.DOCKER_USER}}/kipaplus:latest
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: ${{secrets.DOCKER_USER}}/kipaplus:latest
         
