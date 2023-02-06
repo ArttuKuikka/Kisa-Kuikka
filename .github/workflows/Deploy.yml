@@ -8,7 +8,7 @@ on:
       - completed
 
 jobs:
-  notify:
+  Deploy:
     runs-on: self-hosted
 
     steps:
