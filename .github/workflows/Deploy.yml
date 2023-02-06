@@ -15,9 +15,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Poista container
+        continue-on-error: true
         run: docker container rm Kipa-Plus
 
       - name: Poista vanha image
+        continue-on-error: true
         run: docker image rm arttukuikka/kipaplus  
         
       - name: lataa uusi
