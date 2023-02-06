@@ -1,0 +1,12 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Rastit Tagit";
+}
+
+<div class="grid-container">
+    <div class="grid-item" onClick="location.href='Tag/LueTulo?RastiId=@ViewBag.RastiId'"><img class="grid-item-image" alt="Lue tulo" src="/images/nfc.png"><p class="grid-item-text">Lue tulo</p></div>
+    <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@ViewBag.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
+    
+</div>

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<Kipa_plus.Models.Vartio>
+@using Kipa_plus.Models;
 
 @{
     ViewData["Title"] = "Vartiot";
@@ -7,23 +8,20 @@
 <h1>Vartiot</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@ViewBag.KisaId';">Luo vartio</button>
+    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
 </p>
 <table class="table" style="color: white">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Nimi)
+                Nimi, numero ja lippukunta
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.KisaId)
+                Sarja ja lippukunta
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lippukunta)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Numero)
-            </th>
+           
+           
            
             <th></th>
         </tr>
@@ -33,22 +31,32 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nimi)
+                    <h3>@item.Nimi</h3>
+                    <h5>@item.Numero</h5>
+                    
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.KisaId)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lippukunta)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Numero)
+                    @{
+                        var nimi = "";
+                        List<Sarja> lista = ViewBag.Sarjat;
+                        var items = lista.Where(x => x.Id == item.SarjaId);
+                        if(items != null)
+                        {
+                            var sarja = items.FirstOrDefault();
+                            nimi = sarja.Nimi;
+                        }
+                    }
+                    <h5>@nimi</h5>
+                    <h5>@item.Lippukunta</h5>
                 </td>
                 
+               
+                
                 <td>
-                    <a href="/Vartio/Edit?id=@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
+                   
                 </td>
             </tr>
         }

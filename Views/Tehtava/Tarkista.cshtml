@@ -1,0 +1,300 @@
+﻿@model Kipa_plus.Models.ViewModels.TarkistaTehtäväViewModel
+
+@{
+    ViewData["Title"] = "Tarkista tehtävä";
+}
+
+
+<h4>Tarkista tehtävä</h4>
+<hr />
+<div class="row">
+    <div>
+        <form asp-action="Tarkista" id="Formi">
+
+        <dd class="h1">
+                @Html.DisplayFor(model => model.TehtavaNimi)
+        </dd>
+        <h2>@Model.VartionNumeroJaNimi</h2>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaId" class="control-label"></label>
+            <input asp-for="TehtavaId" class="form-control" />
+            <span asp-validation-for="TehtavaId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="VartioId" class="control-label"></label>
+            <input asp-for="VartioId" class="form-control" />
+            <span asp-validation-for="VartioId" class="text-danger"></span>
+        </div>
+
+        
+
+
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaJson" class="control-label"></label>
+            <input asp-for="TehtavaJson" id="json-input" class="form-control" />
+            <span asp-validation-for="TehtavaJson" class="text-danger"></span>
+        </div>
+
+        <div class="json-viewer" id="json-viewer"></div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="button" id="submit-button" value="Lähetä" class="btn btn-primary noPrint" />
+           
+
+        </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="assets/js/form-render.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
+<script src="assets/js/arviointivali.js"></script>
+<script src="assets/js/fileUpload.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //luo formrender käyttämällä piilokentässä olevaa jsonia joka tehtiin formbuilderilla
+        jQuery(function ($) {
+            var fbeditor = document.getElementById('json-viewer');
+            var getdata = document.getElementById('json-input').value;
+
+            
+            var firstclickdone = false; 
+
+            var VertausJson = @Html.Raw(Model.VertausMalli.TehtavaJson);
+
+            console.log(VertausJson);
+
+            var fb = $(fbeditor).formRender({
+                dataType: 'json',
+                formData: getdata
+            });
+
+            //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata
+            function Submittaa(Kesken) {
+                var data = fb.userData;
+
+                //tarkista että kaikkissa required fieldeissä on userdataa
+                for (let i = 0; i < data.length; i++) {
+
+                    var field = data[i]
+                    console.log(field.userData);
+
+                    if (field.required == true) {
+
+                        try {
+                            if (!field.hasOwnProperty('userData')) {
+                                //luo teksti ja siihen liittyvät asiat
+                                var elem = document.createElement('span');
+                                var parent = document.getElementsByName(field.name)[0].parentElement;
+                                elem.textContent = 'Tämä kenttä on pakollinen';
+                                elem.style.color = 'red';
+                                elem.id = 'elementti';
+
+                                //lisää teksti vain jos sitä ei ole jo
+                                if (parent.querySelector('#elementti') == null) {
+                                    parent.appendChild(elem);
+                                }
+
+                                //lisää fade elementtiin
+                                $(elem).fadeOut(6000, function () {
+                                    elem.remove();
+
+                                });
+                                return;
+                            }
+                            else {
+                                if (field.userData != null) {
+                                    if (Array.isArray(field.userData)) {
+                                        if (field.userData[0].length < 1) {
+                                            //luo teksti ja siihen liittyvät asiat
+                                            var elem = document.createElement('span');
+                                            var parent = document.getElementsByName(field.name)[0].parentElement;
+                                            elem.textContent = 'Tämä kenttä on pakollinen';
+                                            elem.style.color = 'red';
+                                            elem.id = 'elementti';
+
+                                            //lisää teksti vain jos sitä ei ole jo
+                                            if (parent.querySelector('#elementti') == null) {
+                                                parent.appendChild(elem);
+                                            }
+
+                                            //lisää fade elementtiin
+                                            $(elem).fadeOut(6000, function () {
+                                                elem.remove();
+
+                                            });
+                                            return;
+                                        }
+                                    }
+                                    else if (field.userData.length < 1) {
+                                        //luo teksti ja siihen liittyvät asiat
+                                        var elem = document.createElement('span');
+                                        var parent = document.getElementsByName(field.name)[0].parentElement;
+                                        elem.textContent = 'Tämä kenttä on pakollinen';
+                                        elem.style.color = 'red';
+                                        elem.id = 'elementti';
+
+                                        //lisää teksti vain jos sitä ei ole jo
+                                        if (parent.querySelector('#elementti') == null) {
+                                            parent.appendChild(elem);
+                                        }
+
+                                        //lisää fade elementtiin
+                                        $(elem).fadeOut(6000, function () {
+                                            elem.remove();
+
+                                        });
+                                        return;
+                                    }
+                                }
+                                else {
+                                    var elem = document.createElement('span');
+                                    var parent = document.getElementsByName(field.name)[0].parentElement;
+                                    elem.textContent = 'Tämä kenttä on pakollinen';
+                                    elem.style.color = 'red';
+                                    elem.id = 'elementti';
+
+                                    //lisää teksti vain jos sitä ei ole jo
+                                    if (parent.querySelector('#elementti') == null) {
+                                        parent.appendChild(elem);
+                                    }
+
+                                    //lisää fade elementtiin
+                                    $(elem).fadeOut(6000, function () {
+                                        elem.remove();
+
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+                        catch (error) {
+                            alert('täytä kaikki pakolliset punaisella tähdellä merkityt kohdat!')
+                            return;
+                        }
+                    }
+                }
+
+                //korjaa kaikkien datetime kohtien formatti, jostai syystä ne sisältää tupla heittomerkit
+                data.forEach((currentValue, index) => {
+                    if (data[index].type == "currentTime"){
+                        data[index].userData[0] = data[index].userData[0].replaceAll('"', '');
+                    }
+                });
+
+                VertausJson.forEach((currentValue, index) => {
+                    if (VertausJson[index].type == "currentTime") {
+                        VertausJson[index].userData[0] = VertausJson[index].userData[0].replaceAll('"', '');
+                    }
+                });
+
+
+                var jsondata = JSON.stringify(data);
+
+                var teecheck = true;
+
+                if (jsondata != JSON.stringify(VertausJson)) {
+                    if(firstclickdone == true){
+                    var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
+
+                    if(confirm == true){
+                        teecheck = false;
+                    }
+                   
+                }
+                }
+                
+
+                firstclickdone = true;
+
+                if(teecheck == true){
+                    //tarkista että data on samaa kuin aiemmassa vastauksessa
+                    if (jsondata != JSON.stringify(VertausJson)) {
+
+
+                        data.forEach((currentValue, index) => {
+
+                            if (data[index].type == "fileUpload") { //skippaa fileUpload koska se ei missään tilanteessa ole sama
+                                return;
+                            }
+
+                            if (data[index].userData == null) {
+                                return;
+                            }
+
+                            if (VertausJson[index].userData == null) {
+                                return;
+                            }
+
+                            
+
+                            //vertaa jokaista form fieldiä ja jos ongelmia lisää teksti
+                            if (data[index].userData.toString() != VertausJson[index].userData.toString()) {
+
+                                console.log(data[index].userData.toString() + " != " + VertausJson[index].userData.toString())
+
+                                if (document.getElementById('json-viewer').firstChild.children[index].querySelector('.checktext') == null) {
+                                    var span = document.createElement('span');
+                                    span.textContent = "Kohta ei täsmää aiemman vastauksen kanssa!";
+                                    span.classList.add('text-danger');
+                                    span.classList.add('checktext');
+
+                                    document.getElementById('json-viewer').firstChild.children[index].appendChild(span);
+
+                                    setTimeout(function () {
+                                        $(span).remove();
+                                    }, 9000);
+                                }
+
+                            }
+                        });
+                        return;
+                    }
+                }
+
+
+                //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää
+                
+                document.getElementById('json-input').value = jsondata;
+
+                if (Kesken) {
+                    document.getElementById('Kesken-CheckBox').checked = true;
+                };
+
+                document.getElementById('Formi').submit();
+            }
+
+
+
+
+            document.getElementById('submit-button').addEventListener('click', function () {
+                Submittaa(false);
+            });
+
+            
+        })
+    </script>
+}

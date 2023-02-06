@@ -19,27 +19,141 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
-        // GET: Vartio/Create
-        public IActionResult Create(int kisaId, int SarjaId)
+        public async Task<IActionResult> LiitaTag(int? VartioId)
+        {
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+
+            if(VartioId != null)
+            {
+                var vartio = await _context.Vartio.FindAsync(VartioId);
+                if (vartio == null)
+                {
+                    return NotFound();
+                }
+
+                ViewBag.Vartiot = _context.Vartio.Where(x => x.KisaId == vartio.KisaId);
+
+                return View(new LiitaTagModel() { VartioId = (int)vartio.Id});
+            }
+
+
+            return BadRequest("Ei VartioIdtä");
+
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LiitaTag([Bind("VartioId, TagSerial")] LiitaTagModel liitaTagModel)
+        {
+
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+            var poistettavat = _context.Vartio.Where(x => x.TagSerial == liitaTagModel.TagSerial);
+           if (poistettavat != null)
+            {
+                foreach(var item in poistettavat)
+                {
+                    item.TagSerial = null;
+                }
+            }
+
+            var vartio = await _context.Vartio.FindAsync(liitaTagModel.VartioId);
+            if (vartio == null)
+            {
+                return NotFound();
+            }
+
+            vartio.TagSerial = liitaTagModel.TagSerial;
+            _context.Update(vartio);
+            _context.SaveChanges();
+
+            return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+
+        }
+
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public IActionResult OnkoTagLiitetty([FromForm] string TagSerial)
+        {
+            
+
+            if (_context.Vartio == null)
+            {
+                return NotFound();
+            }
+            var vartiot = _context.Vartio.Where(x => x.TagSerial == TagSerial);
+            var vartio = vartiot.FirstOrDefault();
+            if (vartio == null)
+            {
+                return Ok("Ei ole");
+            }
+            else
+            {
+                return Ok(vartio.NumeroJaNimi);
+            }
+
+           
+
+        }
+
+        public IActionResult KenenTag()
+        {
+            return View("KenenTag");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult KenenTag([Bind("TagSerial")] KenenTagModel kenenTagModel)
+        {
+
+            if (_context.Vartio == null)
+            {
+                return View("KenenTagTulos");
+            }
+
+            var vartio = _context.Vartio.Where(x => x.TagSerial == kenenTagModel.TagSerial);
+            if (vartio == null)
+            {
+                return View("KenenTagTulos");
+            }
+            if(vartio.FirstOrDefault() == null)
+            {
+                return View("KenenTagTulos");
+            }
+
+            
+
+            return View("KenenTagTulos", vartio.FirstOrDefault());
+
+        }
+
+        // GET: Vartio/Luo
+        public IActionResult Luo(int kisaId, int SarjaId)
         {
             ViewBag.Sarjat = _context.Sarja.Where(k => k.KisaId== kisaId).ToList();
             ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
             return View(new Vartio() { KisaId = kisaId, SarjaId = SarjaId});
         }
 
-        // POST: Vartio/Create
+        // POST: Vartio/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Luo([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,Tilanne")] Vartio vartio)
         {
             
             if (ModelState.IsValid)
             {
                 _context.Add(vartio);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + vartio.KisaId);
+                return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
             }
             return View(vartio);
         }
@@ -65,7 +179,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,Numero,SarjaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,KisaId,Nimi,Numero,SarjaId,Lippukunta,Tilanne")] Vartio vartio)
         {
             if (id != vartio.Id)
             {
@@ -90,7 +204,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
             }
             return View(vartio);
         }
@@ -129,7 +243,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
         }
 
         private bool VartioExists(int? id)

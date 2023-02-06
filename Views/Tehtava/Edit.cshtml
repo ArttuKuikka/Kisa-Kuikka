@@ -1,0 +1,150 @@
+﻿@model Kipa_plus.Models.Tehtava
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Tehtava</h4>
+<hr />
+<h1 class="text-danger">HUOM! tehtävän pohjan muokkaaminen poistaa kaikki tehtävän vastaukset eli kaiken keräty datan. Muokkaa vain jos olet varma siitä mitä olet tekemässä</h1>
+<div class="row">
+    <div>
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Kisa</label>
+                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Sarja</label>
+                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Rasti</label>
+                @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })
+            </div>
+            <div class="form-group" style="max-width:500px">
+                <label asp-for="Nimi" class="control-label"></label>
+                <input asp-for="Nimi" class="form-control" />
+                <span asp-validation-for="Nimi" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group" hidden="hidden">
+                <label asp-for="TehtavaJson" class="control-label"></label>
+                <input asp-for="TehtavaJson" id="json-input" class="form-control" />
+                <span asp-validation-for="TehtavaJson" class="text-danger"></span>
+            </div>
+            <div class="json-editor" id="json-editor" style="color:black">
+            </div>
+            <br />
+
+            <div class="form-group">
+                <input type="submit" id="submit-button" value="Tallenna muutokset" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+   
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="assets/js/form-builder.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
+<script src="assets/js/arviointivali.js"></script>
+<script src="assets/js/fileUpload.js"></script>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        jQuery(function ($) {
+            //lisää formbuilder
+            var fbeditor = document.getElementById('json-editor');
+            var fb = null;
+
+            var options = {
+                disableFields: ['hidden', 'button', 'media', 'file', 'date'],
+                disabledAttrs: ['className', 'name', 'access'],
+                typeUserDisabledAttrs: {
+                    media: ['required', 'placeholder', 'value', 'description'],
+                    'checkbox-group': ['toggle'],
+                    'date': ['placeholder', 'value'],
+                    'textarea': ['subtype']
+                },
+                i18n: {
+                    locale: 'fi-Fi'
+                },
+                disabledActionButtons: ['save', 'data'],
+                actionButtons: [{
+                    id: 'code',
+                    className: 'btn btn-success',
+                    label: 'Kopioi',
+                    type: 'button',
+                    events: {
+                        click: function () {
+                            navigator.clipboard.writeText(fb.actions.getData('json')).then(
+                                () => {
+                                    alert("Data kopioitu leikepöydälle");
+                                },
+                                () => {
+                                    alert("Virhe kopioidessa leikepöydälle, varmista että olet antanut sivulle 'clipboard-write' oikeuden");
+                                }
+                            );
+
+
+                        }
+                    }
+
+                },
+                {
+                    id: 'setcode',
+                    className: 'btn btn-success',
+                    label: 'Liitä',
+                    type: 'button',
+                    events: {
+                        click: function () {
+                            var koodi = prompt("Liitä tähän kopioimasi JSON koodi");
+                            if (koodi != null) {
+                                fb.actions.setData(koodi);
+                            }
+                        }
+                    }
+                }]
+            };
+
+            $(fbeditor).formBuilder(options).promise.then(formBuilder => {
+                var formData = document.getElementById('json-input').value;
+                formBuilder.actions.setData(formData);
+                fb = formBuilder;
+            });
+            
+            
+            
+
+            //Lähetä nappia painaessa formbuilderin data siirretään json muodossa piilotettuun kentään formissa jonka kautta se lähetetään palvelimelle
+            document.getElementById('submit-button').addEventListener('click', function () {
+                var data = fb.actions.getData('json');
+                document.getElementById('json-input').value = data;
+
+            });
+        });
+
+
+    </script>
+}

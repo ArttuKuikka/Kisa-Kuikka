@@ -8,7 +8,7 @@
 <h1>Rastit</h1>
 
 
-<button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Create/?kisaId=@Model.FirstOrDefault().KisaId';">Luo uusi</button>
+<button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Luo/?kisaId=@ViewBag.KisaId';">Luo uusi</button>
 <table class="table" style="color: white">
     <thead><tr></tr></thead>
     <tbody>
@@ -19,20 +19,20 @@
                     
                     @{
                         var Sarjat = ViewData["Sarjat"] as List<Sarja>;
-                        var sarja = Sarjat.FirstOrDefault(x => x.Id == item.SarjaId);
+                       
                         
 
                     }
                     <h4>@item.Nimi</h4>
-                    <h5>@sarja.Nimi</h5>
+                    
                 </td>
                
                 
                 <td>
-                   
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skanna tag</button>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?id=@item.Id';">Muokkaa</button>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtävä/?RastiId=@item.Id';">Tehtävät</button>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Delete/@item.Id';">Poista</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtavat</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Rasti/Delete/?id=@item.Id';">Poista</button>
                     
                 </td>
             </tr>

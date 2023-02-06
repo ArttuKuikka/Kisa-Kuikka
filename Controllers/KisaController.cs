@@ -20,6 +20,18 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+        [HttpGet("{kisaId:int}/Lataukset")]
+        public async Task<IActionResult> Lataukset(int kisaId)
+        {
+            if (kisaId == null || _context.Kisa == null)
+            {
+                return NotFound();
+            }
+
+
+            return View(kisaId);
+        }
+
         // GET: Kisa
         [HttpGet("{kisaId:int}/")]
         public async Task<IActionResult> Index(int kisaId)
@@ -52,19 +64,19 @@ namespace Kipa_plus.Controllers
             return View(kisa);
         }
 
-        // GET: Kisa/Create
-        [HttpGet("Create")]
-        public IActionResult Create()
+        // GET: Kisa/Luo
+        [HttpGet("Luo")]
+        public IActionResult Luo()
         {
             return View();
         }
 
-        // POST: Kisa/Create
+        // POST: Kisa/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost("Create")]
+        [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Nimi")] Kisa kisa)
+        public async Task<IActionResult> Luo([Bind("Id,Nimi")] Kisa kisa)
         {
            
             if (ModelState.IsValid)
@@ -185,7 +197,7 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.KisaId = kisaId;
             return View(sarjat);
         }
 
@@ -203,7 +215,8 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-
+            ViewBag.KisaId = kisaId;
+            ViewBag.Sarjat = _context.Sarja.Where(x=> x.KisaId == kisaId).ToList();
             return View(vartiot);
         }
 
@@ -222,8 +235,8 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
             ViewData["Sarjat"] = _context.Sarja.ToList();
-            
-            
+
+            ViewBag.KisaId = kisaId;
             return View(rastit);
         }
     }

@@ -29,6 +29,7 @@ body {
     column-gap: 1em;
 }
 
+
 .grid-item {
     background-color: rgba(120, 120, 120, 0.8);
     border: 3px solid rgba(0, 0, 0, 0.8);
@@ -43,16 +44,28 @@ body {
 
 .grid-item-image{
     max-width: 70%;
-    max-height: 100%;
+    max-height: 80%;
 }
 
-@media(max-width: 600px){
+.grid-item-text{
+    font-size: 1em;
+}
+
+.SkannausTulos{
+    text-align: center;
+    
+}
+
+@media(max-width: 600px) {
     .grid-item {
         width: 98%;
         justify-content: center;
         align-content: center;
     }
 }
+
+
+
 
 @media (min-width: 600px) {
     .grid-container {
@@ -75,6 +88,24 @@ body {
 @media (min-width: 1100px) {
     .grid-container {
         grid-template-columns: repeat(5, 0.5fr);
+    }
+}
+
+@media print {
+    .noPrint {
+        display: none;
+    }
+    .pb-3{
+        background-color: white !important;
+        color: black !important;
+    }
+    body {
+        background-color: white !important;
+        color: black !important;
+    }
+    .navbar {
+        background-color: white !important;
+        color: black !important;
     }
 }
 

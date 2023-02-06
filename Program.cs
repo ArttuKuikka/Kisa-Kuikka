@@ -6,13 +6,20 @@ using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.StaticFiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+var DBHOST = Environment.GetEnvironmentVariable("DB_HOST");
+var DBPORT = Environment.GetEnvironmentVariable("DB_PORT");
+var DBNAME = Environment.GetEnvironmentVariable("DB_NAME");
+var DBUSER = Environment.GetEnvironmentVariable("DB_USER");
+var DBUSERPASSWD = Environment.GetEnvironmentVariable("DB_USER_PASSWORD");
+
+var connectionString = $"Server={DBHOST},{DBPORT};Database={DBNAME};User ID={DBUSER};Password={DBUSERPASSWD};TrustServerCertificate=True;MultipleActiveResultSets=true;";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -23,6 +30,8 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 
+
+//lis‰‰ bearer authentication api varten
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = "MultiAuthSchemes";
@@ -56,6 +65,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+//lis‰‰ swagger api a varten
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(e => { e.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Kipa-plus API", Version = "v1" }); });
 
@@ -76,8 +86,12 @@ else
     app.UseHsts();
 }
 
-app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseHttpsRedirection();
+
+//lis‰‰ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
+var provider = new FileExtensionContentTypeProvider();
+provider.Mappings.Add(".lang", "language");
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider }) ;
 
 app.UseRouting();
 

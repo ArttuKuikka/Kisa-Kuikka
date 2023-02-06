@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Kipa_plus.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : Controller //home controller näyttä käytejellä oman kotisivun jossa painikkeet kaikkin käyttäjän roolille hyödyllisiin ominaisuukisiin ja tarvittaessa redirectaa kisa näkymään
     {
         
         public async Task<IActionResult> Index()

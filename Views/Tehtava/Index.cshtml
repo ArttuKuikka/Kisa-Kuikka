@@ -1,0 +1,189 @@
+﻿@model Kipa_plus.Models.ViewModels.RastinTehtävätViewModel
+@using Kipa_plus.Models;
+@using Kipa_plus.Models.ViewModels;
+
+@{
+    ViewData["Title"] = "Rastin Tehtavapohjat";
+}
+
+<h1>Rastin Tehtävät</h1>
+
+<p>
+    
+    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Luo?KisaId=@Model.KisaId&RastiId=@Model.RastiId';">Luo Tehtävä</button>
+</p>
+<table class="table" style="color: white">
+    <thead>
+        <tr>
+            <th>
+                <h2>Tehtävät</h2>
+            </th>
+           <th></th>
+           
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.TehtäväPohjat) {
+        <tr>
+            
+            <td>
+               <h4>@item.Nimi</h4>
+                    @{
+                        var sarjat = (List<Sarja>)Model.Sarjat;
+                        var nimet = sarjat.Where(x => x.Id == item.SarjaId);
+                        var nimi = "";
+                        if(nimet != null)
+                        {
+                            nimi = nimet.FirstOrDefault().Nimi + "-sarja";
+                        }
+                        else
+                        {
+                            nimi = item.SarjaId.ToString();
+                        }
+
+                        }
+                        <h5>@nimi</h5>
+            </td>
+           
+            <td>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id';">Täytä</button>
+                    
+                <button type="button" class="btn btn-warning" onclick="location.href = '/Tehtava/Edit?id=@item.Id';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id';">Poista</button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@if(Model.TehtavaVastausKesken.Count != 0)
+{
+    <br />
+    <br />
+
+
+    <table class="table" style="color: white">
+        <thead>
+            <tr>
+                <th>
+                    <h2>Kesken</h2>
+                </th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TehtavaVastausKesken)
+            {
+                <tr>
+
+                    <td>
+                        @{
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().NumeroJaNimi;
+                        }
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
+                        <h5 class="text-warning">Kesken</h5>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id';">Jatka</button>
+                       
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id';">Poista</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if(Model.TehtavaVastausTarkistus.Count != 0)
+{
+    <br />
+    <br />
+
+
+    <table class="table" style="color: white">
+        <thead>
+            <tr>
+                <th>
+                    <h2>Odottaa tarkistusta</h2>
+                </th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TehtavaVastausTarkistus)
+            {
+                <tr>
+
+                    <td>
+                       @{
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().NumeroJaNimi;
+                        }
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
+                        <h5 class="text-warning">Odottaa tarkistusta</h5>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId';">Tarkista</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id';">Näytä aiempi vastaus</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@if(Model.TehtavaVastausTarkistetut.Count != 0)
+{
+    <br />
+    <br />
+
+    <table class="table" style="color: white">
+        <thead>
+            <tr>
+                <th>
+                    <h2>Tarkistetut</h2>
+                </th>
+                <th></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.TehtavaVastausTarkistetut)
+            {
+                <tr>
+
+                    <td>
+                        @{
+                            var VartioNimi = Model.Vartiot.Where(x => x.Id == item.VartioId).First().NumeroJaNimi;
+                        }
+
+                        <h4>@VartioNimi</h4>
+                        @{
+                            var tehtnimi = Model.TehtäväPohjat.Where(x => x.Id == item.TehtavaId).First().Nimi;
+                        }
+                        <h5>@tehtnimi</h5>
+                        <h5 class="text-success">Tarkistettu</h5>
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id';">Näytä</button>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

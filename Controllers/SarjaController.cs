@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Newtonsoft.Json.Linq;
+using System.Diagnostics.Metrics;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace Kipa_plus.Controllers
 {
@@ -19,6 +23,11 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
+
+       
+
+
+
 
 
         [HttpGet("Details")]
@@ -39,7 +48,7 @@ namespace Kipa_plus.Controllers
             return View(sarja);
         }
 
-        // GET: Sarja/Create
+        // GET: Sarja/Luo
         [HttpGet("Luo")]
         public IActionResult Luo(int kisaId)
         {
@@ -49,7 +58,7 @@ namespace Kipa_plus.Controllers
             return View(new Sarja() { KisaId = kisaId });
         }
 
-        // POST: Sarja/Create
+        // POST: Sarja/Luo
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]
@@ -61,7 +70,7 @@ namespace Kipa_plus.Controllers
             {
                 _context.Add(sarja);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + sarja.KisaId);
+                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
             }
             return View(sarja);
         }
@@ -112,7 +121,7 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
             }
             return View(sarja);
         }
@@ -151,7 +160,7 @@ namespace Kipa_plus.Controllers
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
         }
 
         private bool SarjaExists(int? id)

@@ -1,0 +1,66 @@
+﻿@model Kipa_plus.Models.TehtavaVastaus;
+@{
+    ViewData["Title"] = "Nayta tehtävä vastaus";
+}
+<h1>Näytä tehtävän vastaus</h1>
+<br />
+<h2>@ViewBag.VartioNimi</h2>
+<div class="row">
+    <div>
+        <form asp-action="Nayta" id="Formi">
+
+        
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaJson" class="control-label"></label>
+            <input asp-for="TehtavaJson" id="json-input" class="form-control" />
+            <span asp-validation-for="TehtavaJson" class="text-danger"></span>
+        </div>
+
+        <div class="json-viewer" id="json-viewer"></div>
+
+       
+
+        </form>
+    </div>
+</div>
+<button onclick="window.print();" class="btn btn-dark noPrint">
+    Tulosta
+</button>
+
+
+
+
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="assets/js/form-render.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
+<script src="assets/js/arviointivali.js"></script>
+<script src="assets/js/fileUpload.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //luo formrender käyttämällä piilokentässä olevaa jsonia joka tehtiin formbuilderilla
+        jQuery(function ($) {
+            var fbeditor = document.getElementById('json-viewer');
+            var getdata = document.getElementById('json-input').value;
+            var fb = $(fbeditor).formRender({
+                dataType: 'json',
+                formData: getdata
+            });
+
+            $("input, textarea").prop("readonly", true);
+           
+        })
+    </script>
+}

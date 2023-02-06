@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "formBuilder": "^3.8.3",
-    "jquery": "^3.6.1"
+    "jquery": "^3.6.1",
+    "pickerjs": "^1.2.1"
   }
 }
