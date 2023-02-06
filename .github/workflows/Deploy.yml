@@ -12,7 +12,6 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - uses: actions/checkout@v2
 
       - name: Poista container
         continue-on-error: true
@@ -25,8 +24,7 @@ jobs:
       - name: lataa uusi
         run: docker pull arttukuikka/kipaplus:latest
         
-      - name: lataa docker compose
-        run: wget https://raw.githubusercontent.com/ArttuKuikka/Kipa-plus/Production/docker-compose.yml
         
       - name: suorita compose
+        working-directory: /home/administrator/KipaPlus
         run: docker compose up -d
