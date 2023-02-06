@@ -29,4 +29,4 @@ jobs:
         run: wget https://raw.githubusercontent.com/ArttuKuikka/Kipa-plus/Production/docker-compose.yml
         
       - name: suorita compose
-        run: sudo docker compose up -d
+        run: docker compose up -d
