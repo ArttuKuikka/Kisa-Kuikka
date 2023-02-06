@@ -21,9 +21,7 @@ jobs:
       - name: Build image
         run: docker compose build 
         
-      - name: Tag image
-        run: docker tag kipaplus kipaplus:latest
         
       - name: Docker Push
-        run: docker push ${{secrets.DOCKER_USER}}/kipaplus
+        run: docker push ${{secrets.DOCKER_USER}}/kipaplus:latest
         
