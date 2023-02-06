@@ -1,0 +1,27 @@
+name: Deploy
+
+# Only trigger, when the build workflow succeeded
+on:
+  workflow_run:
+    workflows: ["Build Package"]
+    types:
+      - completed
+
+jobs:
+  notify:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Poista vanha image
+        run: docker image rm arttukuikka/kipaplus
+        
+      - name: lataa uusi
+        run: docker pull arttukuikka/kipaplus:latest
+        
+      - name: lataa docker compose
+        run: wget https://raw.githubusercontent.com/ArttuKuikka/Kipa-plus/Production/docker-compose.yml
+        
+      - name: suorita compose
+        run: sudo docker compose up -d
