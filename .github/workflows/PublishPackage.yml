@@ -22,5 +22,5 @@ jobs:
         run: docker compose build 
         
       - name: Docker Push
-        run: Docker push ${{secrets.DOCKER_USER}}/kipaplus
+        run: docker push ${{secrets.DOCKER_USER}}/kipaplus:latest
         
