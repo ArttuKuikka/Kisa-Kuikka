@@ -12,6 +12,9 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Pysäytä container
+        continue-on-error: true
+        run: docker kill Kipa-Plus
 
       - name: Poista container
         continue-on-error: true
