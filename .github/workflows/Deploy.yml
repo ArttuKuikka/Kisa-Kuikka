@@ -17,6 +17,9 @@ jobs:
       - name: Poista vanha image
         run: docker image rm arttukuikka/kipaplus
         
+      - name: Poista container
+        run: docker container rm Kipa-Plus
+        
       - name: lataa uusi
         run: docker pull arttukuikka/kipaplus:latest
         
