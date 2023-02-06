@@ -17,7 +17,7 @@ Kipa-plus ensimmäinen testikerta tulee olemaan Vainion Vesojen Kökäs kisan es
 
 ## Tulevavia ominaisuuksia
 - Käyttäjä ja roolihallinta
-- Kipa-plussaan on tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten myöhemmin, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
+- Kipa-plussaan on myöhemmin tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
 
 
 ## Simppeli asennus (paremmat ohjeet myöhemmin)
