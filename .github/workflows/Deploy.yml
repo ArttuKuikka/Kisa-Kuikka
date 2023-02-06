@@ -3,7 +3,7 @@ name: Deploy
 # Only trigger, when the build workflow succeeded
 on:
   workflow_run:
-    workflows: ["Build Package"]
+    workflows: ["Build latest"]
     types:
       - completed
 
