@@ -6,7 +6,7 @@ on:
     - production
 
 jobs:
-  build-and-publish-latest:
+  build-and-publish-package:
     name: 'Build Package'
     runs-on: ubuntu-latest
     steps:
