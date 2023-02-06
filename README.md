@@ -2,7 +2,7 @@
 
 
 
-```diff
+
 - !!HUOM!! Kipa-plus on vielä teon alle, eikä sisällä kaikkia ominaisuuksia joita siihen on tarkoitus lisätä, käytä ainoastaan testaamiseen!!
 
 Kipa-plus on asp.net core pohjainen ohjelmiston partitaitokisojen pisteiden laskuun ja vartioiden paikantamiseen NFC-tagien avulla. Kipa-plus vähentää kisoissa tarvittavien papereiden antamalla rastityöntekijöille mahdollisuuden syöttää rastien arvioinnit suoraan rastilta käsin puhelimen välityksessä.
@@ -16,16 +16,25 @@ Kipa-plus ensimmäinen testikerta tulee olemaan Vainion Vesojen Kökäs kisan es
 
 
 ## Tulevavia ominaisuuksia
-Kipa-plussaan on tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten myöhemmin, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa.
+- Käyttäjä ja roolihallinta
+- Kipa-plussaan on tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten myöhemmin, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
 
 
-
+## Simppeli asennus (paremmat ohjeet myöhemmin)
+- Asenna Ubuntu server tai jokin muu linux käyttöjärjestelmä palvelintietokoneellesi
+- asenna docker ja docker compose (https://docs.docker.com/engine/install/ubuntu/)
+- luo kansio docker compose tiedostolle `mkdir KipaPlus && cd KipaPlus`
+- lataa docker compose `wget https://raw.githubusercontent.com/ArttuKuikka/Kipa-plus/Production/docker-compose.yml`
+- (ei pakollista) vaihda tietokannan salasana docker-compose.yml tiedostossa komennolla `nano docker-compose.yml`
+- suorita docker compose `sudo docker compose up -d`
+- Valmista, mene palvemimen selaimella osoitteeseen `http://palvelimen-ip:8001/` (jos tämä ei toimi, tarkista palvelimen palomuurin asetukset ja salli portti 8001)
+- Kipa plus on suunniteltu käytettyväksi reverse proxyn kanssa, joka huolehtii https suojaksesta, ohjeet tähän tulevat myöhemmin
 
 
 ## Muuta
 Projektiin kuuluu myös toinen repository jossa on hieman muokattu versio kevinchappel/formbuilder:ista https://github.com/ArttuKuikka/KipaFormBuilder
 
 
-Pull requesteja otetaan mielellään vastaan ja jos tulee jotain kysyttävää voit ottaa yhteyttä:
-Discord: Arttu#6180
-Sähköposti: arttu.juhani.kuikka@gmail.com
+Pull requesteja otetaan mielellään vastaan ja Jos sinulla on jotai kysyttävää, ota yhteyttä:
+- Discord: Arttu#6180
+- Sähköposti: arttu.juhani.kuikka@gmail.com
