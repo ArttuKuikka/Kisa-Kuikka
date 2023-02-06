@@ -14,11 +14,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Poista vanha image
-        run: docker image rm arttukuikka/kipaplus
-        
       - name: Poista container
         run: docker container rm Kipa-Plus
+
+      - name: Poista vanha image
+        run: docker image rm arttukuikka/kipaplus  
         
       - name: lataa uusi
         run: docker pull arttukuikka/kipaplus:latest
