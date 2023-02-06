@@ -3,7 +3,7 @@ name: 'Build latest'
 on:
   push:
     branches:
-    - production
+    - Production
 
 jobs:
   build-and-publish-package:
