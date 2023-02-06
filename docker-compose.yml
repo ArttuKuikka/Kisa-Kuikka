@@ -9,8 +9,9 @@ volumes:
 
 services:
   db:
-    container_name: app-db
+    container_name: Kipa-DB
     image: mcr.microsoft.com/mssql/server:2022-latest
+    restart: unless-stopped:5
     ports:
         - 8002:1433
     environment:
@@ -24,12 +25,16 @@ services:
           target: /var/opt/mssql
 
   kipa-plus:
-    image: ${DOCKER_REGISTRY-}kipaplus
+    container_name: Kipa-Plus
+    image: arttukuikka/kipaplus:latest
+    restart: unless-stopped:5
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
         - db
+    ports:
+        - 8001:80
     networks:
         - KipaNet
     environment:
