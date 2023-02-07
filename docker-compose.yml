@@ -12,8 +12,6 @@ services:
     container_name: Kipa-DB
     image: mcr.microsoft.com/mssql/server:2022-latest
     restart: unless-stopped
-    ports:
-        - 8002:1433
     environment:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=S3cur3P@ssW0rd!
