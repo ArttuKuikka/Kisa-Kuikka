@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class KisaController : Controller
     {
         private readonly ApplicationDbContext _context;

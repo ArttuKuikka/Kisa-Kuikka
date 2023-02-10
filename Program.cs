@@ -1,110 +1,28 @@
-using Kipa_plus.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Net.Http.Headers;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.StaticFiles;
-
-var builder = WebApplication.CreateBuilder(args);
-
-ConfigurationManager configuration = builder.Configuration;
-
-// Add services to the container.
-var DBHOST = Environment.GetEnvironmentVariable("DB_HOST");
-var DBPORT = Environment.GetEnvironmentVariable("DB_PORT");
-var DBNAME = Environment.GetEnvironmentVariable("DB_NAME");
-var DBUSER = Environment.GetEnvironmentVariable("DB_USER");
-var DBUSERPASSWD = Environment.GetEnvironmentVariable("DB_USER_PASSWORD");
-
-var connectionString = $"Server={DBHOST},{DBPORT};Database={DBNAME};User ID={DBUSER};Password={DBUSERPASSWD};TrustServerCertificate=True;MultipleActiveResultSets=true;";
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddControllers();
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddRazorPages();
+using Kipa_plus;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 
-//lis‰‰ bearer authentication api varten
-builder.Services.AddAuthentication(options =>
+namespace SampleMvcWebWithUi
 {
-    options.DefaultAuthenticateScheme = "MultiAuthSchemes";
-    options.DefaultChallengeScheme = "MultiAuthSchemes";
-    options.DefaultScheme = "MultiAuthSchemes";
-}).AddPolicyScheme("MultiAuthSchemes", "Bearer", options =>
-{
-    options.ForwardDefaultSelector = context =>
+    public class Program
     {
-        string authorization = context.Request.Headers[HeaderNames.Authorization];
-        if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
+        public static void Main(string[] args)
         {
-            var token = authorization.Substring("Bearer ".Length).Trim();
-            var jwtHandler = new JwtSecurityTokenHandler();
-            return (jwtHandler.CanReadToken(token) && jwtHandler.ReadJwtToken(token).Issuer.Equals(configuration["JWT:ValidIssuer"]))
-                ? JwtBearerDefaults.AuthenticationScheme : "Bearer";
+            CreateHostBuilder(args).Build().Run();
         }
-        return "Identity.Application";
-    };
-}).AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = configuration["JWT:ValidAudience"],
-        ValidIssuer = configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-    };
-});
 
-//lis‰‰ swagger api a varten
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(e => { e.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Kipa-plus API", Version = "v1" }); });
-
-var app = builder.Build();
-
-app.UseSwagger();
-app.UseSwaggerUI();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseMigrationsEndPoint();
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
+    }
 }
-else
-{
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-//app.UseHttpsRedirection();
-
-//lis‰‰ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
-var provider = new FileExtensionContentTypeProvider();
-provider.Mappings.Add(".lang", "language");
-app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider }) ;
-
-app.UseRouting();
-
-app.UseAuthorization();
-app.UseAuthentication();
-
-app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}");
-
-
-
-app.MapRazorPages();
-app.MapControllers();
-
-app.Run();
