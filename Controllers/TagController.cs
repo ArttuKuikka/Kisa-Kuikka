@@ -1,9 +1,11 @@
 ﻿using Kipa_plus.Data;
 using Microsoft.AspNetCore.Mvc;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     public class TagController : Controller
     {
         private readonly ApplicationDbContext _context;

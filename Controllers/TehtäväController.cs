@@ -10,9 +10,11 @@ using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
 using Kipa_plus.Models.ViewModels;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     public class TehtavaController : Controller
     {
         private readonly ApplicationDbContext _context;

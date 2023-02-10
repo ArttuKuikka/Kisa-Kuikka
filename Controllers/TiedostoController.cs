@@ -1,12 +1,14 @@
 ﻿using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     public class TiedostoController : Controller
     {
         private readonly ApplicationDbContext _context;

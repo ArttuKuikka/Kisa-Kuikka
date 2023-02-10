@@ -11,9 +11,11 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics.Metrics;
 using System.Net;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class SarjaController : Controller
     {

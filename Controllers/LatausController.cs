@@ -1,5 +1,6 @@
 ﻿using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 using NPOI.HSSF.UserModel;
@@ -13,6 +14,7 @@ using System.IO;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class LatausController : Controller
     {

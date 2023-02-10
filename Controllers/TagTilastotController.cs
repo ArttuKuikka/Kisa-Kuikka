@@ -1,11 +1,13 @@
 ﻿using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
+    [Authorize]
     public class TagTilastotController : Controller
     {
         private readonly ApplicationDbContext _context;

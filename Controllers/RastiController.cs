@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
     [Route("[controller]")]
     public class RastiController : Controller
     {
