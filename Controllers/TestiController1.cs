@@ -9,20 +9,14 @@ namespace Kipa_plus.Controllers
     {
         public async Task<IActionResult> Index()
         {
-            return Ok("K");  
+            var str = "";
+            foreach(var claim in User.Claims)
+            {
+                str+=  " " +claim.Type + ":" + claim.Value;
+            }
+            return Ok(str);  
         }
-        [HttpGet("Testi")]
-        public async Task<IActionResult> Testi()
-        {
-            return Ok("KK");  
-        }
-
         
-
-        [HttpGet("{kisaId:int}/Vartiot/Details")]
-        public async Task<IActionResult> Vartio(int kisaId, [FromQuery] int id)
-        {
-            return Ok(kisaId.ToString() + " " + id.ToString());
-        }
+        
     }
 }

@@ -1,7 +1,7 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    
 }
 
 <h1>@ViewData["Title"]</h1>
@@ -12,6 +12,21 @@
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Etunimi" class="form-control" autocomplete="Etunimi" aria-required="true" placeholder="nimi" />
+                <label asp-for="Input.Etunimi">Etunimi</label>
+                <span asp-validation-for="Input.Etunimi" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Sukunimi" class="form-control" autocomplete="Sukunimi" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Sukunimi">Sukunimi</label>
+                <span asp-validation-for="Input.Sukunimi" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                <label asp-for="Input.Email">Email</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
