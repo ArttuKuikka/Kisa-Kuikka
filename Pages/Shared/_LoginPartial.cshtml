@@ -7,9 +7,9 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-            @if(User.Claims.Any(x => x.Type == "Etunimi"))
+            @if(User.Claims.Any(x => x.Type == "KokoNimi"))
             {
-                <a class="nav-link" style="color: white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Tervetuloa @User.Claims.FirstOrDefault(x => x.Type == "Etunimi").Value @User.Claims.FirstOrDefault(x => x.Type == "Sukunimi").Value</a>
+                <a class="nav-link" style="color: white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Tervetuloa @User.Claims.FirstOrDefault(x => x.Type == "KokoNimi").Value</a>
             }
             else
             {

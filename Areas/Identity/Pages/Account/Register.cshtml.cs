@@ -81,14 +81,15 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
 
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Etunimi")]
-            public string Etunimi { get; set; }
+            [Display(Name = "Nimi")]
+            public string KokoNimi { get; set; }
 
             [Required]
             [DataType(DataType.Text)]
-            [Display(Name = "Sukunimi")]
-            public string Sukunimi { get; set; }
+            [Display(Name = "LiittymisId")]
+            public string LiittymisId { get; set; }
 
+         
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -118,6 +119,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            //tarkista liittymisId
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
@@ -132,8 +134,8 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("Etunimi", Input.Etunimi));
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("Sukunimi", Input.Sukunimi));
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("KokoNimi", Input.KokoNimi));
+                    
                     var userId = await _userManager.GetUserIdAsync(user);
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
