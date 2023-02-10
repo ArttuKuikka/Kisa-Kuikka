@@ -24,14 +24,16 @@
         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
         <div class="form__field">
             <label for="login__username"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Username</span></label>
-            <input asp-for="Input.Email"  autocomplete="username" type="text" name="username" class="form__input form-control" placeholder="Käyttäjätunnus" aria-required="true" />
-            <span asp-validation-for="Input.Email" class="text-danger"></span>
+            <input asp-for="Input.Email"  autocomplete="username" type="text" class="form__input form-control" placeholder="Käyttäjätunnus" aria-required="true" />
+            
         </div>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
         <div class="form__field">
            <label for="login__password"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#lock"></use></svg><span class="hidden">Password</span></label>
-           <input asp-for="Input.Password" type="password" autocomplete="current-password" name="password" class="form__input form-control" placeholder="Salasana" aria-required="true">
-           <span asp-validation-for="Input.Password" class="text-danger"></span>
+           <input asp-for="Input.Password" type="password" autocomplete="current-password" class="form__input form-control" placeholder="Salasana" aria-required="true">
+           
         </div>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
                 <div class="form__field">
                     <label asp-for="Input.RememberMe" class="form-label">
                         <input class="form-check-input" asp-for="Input.RememberMe" />
