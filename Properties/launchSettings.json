@@ -18,7 +18,8 @@
         "DB_PORT": "8002",
         "DB_NAME": "KipaPlus",
         "DB_USER": "sa",
-        "DB_USER_PASSWORD": "S3cur3P@ssW0rd!"
+        "DB_USER_PASSWORD": "S3cur3P@ssW0rd!",
+        "DEFAULTADMINUSER": "admin@arttukuikka.fi"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7034;http://localhost:5043"
