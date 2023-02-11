@@ -24,16 +24,16 @@
 
 
                 <div class="form__field">
-                    <label for="login__username"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#input"></use></svg><span class="hidden">LiittymisId</span></label>
-                    <input asp-for="Input.LiittymisId" autocomplete="username" type="text" class="form__input form-control" placeholder="LiittymisId" aria-required="true" />
+                    <label for="login__LiittymisId"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#input"></use></svg><span class="hidden">LiittymisId</span></label>
+                    <input asp-for="Input.LiittymisId" autocomplete="LiittymisId" type="text" class="form__input form-control" placeholder="LiittymisId" aria-required="true" />
 
                 </div>
                 <span asp-validation-for="Input.LiittymisId" class="text-danger"></span>
 
                 
                 <div class="form__field">
-                    <label for="login__username"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Nimi</span></label>
-                    <input asp-for="Input.KokoNimi" autocomplete="username" type="text" class="form__input form-control" placeholder="Nimi" aria-required="true" />
+                    <label for="login__name"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Nimi</span></label>
+                    <input asp-for="Input.KokoNimi" autocomplete="name" type="text" class="form__input form-control" placeholder="Nimi" aria-required="true" />
 
                 </div>
                 <span asp-validation-for="Input.KokoNimi" class="text-danger"></span>
@@ -44,7 +44,7 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form__field">
                     <label for="login__username"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Sähköposti</span></label>
-                    <input asp-for="Input.Email" autocomplete="username" type="text" class="form__input form-control" placeholder="Sähköposti" aria-required="true" />
+                    <input asp-for="Input.Email" autocomplete="email" type="text" class="form__input form-control" placeholder="Sähköposti" aria-required="true" />
 
                 </div>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -59,7 +59,7 @@
 
                 <div class="form__field">
                     <label for="login__password"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#lock"></use></svg><span class="hidden">Varmista salasana</span></label>
-                    <input asp-for="Input.ConfirmPassword" type="password" autocomplete="current-password" class="form__input form-control" placeholder="Varmista salasana" aria-required="true">
+                    <input asp-for="Input.ConfirmPassword" type="text" autocomplete="new-password" class="form__input form-control" placeholder="Varmista salasana" aria-required="true">
 
                 </div>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
