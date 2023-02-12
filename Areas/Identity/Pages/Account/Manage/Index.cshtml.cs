@@ -55,21 +55,26 @@ namespace Kipa_plus.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            
+            [Display(Name = "Nimi")]
+            public string KokoNimi { get; set; }
         }
 
         private async Task LoadAsync(IdentityUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
+            var claims = await _userManager.GetClaimsAsync(user);
+            var nimi = "Ei nimeä";
+            if (claims.Where(x => x.Type == "KokoNimi").Any())
+            {
+                nimi = claims.First(x => x.Type == "KokoNimi").Value;
+            }
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                KokoNimi = nimi
             };
         }
 
@@ -99,19 +104,29 @@ namespace Kipa_plus.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
+            var claims = await _userManager.GetClaimsAsync(user);
+            if (Input.KokoNimi != null || Input.KokoNimi != "")
             {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
+                IdentityResult result;
+                if(claims.Where(x => x.Type == "KokoNimi").Any())
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    result = await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "KokoNimi"), new System.Security.Claims.Claim("KokoNimi", Input.KokoNimi));
+                }
+                else
+                {
+                    result = await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("KokoNimi", Input.KokoNimi));
+                }
+
+                
+                if (!result.Succeeded)
+                {
+                    StatusMessage = "Vihre päivittäessä nimeä";
                     return RedirectToPage();
                 }
             }
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Profiilisi on päivitetty";
             return RedirectToPage();
         }
     }
