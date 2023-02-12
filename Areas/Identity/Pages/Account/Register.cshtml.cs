@@ -74,17 +74,17 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [EmailAddress]
+            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
+            [EmailAddress(ErrorMessage = "Virheellinen sähköpostiosoite")]
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
             [DataType(DataType.Text)]
             [Display(Name = "Nimi")]
             public string KokoNimi { get; set; }
 
-            [Required]
+            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
             [DataType(DataType.Text)]
             [Display(Name = "LiittymisId")]
             public string LiittymisId { get; set; }
@@ -94,7 +94,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
             [StringLength(100, ErrorMessage = "Salasanan pitää olla ainakin {2} merkkiä pitkä ja saa olla enintään {1} merkkiä pitkä", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -119,7 +119,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            //tarkista liittymisId
+            //TODO: tarkista liittymisId
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
