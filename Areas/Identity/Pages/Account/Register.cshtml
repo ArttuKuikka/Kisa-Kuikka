@@ -59,7 +59,7 @@
 
                 <div class="form__field">
                     <label for="login__password"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#lock"></use></svg><span class="hidden">Varmista salasana</span></label>
-                    <input asp-for="Input.ConfirmPassword" type="text" autocomplete="new-password" class="form__input form-control" placeholder="Varmista salasana" aria-required="true">
+                    <input asp-for="Input.ConfirmPassword" type="password" autocomplete="new-password" class="form__input form-control" placeholder="Varmista salasana" aria-required="true">
 
                 </div>
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
