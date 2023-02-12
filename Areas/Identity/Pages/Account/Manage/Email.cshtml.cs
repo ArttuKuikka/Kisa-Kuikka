@@ -35,6 +35,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account.Manage
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
+        [Display(Name = "Sähköposti")]
         public string Email { get; set; }
 
         /// <summary>
@@ -67,9 +68,9 @@ namespace Kipa_plus.Areas.Identity.Pages.Account.Manage
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
+            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Uusi sähköposti")]
             public string NewEmail { get; set; }
         }
 
