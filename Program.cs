@@ -7,9 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.StaticFiles;
-using DynamicAuthorization.Mvc.Core.Extensions;
-using DynamicAuthorization.Mvc.Ui;
-using DynamicAuthorization.Mvc.MsSqlServerStore;
+
 using Kipa_plus.Auth;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -39,9 +37,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.Sign
 var mvcBuilder = builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
-    .AddSqlServerStore(options => options.ConnectionString = connectionString)
-    .AddUi(mvcBuilder);
+//builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
+//    .AddSqlServerStore(options => options.ConnectionString = connectionString)
+//    .AddUi(mvcBuilder);
 
 
 
