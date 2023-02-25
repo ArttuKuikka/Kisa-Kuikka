@@ -5,7 +5,7 @@
 
 - !!HUOM!! Kipa-plus on vielä teon alle, eikä sisällä kaikkia ominaisuuksia joita siihen on tarkoitus lisätä, käytä ainoastaan testaamiseen!!
 
-Kipa-plus on asp.net core pohjainen ohjelmiston partitaitokisojen pisteiden laskuun ja vartioiden paikantamiseen NFC-tagien avulla. Kipa-plus vähentää kisoissa tarvittavien papereiden antamalla rastityöntekijöille mahdollisuuden syöttää rastien arvioinnit suoraan rastilta käsin puhelimen välityksessä.
+Kipa-plus on asp.net core pohjainen ohjelmiston partitaitokisojen pisteiden laskuun ja vartioiden paikantamiseen NFC-tagien avulla. Kipa-plus vähentää kisoissa tarvittavien papereiden määrää antamalla rastityöntekijöille mahdollisuuden syöttää rastien arvioinnit suoraan rastilta käsin puhelimen välityksessä.
 
 Kipa-plus tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoida kisojen toimintaa muuten. Kipa-plus tukee täysin digitaalista arviontia rastilla, mutta myös paperista jolloin Kipa-plussaan syötetään vain paperilta yhteenlaskettu tulos sekä muut tulostoimostolle tarpeelliset tiedot.
 
@@ -17,7 +17,7 @@ Kipa-plus ensimmäinen testikerta tulee olemaan Vainion Vesojen Kökäs kisan es
 
 ## Tulevavia ominaisuuksia
 - Käyttäjä ja roolihallinta
-- Kipa-plussaan on myöhemmin tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
+- myöhemmin tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
 
 
 ## Simppeli asennus (paremmat ohjeet myöhemmin)
@@ -27,8 +27,8 @@ Kipa-plus ensimmäinen testikerta tulee olemaan Vainion Vesojen Kökäs kisan es
 - lataa docker compose `wget https://raw.githubusercontent.com/ArttuKuikka/Kipa-plus/Production/docker-compose.yml`
 - (ei pakollista) vaihda tietokannan salasana docker-compose.yml tiedostossa komennolla `nano docker-compose.yml`
 - suorita docker compose `sudo docker compose up -d`
-- Valmista, mene palvemimen selaimella osoitteeseen `http://palvelimen-ip:8001/` (jos tämä ei toimi, tarkista palvelimen palomuurin asetukset ja salli portti 8001)
-- Kipa plus on suunniteltu käytettyväksi reverse proxyn kanssa, joka huolehtii https suojaksesta, ohjeet tähän tulevat myöhemmin
+- Valmista, mene selaimella osoitteeseen `http://palvelimen-ip:8001/` (jos tämä ei toimi, tarkista palvelimen palomuurin asetukset ja salli portti 8001)
+- Kipa plus on suunniteltu käytettäväksi reverse proxyn kanssa, joka huolehtii https suojaksesta, ohjeet tähän tulevat myöhemmin
 
 
 ## Muuta
