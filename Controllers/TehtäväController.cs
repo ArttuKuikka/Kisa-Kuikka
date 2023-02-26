@@ -12,6 +12,7 @@ using Kipa_plus.Models.ViewModels;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using System.Security.Claims;
 
 namespace Kipa_plus.Controllers
 {
@@ -173,6 +174,7 @@ namespace Kipa_plus.Controllers
 
                 aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
                 aiempitehtva.Tarkistettu = true;
+                aiempitehtva.TarkistajaUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 _context.SaveChanges();
 
                 return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
@@ -212,6 +214,7 @@ namespace Kipa_plus.Controllers
 
                 tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
                 tehtvastaus.Kesken = false;
+                tehtvastaus.JatkajaUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();
@@ -257,6 +260,7 @@ namespace Kipa_plus.Controllers
                 TV.SarjaId = TehtavaPohja.SarjaId;
                 TV.KisaId = TehtavaPohja.KisaId;
                 TV.RastiId= TehtavaPohja.RastiId;
+                TV.TäyttäjäUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
                 
                 _context.TehtavaVastaus.Add(TV);
                 _context.SaveChanges();

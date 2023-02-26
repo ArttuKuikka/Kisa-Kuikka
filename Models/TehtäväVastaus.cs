@@ -1,4 +1,6 @@
-﻿namespace Kipa_plus.Models
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace Kipa_plus.Models
 {
     public class TehtavaVastaus
     {
@@ -11,5 +13,8 @@
         public bool Kesken { get; set; }
         public string? TehtavaJson { get; set; }
         public bool Tarkistettu { get; set; }
+        public int? TäyttäjäUserId { get; set; }
+        public int? JatkajaUserId { get; set; }
+        public int? TarkistajaUserId { get; set; }
     }
 }
