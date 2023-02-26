@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Kipa_plus.Models.DynamicAuth.Custom;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kipa_plus.Models.DynamicAuth
 {
@@ -9,5 +10,6 @@ namespace Kipa_plus.Models.DynamicAuth
         public string Name { get; set; }
 
         public IEnumerable<MvcControllerInfo> SelectedControllers { get; set; }
+        public IEnumerable<RastiControllerModel> ValitutRastit { get; set; }
     }
 }

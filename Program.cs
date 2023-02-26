@@ -57,7 +57,7 @@ builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => option
 
 builder.Services.AddRazorPages();
 
-builder.Services.AddSingleton<IMvcControllerDiscovery, MvcControllerDiscovery>();
+//builder.Services.AddSingleton<IMvcControllerDiscovery, MvcControllerDiscovery>();
 //builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
 //    .AddSqlServerStore(options => options.ConnectionString = connectionString)
 //    .AddUi(mvcBuilder);

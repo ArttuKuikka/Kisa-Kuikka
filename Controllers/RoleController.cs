@@ -8,6 +8,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Kipa_plus.Models;
+using Kipa_plus.Services;
+using Kipa_plus.Data;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Kipa_plus.Controllers
 {
@@ -21,15 +24,21 @@ namespace Kipa_plus.Controllers
         private readonly RoleManager<TRole> _roleManager;
         private readonly IMvcControllerDiscovery _mvcControllerDiscovery;
         private readonly IRoleAccessStore _roleAccessStore;
+        private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
+        private readonly ApplicationDbContext _context;
 
         public RoleController(
             IMvcControllerDiscovery mvcControllerDiscovery,
             IRoleAccessStore roleAccessStore,
-            RoleManager<TRole> roleManager)
+            RoleManager<TRole> roleManager,
+            IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
+            ApplicationDbContext context)
         {
             _mvcControllerDiscovery = mvcControllerDiscovery;
             _roleAccessStore = roleAccessStore;
             _roleManager = roleManager;
+            _context = context;
+            _actionDescriptorCollectionProvider= actionDescriptorCollectionProvider;
         }
 
         // GET: Role
@@ -46,8 +55,9 @@ namespace Kipa_plus.Controllers
         public ActionResult Create()
         {
             var controllers = _mvcControllerDiscovery.GetControllers();
+            var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
             ViewData["Controllers"] = controllers;
-
+            ViewData["Rastit"] = rastit.GetRastit();
             return View();
         }
 

@@ -44,7 +44,8 @@ namespace Kipa_plus.Services
             sql.AppendLine("CREATE TABLE [dbo].[RoleAccess] ( ");
             sql.AppendLine("[Id] int IDENTITY(1,1)  NOT NULL, ");
             sql.AppendLine($"[RoleId] {GetRoleIdType()}  NOT NULL, ");
-            sql.AppendLine("[Access] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL );");
+            sql.AppendLine("[Access] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL, ");
+            sql.AppendLine("[RastiAccess] nvarchar(max) COLLATE SQL_Latin1_General_CP1_CI_AS  NULL );");
             sql.AppendLine("ALTER TABLE [dbo].[RoleAccess] SET (LOCK_ESCALATION = TABLE);");
             sql.AppendLine("DBCC CHECKIDENT ('[dbo].[RoleAccess]', RESEED, 1);");
             sql.AppendLine("CREATE NONCLUSTERED INDEX [IX_RoleAccess_RoleId] ");

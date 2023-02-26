@@ -28,7 +28,7 @@ namespace Kipa_plus.Services
                 {
                     using (var conn = new SqlConnection(_options.ConnectionString))
                     {
-                        const string insertCommand = "INSERT INTO RoleAccess VALUES(@RoleId, @Access)";
+                        const string insertCommand = "INSERT INTO RoleAccess VALUES(@RoleId, @Access, @RastiAccess)";
                         using (var cmd = new SqlCommand(insertCommand, conn))
                         {
                             cmd.CommandType = CommandType.Text;
@@ -36,6 +36,7 @@ namespace Kipa_plus.Services
 
                             var access = JsonConvert.SerializeObject(roleAccess.Controllers);
                             cmd.Parameters.AddWithValue("@Access", access);
+                            cmd.Parameters.AddWithValue("@RastiAccess", "rastiAcces");
 
                             conn.Open();
                             var affectedRows = await cmd.ExecuteNonQueryAsync();

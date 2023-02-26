@@ -1,10 +1,12 @@
 ﻿@using Kipa_plus.Models.DynamicAuth;
 @using Kipa_plus;
+@using Kipa_plus.Models.DynamicAuth.Custom;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model RoleViewModel
 @{
     ViewData["Title"] = "Create Role";
     var controllers = (IEnumerable<MvcControllerInfo>)ViewData["Controllers"];
+    var rastit = (IEnumerable<RastiControllerModel>)ViewData["Rastit"];
     Layout = "_Layout";
 }
 
@@ -32,6 +34,47 @@
             <div class="form-group row">
                 <label class="col-md-3 col-form-label">Access List</label>
                 <div class="col-md-9">
+                    <ol id="tree">
+                        @foreach (var rasti in rastit)
+                        {
+                            var name = rasti.RastiNimi;
+
+                            <li class="controller" data-value="@rasti.RastiNimi">
+                                <input type="hidden" class="area" value="@rasti.RastiId" />
+                                @name
+                                @if (rasti.Actions.Any())
+                                {
+                                    <ul>
+                                        @foreach (var action in rasti.Actions)
+                                        {
+                                            name = action.Nimi ?? action.ActionName;
+                                            <li data-value="@action.ActionName">@name</li>
+                                        }
+                                    </ul>
+                                }
+                                @foreach(var subcontroller in rasti.SubControllers)
+                                {
+                                    var name2 = subcontroller.Nimi;
+
+                                <li class="controller" data-value="@subcontroller.Nimi">
+                                    <input type="hidden" class="area" value="@subcontroller.Nimi" />
+                                        @name2
+                                        @if (subcontroller.Actions.Any())
+                                        {
+                                        <ul>
+                                                @foreach (var action in subcontroller.Actions)
+                                                {
+                                                    name2 = action.Nimi ?? action.ActionName;
+                                                <li data-value="@action.ActionName">@name2</li>
+                                                }
+                                        </ul>
+                                        }
+                                        
+                                </li>
+                                }
+                            </li>
+                        }
+                    </ol>
                     <ol id="tree">
                         @foreach (var controller in controllers)
                         {

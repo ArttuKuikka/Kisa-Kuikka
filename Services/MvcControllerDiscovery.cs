@@ -6,6 +6,9 @@ using System.ComponentModel;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Kipa_plus.Models;
+using Kipa_plus.Models.DynamicAuth.Custom;
+using Kipa_plus.Data;
+using System.Linq;
 
 namespace Kipa_plus.Services
 {
@@ -13,10 +16,11 @@ namespace Kipa_plus.Services
     {
         private List<MvcControllerInfo> _mvcControllers;
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
-
+        
         public MvcControllerDiscovery(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider)
         {
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
+            
         }
 
         public IEnumerable<MvcControllerInfo> GetControllers()
@@ -40,6 +44,7 @@ namespace Kipa_plus.Services
                 var actionDescriptor = actionDescriptors.First();
                 var controllerTypeInfo = actionDescriptor.ControllerTypeInfo;
 
+                //lisää controller listaan vaan ne joissa on static
                 var staticattr = controllerTypeInfo.GetCustomAttribute<StaticAttribute>();
                 if (staticattr == null)
                 {
@@ -75,6 +80,8 @@ namespace Kipa_plus.Services
 
             return _mvcControllers;
         }
+
+        
 
         private static bool IsProtectedAction(MemberInfo controllerTypeInfo, MemberInfo actionMethodInfo)
         {
