@@ -31,10 +31,23 @@
     });
 
     $("#tree").bonsai({
-        expandAll: false,
+        expandAll: true,
         checkboxes: true,
         createInputs: "checkbox"
     });
+
+    $("#rastitree").bonsai({
+        expandAll: true,
+        checkboxes: true,
+        createInputs: "checkbox"
+    });
+
+    $("#subcontroller").bonsai({
+        expandAll: true,
+        checkboxes: true,
+        createInputs: "checkbox"
+    });
+   
 
     $("form").submit(function () {
         let controllerIndex = 0, actionIndex = 0;

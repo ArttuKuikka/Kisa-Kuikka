@@ -34,7 +34,8 @@
             <div class="form-group row">
                 <label class="col-md-3 col-form-label">Access List</label>
                 <div class="col-md-9">
-                    <ol id="tree">
+                    <ol id="rastitree">
+                        
                         @foreach (var rasti in rastit)
                         {
                             var name = rasti.RastiNimi;
@@ -52,11 +53,13 @@
                                         }
                                     </ul>
                                 }
+                                <ol>
                                 @foreach(var subcontroller in rasti.SubControllers)
                                 {
                                     var name2 = subcontroller.Nimi;
-
-                                <li class="controller" data-value="@subcontroller.Nimi">
+                                    
+                                    
+                                   <li class="subcontroller" data-value="@subcontroller.Nimi">
                                     <input type="hidden" class="area" value="@subcontroller.Nimi" />
                                         @name2
                                         @if (subcontroller.Actions.Any())
@@ -70,8 +73,11 @@
                                         </ul>
                                         }
                                         
-                                </li>
+                                    </li>
+                                    
+                                    
                                 }
+                                </ol>
                             </li>
                         }
                     </ol>
