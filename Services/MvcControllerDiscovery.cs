@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
+using Kipa_plus.Models;
 
 namespace Kipa_plus.Services
 {
@@ -38,6 +39,13 @@ namespace Kipa_plus.Services
 
                 var actionDescriptor = actionDescriptors.First();
                 var controllerTypeInfo = actionDescriptor.ControllerTypeInfo;
+
+                var staticattr = controllerTypeInfo.GetCustomAttribute<StaticAttribute>();
+                if (staticattr == null)
+                {
+                    continue;
+                }
+
                 var currentController = new MvcControllerInfo
                 {
                     AreaName = controllerTypeInfo.GetCustomAttribute<AreaAttribute>()?.RouteValue,

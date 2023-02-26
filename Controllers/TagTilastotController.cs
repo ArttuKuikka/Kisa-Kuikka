@@ -8,6 +8,7 @@ namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
     [Authorize]
+    [Static]
     public class TagTilastotController : Controller
     {
         private readonly ApplicationDbContext _context;

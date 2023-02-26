@@ -7,11 +7,12 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Kipa_plus.Models;
 
 namespace Kipa_plus.Controllers
 {
     [Authorize, AddResourcesToViewFilter]
-    
+    [Static]
     [DisplayName("Role Management")]
     public class RoleController<TRole, TKey> : Controller
         where TRole : IdentityRole<TKey>

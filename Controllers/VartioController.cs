@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [Static]
     public class VartioController : Controller
     {
         private readonly ApplicationDbContext _context;

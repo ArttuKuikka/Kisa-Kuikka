@@ -15,6 +15,7 @@ using System.IO;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [Static]
     [Route("[controller]")]
     public class LatausController : Controller
     {

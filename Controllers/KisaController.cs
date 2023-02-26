@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
+    [Static]
     [Authorize]
     public class KisaController : Controller
     {

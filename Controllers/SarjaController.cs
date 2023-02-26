@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [Static]
     [Route("[controller]")]
     public class SarjaController : Controller
     {

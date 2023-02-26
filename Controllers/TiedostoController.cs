@@ -9,6 +9,7 @@ using System;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [Static]
     public class TiedostoController : Controller
     {
         private readonly ApplicationDbContext _context;

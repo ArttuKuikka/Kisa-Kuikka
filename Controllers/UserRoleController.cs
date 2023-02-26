@@ -8,12 +8,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Filters;
+using Kipa_plus.Models;
 
 namespace Kipa_plus.Controllers
 {
     
     [Authorize, AddResourcesToViewFilter]
     [DisplayName("User Role Management")]
+    [Static]
     public class UserRoleController<TRole, TUser, TKey> : Controller
     where TRole : IdentityRole<TKey>
     where TUser : IdentityUser<TKey>
