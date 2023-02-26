@@ -3,6 +3,7 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
@@ -17,6 +18,7 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
+        [DisplayName("Näytä tilastot")]
         public IActionResult Index(int? id)
         {
             if (id == null)
@@ -65,6 +67,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpGet("Raw")]
+        [DisplayName("Näytä tilastojen raakaversio")]
         public IActionResult Raw(int? id)
         {
             if (id == null)

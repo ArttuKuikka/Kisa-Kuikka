@@ -16,7 +16,7 @@ namespace Kipa_plus.Controllers
 {
     [Authorize, AddResourcesToViewFilter]
     [Static]
-    [DisplayName("Role Management")]
+    [DisplayName("Roolien hallinta")]
     public class RoleController<TRole, TKey> : Controller
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
@@ -42,7 +42,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Role
-        [DisplayName("Role List")]
+        [DisplayName("Listaa roolit")]
         public ActionResult Index()
         {
             var roles = _roleManager.Roles;
@@ -50,7 +50,7 @@ namespace Kipa_plus.Controllers
             return View(roles);
         }
 
-        [DisplayName("Create Role")]
+        [DisplayName("Luo")]
         // GET: Role/Create
         public ActionResult Create()
         {
@@ -104,7 +104,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Role/Edit/5
-        [DisplayName("Edit Role")]
+        [DisplayName("Muokkaa")]
         public async Task<ActionResult> Edit(string id)
         {
             ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();

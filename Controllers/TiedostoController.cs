@@ -4,7 +4,7 @@ using Kipaplus.Data.Migrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
@@ -33,6 +33,8 @@ namespace Kipa_plus.Controllers
            
             return View(tiedostot);
         }
+
+        [DisplayName("Lähetä tiedostoja")]
         public async Task<IActionResult> Post()
         {
             return View();
@@ -83,6 +85,7 @@ namespace Kipa_plus.Controllers
             }
         }
 
+        [DisplayName("Poista tiedostoja")]
         public async Task<IActionResult> Delete(int id)
         {
             var path = Path.GetFullPath("/UploadedFiles");
@@ -106,6 +109,7 @@ namespace Kipa_plus.Controllers
             }
         }
 
+        [DisplayName("Lataa tiedostoja")]
         public async Task<IActionResult> Get(int id)
         {
             

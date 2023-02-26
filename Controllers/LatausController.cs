@@ -10,6 +10,7 @@ using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using NPOI.XWPF.UserModel;
+using System.ComponentModel;
 using System.IO;
 
 namespace Kipa_plus.Controllers
@@ -17,6 +18,7 @@ namespace Kipa_plus.Controllers
     [Authorize]
     [Static]
     [Route("[controller]")]
+    [DisplayName("Tiedoston lataus")]
     public class LatausController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -26,6 +28,7 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+        [DisplayName("Lataa tiedosto")]
         public async Task<IActionResult> index(int? kisaid, string? format)
         {
             if (kisaid == null) { return BadRequest("KisaId null"); }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
@@ -78,6 +79,7 @@ namespace Kipa_plus.Controllers
 
         // GET: Rasti/Edit/5
         [HttpGet("Edit")]
+        [DisplayName("Muokkaa")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Rasti == null)
@@ -130,6 +132,7 @@ namespace Kipa_plus.Controllers
 
         // GET: Rasti/Delete/5
         [HttpGet("Delete")]
+        [DisplayName("Poista")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Rasti == null)

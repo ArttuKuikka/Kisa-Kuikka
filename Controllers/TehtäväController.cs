@@ -11,6 +11,7 @@ using Kipaplus.Data.Migrations;
 using Kipa_plus.Models.ViewModels;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
@@ -24,9 +25,10 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
-       
+
 
         // GET: Tehtava
+        [DisplayName("Listaa rastin tehtävät")]
         public async Task<IActionResult> Index(int? RastiId)
         {
             if(RastiId == null || _context.Tehtava == null)
@@ -51,8 +53,8 @@ namespace Kipa_plus.Controllers
             return View(ViewModel);
         }
 
-       
 
+        [DisplayName("Näytä")]
         public IActionResult Nayta(int? TehtavaVastausId)
         {
             if (TehtavaVastausId == null)
@@ -67,6 +69,7 @@ namespace Kipa_plus.Controllers
         }
 
         //GET: Tayta
+        [DisplayName("Täytä")]
         public async Task<IActionResult> Tayta(int? TehtavaId)
         {
             if (TehtavaId == null || _context.Tehtava == null)
@@ -297,6 +300,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtava/Edit/5
+        [DisplayName("Muokkaa")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Tehtava == null)
@@ -361,6 +365,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtava/Delete/5
+        [DisplayName("Poista")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tehtava == null)
@@ -398,6 +403,7 @@ namespace Kipa_plus.Controllers
             return Redirect("/Tehtava/?RastiId=" + rid);
         }
 
+        [DisplayName("Poista vastaus")]
         public async Task<IActionResult> PoistaVastaus(int? id)
         {
             if (id == null || _context.Tehtava == null)

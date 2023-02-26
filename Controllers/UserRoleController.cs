@@ -14,7 +14,7 @@ namespace Kipa_plus.Controllers
 {
     
     [Authorize, AddResourcesToViewFilter]
-    [DisplayName("User Role Management")]
+    [DisplayName("Käyttäjän roolien hallinta")]
     [Static]
     public class UserRoleController<TRole, TUser, TKey> : Controller
     where TRole : IdentityRole<TKey>
@@ -31,7 +31,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Access
-        [DisplayName("User List")]
+        [DisplayName("Listaa käyttäjät")]
         public async Task<ActionResult> Index([FromServices] IIdentityService identityService)
         {
             var usersRoles = await identityService.GetUsersRolesAsync();
@@ -40,7 +40,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Access/Edit
-        [DisplayName("Edit User Roles")]
+        [DisplayName("Muokkaa käyttäjän rooleja")]
         public async Task<ActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
