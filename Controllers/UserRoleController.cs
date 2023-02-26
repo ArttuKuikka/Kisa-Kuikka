@@ -13,7 +13,7 @@ using Kipa_plus.Models;
 namespace Kipa_plus.Controllers
 {
     
-    [Authorize, AddResourcesToViewFilter]
+    [Authorize]
     [DisplayName("Käyttäjän roolien hallinta")]
     [Static]
     public class UserRoleController<TRole, TUser, TKey> : Controller

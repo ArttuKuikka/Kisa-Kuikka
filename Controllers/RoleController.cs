@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Kipa_plus.Controllers
 {
-    [Authorize, AddResourcesToViewFilter]
+    [Authorize]
     [Static]
     [DisplayName("Roolien hallinta")]
     public class RoleController<TRole, TKey> : Controller

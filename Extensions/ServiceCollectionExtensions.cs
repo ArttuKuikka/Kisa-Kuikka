@@ -118,7 +118,7 @@ namespace Kipa_plus.Extensions
             //    }
             //}
 
-            builder.Services.AddScoped<AddResourcesToViewFilter>();
+            
 
             if (DynamicAuthorizationOptions.UserClaimType == null)
                 builder.Services.AddScoped(
