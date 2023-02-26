@@ -4,7 +4,7 @@
 @model IEnumerable<UserRoleViewModel>
 @{
     ViewData["Title"] = "User Role List";
-    Layout = "~/Views/Shared/_AuthLayout.cshtml";
+    Layout = "_Layout";
 }
 
 <h2>Access List</h2>
@@ -12,7 +12,7 @@
 <div class="row">
     <div class="col-md-10">
 
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="color:white">
             <thead>
                 <tr>
                     <th scope="col"> @Html.DisplayNameFor(m => m.UserName) </th>
