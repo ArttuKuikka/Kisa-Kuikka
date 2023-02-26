@@ -9,6 +9,14 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.StaticFiles;
 
 using Kipa_plus.Auth;
+using Kipa_plus.Services;
+using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Filters;
+using Kipa_plus.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Kipa_plus.Controllers;
+using System.Reflection;
+//using static NPOI.XSSF.UserModel.Charts.XSSFLineChartData<Tx, Ty>;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,15 +36,28 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+//.AddEntityFrameworkStores<ApplicationDbContext>()
+//.AddErrorDescriber<CustomIdentityErrorDescriber>()
+//.AddDefaultTokenProviders()
+//.AddDefaultUI();
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-.AddEntityFrameworkStores<ApplicationDbContext>()
-.AddErrorDescriber<CustomIdentityErrorDescriber>()
-.AddDefaultTokenProviders()
-.AddDefaultUI();
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddErrorDescriber<CustomIdentityErrorDescriber>()
+        .AddDefaultTokenProviders()
+        .AddDefaultUI();
 
-var mvcBuilder = builder.Services.AddControllersWithViews();
+
+var mvcbuilder = builder.Services.AddControllersWithViews();
+builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
+.AddSqlServerStore(options => options.ConnectionString = connectionString)
+.AddUi(mvcbuilder);
+
+
+
 builder.Services.AddRazorPages();
 
+builder.Services.AddSingleton<IMvcControllerDiscovery, MvcControllerDiscovery>();
 //builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
 //    .AddSqlServerStore(options => options.ConnectionString = connectionString)
 //    .AddUi(mvcBuilder);

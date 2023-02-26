@@ -3,10 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Models;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using Kipa_plus.Models.DynamicAuth;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kipa_plus.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<IdentityUser, IdentityRole, string>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
