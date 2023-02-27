@@ -32,27 +32,25 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-md-3 col-form-label">Access List</label>
+                <label class="col-md-12 col-form-label">Rasti list</label>
                 <div class="col-md-9">
                     <ol id="rastitree">
                         
                         @foreach (var rasti in rastit)
                         {
-                            var name = rasti.RastiNimi;
-
-                            <li class="controller" data-value="@rasti.RastiNimi">
-                                <input type="hidden" class="area" value="@rasti.RastiId" />
-                                @name
+                            <li class="rasticontroller" data-value="@rasti.RastiNimi">
+                                @rasti.RastiNimi
                                 <ol>
                                 @if (rasti.Actions.Any())
                                 {
-                                    <li>
-
-                                        Yleiset
+                                 <li class="commonactions" data-value="@rasti.RastiNimi">
+                                         <input type="hidden" class="area" value="@rasti.RastiId" />
+                                          Yleistä
                                         <ul>
+
                                         @foreach (var action in rasti.Actions)
                                         {
-                                            name = action.Nimi ?? action.ActionName;
+                                            var name = action.Nimi ?? action.ActionName;
                                             <li data-value="@action.ActionName">@name</li>
                                         }
                                         </ul>
@@ -86,6 +84,7 @@
                             </li>
                         }
                     </ol>
+                    <label class="col-md-12 col-form-label">Access List</label>
                     <ol id="tree">
                         @foreach (var controller in controllers)
                         {

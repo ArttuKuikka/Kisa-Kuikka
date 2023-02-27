@@ -11,6 +11,7 @@ using Kipa_plus.Models;
 using Kipa_plus.Services;
 using Kipa_plus.Data;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Kipa_plus.Models.DynamicAuth.Custom;
 
 namespace Kipa_plus.Controllers
 {
@@ -100,6 +101,13 @@ namespace Kipa_plus.Controllers
                     RoleId = role.GetType().GetProperty("Id")?.GetValue(role).ToString()
                 };
                 await _roleAccessStore.AddRoleAccessAsync(roleAccess);
+            }
+
+            if (viewModel.ValitutRastit != null && viewModel.ValitutRastit.Any())
+            {
+                var RastiControllerModel = new RastiControllerModel() { };
+
+                
             }
 
             return RedirectToAction(nameof(Index));
