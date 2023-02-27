@@ -36,7 +36,9 @@ namespace Kipa_plus.Services
 
                             var access = JsonConvert.SerializeObject(roleAccess.Controllers);
                             cmd.Parameters.AddWithValue("@Access", access);
-                            cmd.Parameters.AddWithValue("@RastiAccess", "rastiAcces");
+
+                            var rastiAccess = JsonConvert.SerializeObject(roleAccess.RastiAccess);
+                            cmd.Parameters.AddWithValue("@RastiAccess", rastiAccess);
 
                             conn.Open();
                             var affectedRows = await cmd.ExecuteNonQueryAsync();
