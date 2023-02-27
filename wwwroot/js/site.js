@@ -117,7 +117,7 @@
                 if ($(controller).prop("indeterminate")) {
                     $(controller).prop("checked", true);
                 }
-                const controllerName = "ValitutRastit[" + RastiControllerIndex + "].subcontroller[" + subcontrollerindex + "]";
+                const controllerName = "ValitutRastit[" + RastiControllerIndex + "].SubControllers[" + subcontrollerindex + "]";
                 $(controller).prop("name", controllerName + ".Name");
 
               

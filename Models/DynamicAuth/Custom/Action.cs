@@ -2,7 +2,7 @@
 {
     public class Action
     {
-        public string Nimi { get; set; }
-        public string ActionName { get; set; }
+        public string Name { get; set; }
+        public string? ActionName { get; set; }
     }
 }

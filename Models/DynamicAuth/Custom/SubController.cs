@@ -2,7 +2,7 @@
 {
     public class SubController
     {
-        public string Nimi { get; set; }
+        public string Name { get; set; }
         public IEnumerable<Action> Actions { get; set; }
     }
 }

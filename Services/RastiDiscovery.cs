@@ -57,7 +57,7 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(controllerTypeInfo, methodInfo))
                     actions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Nimi = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
                         ActionName = descriptor.ActionName
                     });
             }
@@ -68,7 +68,7 @@ namespace Kipa_plus.Services
             //kaikki tehtävä controller methodit ja nimi
             var TehtController = new SubController();
 
-            TehtController.Nimi = "Tehtävä";
+            TehtController.Name = "Tehtävä";
             var tehtactions = new List<Models.DynamicAuth.Custom.Action>();
 
             var TehtactionDescriptor = TehtäväController.First();
@@ -80,7 +80,7 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(TehtcontrollerTypeInfo, methodInfo))
                     tehtactions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Nimi = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
                         ActionName = descriptor.ActionName
                     });
             }
@@ -90,7 +90,7 @@ namespace Kipa_plus.Services
             //kaikki tag controller methodit ja nimi
             var TagiController = new SubController();
 
-            TagiController.Nimi = "Tag";
+            TagiController.Name = "Tag";
             var tagactions = new List<Models.DynamicAuth.Custom.Action>();
 
             var tagactionDescriptor = TagController1.First();
@@ -102,7 +102,7 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(tagcontrollerTypeInfo, methodInfo))
                     tagactions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Nimi = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
                         ActionName = descriptor.ActionName
                     });
             }
@@ -118,7 +118,7 @@ namespace Kipa_plus.Services
 
             foreach (var rasti in _context.Rasti)
             {
-                var RCM = new RastiControllerModel() { RastiNimi = rasti.Nimi, RastiId = (int)rasti.Id };
+                var RCM = new RastiControllerModel() { Name = rasti.Nimi, RastiId = (int)rasti.Id };
 
                 RCM.Actions = actions;
                 RCM.SubControllers = subcontrollers;

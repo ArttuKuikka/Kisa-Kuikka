@@ -38,19 +38,19 @@
                         
                         @foreach (var rasti in rastit)
                         {
-                            <li class="rasticontroller" data-value="@rasti.RastiNimi">
-                                @rasti.RastiNimi
+                            <li class="rasticontroller" data-value="@rasti.Name">
+                                @rasti.Name
                                 <ol>
                                 @if (rasti.Actions.Any())
                                 {
-                                 <li class="commonactions" data-value="@rasti.RastiNimi">
+                                 <li class="commonactions" data-value="@rasti.Name">
                                          <input type="hidden" class="area" value="@rasti.RastiId" />
                                           Yleistä
                                         <ul>
 
                                         @foreach (var action in rasti.Actions)
                                         {
-                                            var name = action.Nimi ?? action.ActionName;
+                                            var name = action.Name ?? action.ActionName;
                                             <li data-value="@action.ActionName">@name</li>
                                         }
                                         </ul>
@@ -59,18 +59,18 @@
                                 
                                 @foreach(var subcontroller in rasti.SubControllers)
                                 {
-                                    var name2 = subcontroller.Nimi;
+                                    var name2 = subcontroller.Name;
                                     
                                     
-                                   <li class="subcontroller" data-value="@subcontroller.Nimi">
-                                    <input type="hidden" class="area" value="@subcontroller.Nimi" />
+                                   <li class="subcontroller" data-value="@subcontroller.Name">
+                                    <input type="hidden" class="area" value="@subcontroller.Name" />
                                         @name2
                                         @if (subcontroller.Actions.Any())
                                         {
                                         <ul>
                                                 @foreach (var action in subcontroller.Actions)
                                                 {
-                                                    name2 = action.Nimi ?? action.ActionName;
+                                                    name2 = action.Name ?? action.ActionName;
                                                 <li data-value="@action.ActionName">@name2</li>
                                                 }
                                         </ul>
