@@ -68,6 +68,8 @@ namespace Kipa_plus.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+                var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+                ViewData["Rastit"] = rastit.GetRastit();
                 return View(viewModel);
             }
 

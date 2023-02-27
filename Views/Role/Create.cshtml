@@ -43,17 +43,22 @@
                             <li class="controller" data-value="@rasti.RastiNimi">
                                 <input type="hidden" class="area" value="@rasti.RastiId" />
                                 @name
+                                <ol>
                                 @if (rasti.Actions.Any())
                                 {
-                                    <ul>
+                                    <li>
+
+                                        Yleiset
+                                        <ul>
                                         @foreach (var action in rasti.Actions)
                                         {
                                             name = action.Nimi ?? action.ActionName;
                                             <li data-value="@action.ActionName">@name</li>
                                         }
-                                    </ul>
+                                        </ul>
+                                     </li>
                                 }
-                                <ol>
+                                
                                 @foreach(var subcontroller in rasti.SubControllers)
                                 {
                                     var name2 = subcontroller.Nimi;
