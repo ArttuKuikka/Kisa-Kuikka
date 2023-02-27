@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Kipa_plus.Models.DynamicAuth.Custom;
+using System.Collections.Generic;
 
 namespace Kipa_plus.Models.DynamicAuth
 {
@@ -9,5 +10,7 @@ namespace Kipa_plus.Models.DynamicAuth
         public string RoleId { get; set; }
 
         public IEnumerable<MvcControllerInfo> Controllers { get; set; }
+
+        public IEnumerable<RastiControllerModel> RastiAccess { get; set; }
     }
 }
