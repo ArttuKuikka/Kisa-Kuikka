@@ -39,6 +39,7 @@
                         @foreach (var rasti in rastit)
                         {
                             <li class="rasticontroller" data-value="@rasti.Name">
+                                <input type="hidden" class="area" value="@rasti.RastiId" />
                                 @rasti.Name
                                 <ol>
                                 @if (rasti.Actions.Any())
