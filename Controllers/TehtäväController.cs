@@ -13,6 +13,7 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kipa_plus.Controllers
 {
@@ -20,10 +21,12 @@ namespace Kipa_plus.Controllers
     public class TehtavaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public TehtavaController(ApplicationDbContext context)
+        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
 
@@ -174,7 +177,7 @@ namespace Kipa_plus.Controllers
 
                 aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
                 aiempitehtva.Tarkistettu = true;
-                aiempitehtva.TarkistajaUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                aiempitehtva.TarkistajaUser = await _userManager.GetUserAsync(User);
                 _context.SaveChanges();
 
                 return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
@@ -214,7 +217,7 @@ namespace Kipa_plus.Controllers
 
                 tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
                 tehtvastaus.Kesken = false;
-                tehtvastaus.JatkajaUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+                tehtvastaus.JatkajaUser = await _userManager.GetUserAsync(User);
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();
@@ -260,8 +263,8 @@ namespace Kipa_plus.Controllers
                 TV.SarjaId = TehtavaPohja.SarjaId;
                 TV.KisaId = TehtavaPohja.KisaId;
                 TV.RastiId= TehtavaPohja.RastiId;
-                TV.TäyttäjäUserId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-                
+                TV.TäyttäjäUser = await _userManager.GetUserAsync(User);
+
                 _context.TehtavaVastaus.Add(TV);
                 _context.SaveChanges();
 
