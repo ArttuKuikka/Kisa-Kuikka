@@ -1,4 +1,5 @@
 ﻿using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Models.DynamicAuth.Custom;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -122,7 +123,7 @@ namespace Kipa_plus.Services
                 {
                     using (var conn = new SqlConnection(_options.ConnectionString))
                     {
-                        const string query = "SELECT [Id], [RoleId], [Access] FROM [RoleAccess] WHERE [RoleId] = @RoleId";
+                        const string query = "SELECT [Id], [RoleId], [Access], [RastiAccess] FROM [RoleAccess] WHERE [RoleId] = @RoleId";
                         using (var cmd = new SqlCommand(query, conn))
                         {
                             cmd.CommandType = CommandType.Text;
@@ -137,6 +138,8 @@ namespace Kipa_plus.Services
                             roleAccess.RoleId = reader[1].ToString();
                             var json = reader[2].ToString();
                             roleAccess.Controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
+                            var json2 = reader[3].ToString();
+                            roleAccess.RastiAccess = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json2);
 
                             return roleAccess;
                         }
@@ -193,6 +196,51 @@ namespace Kipa_plus.Services
                     return false;
                 }
             }
+
+        public async Task<bool> HasRastiAccessToActionAsync(string RastiMethodName, params string[] roles)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_options.ConnectionString))
+                {
+                    using (var cmd = new SqlCommand())
+                    {
+                        var parameters = new string[roles.Length];
+                        for (var i = 0; i < roles.Length; i++)
+                        {
+                            parameters[i] = $"@RoleId{i}";
+                            cmd.Parameters.AddWithValue(parameters[i], roles[i]);
+                        }
+                        var query = $"SELECT [RastiAccess] FROM [RoleAccess] WHERE [RoleId] IN ({string.Join(", ", parameters)})";
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = query;
+                        cmd.Connection = conn;
+
+                        conn.Open();
+                        var reader = await cmd.ExecuteReaderAsync();
+
+                        var list = new List<Models.DynamicAuth.Custom.Action>();
+                        while (reader.Read())
+                        {
+                            var json = reader[0].ToString();
+                            if (string.IsNullOrEmpty(json))
+                                continue;
+
+                            var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                            list.AddRange(controllers.SelectMany(c => c.Actions));
+                        }
+
+                        return list.Any(a => a.Name == RastiMethodName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
+                return false;
+            }
         }
+    }
     
 }

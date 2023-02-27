@@ -51,8 +51,8 @@
 
                                         @foreach (var action in rasti.Actions)
                                         {
-                                            var name = action.Name ?? action.ActionName;
-                                            <li data-value="@action.ActionName">@name</li>
+                                            var name = action.DisplayName ?? action.Name;
+                                            <li data-value="@action.Name">@name</li>
                                         }
                                         </ul>
                                      </li>
@@ -60,7 +60,7 @@
                                 
                                 @foreach(var subcontroller in rasti.SubControllers)
                                 {
-                                    var name2 = subcontroller.Name;
+                                    var name2 = subcontroller.DisplayName ?? subcontroller.Name;
                                     
                                     
                                    <li class="subcontroller" data-value="@subcontroller.Name">
@@ -71,8 +71,8 @@
                                         <ul>
                                                 @foreach (var action in subcontroller.Actions)
                                                 {
-                                                    name2 = action.Name ?? action.ActionName;
-                                                <li data-value="@action.ActionName">@name2</li>
+                                                    name2 = action.DisplayName ?? action.Name;
+                                                <li data-value="@action.Name">@name2</li>
                                                 }
                                         </ul>
                                         }

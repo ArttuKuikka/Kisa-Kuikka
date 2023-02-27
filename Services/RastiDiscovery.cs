@@ -57,8 +57,8 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(controllerTypeInfo, methodInfo))
                     actions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
-                        ActionName = descriptor.ActionName
+                        DisplayName = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = descriptor.ActionName
                     });
             }
 
@@ -68,7 +68,7 @@ namespace Kipa_plus.Services
             //kaikki tehtävä controller methodit ja nimi
             var TehtController = new SubController();
 
-            TehtController.Name = "Tehtävä";
+            TehtController.DisplayName = "Tehtävä";
             var tehtactions = new List<Models.DynamicAuth.Custom.Action>();
 
             var TehtactionDescriptor = TehtäväController.First();
@@ -80,8 +80,8 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(TehtcontrollerTypeInfo, methodInfo))
                     tehtactions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
-                        ActionName = descriptor.ActionName
+                        DisplayName = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = descriptor.ActionName
                     });
             }
             TehtController.Actions = tehtactions;
@@ -102,8 +102,8 @@ namespace Kipa_plus.Services
                 if (IsProtectedAction(tagcontrollerTypeInfo, methodInfo))
                     tagactions.Add(new Models.DynamicAuth.Custom.Action
                     {
-                        Name = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
-                        ActionName = descriptor.ActionName
+                        DisplayName = methodInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName ?? descriptor.ActionName,
+                        Name = descriptor.ActionName
                     });
             }
             TagiController.Actions = tagactions;

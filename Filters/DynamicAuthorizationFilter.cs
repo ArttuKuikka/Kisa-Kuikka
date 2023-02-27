@@ -107,43 +107,14 @@ namespace Kipa_plus.Filters
                     select role.Id.ToString()
                 ).ToArrayAsync();
 
+            Console.WriteLine(context.HttpContext.Request.Query.FirstOrDefault().Value);
                 if (await _roleAccessStore.HasAccessToActionAsync(actionId, roles))
                     return;
 
                 context.Result = new ForbidResult();
             }
 
-#if NETCORE3 || NET5
 
-        private static bool IsProtectedAction(AuthorizationFilterContext context)
-        {
-            var controllerActionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-            if (controllerActionDescriptor == null)
-                return false;
-
-            var controllerTypeInfo = controllerActionDescriptor.ControllerTypeInfo;
-
-            var anonymousAttribute = controllerTypeInfo.GetCustomAttribute<AllowAnonymousAttribute>();
-            if (anonymousAttribute != null)
-                return false;
-
-            var actionMethodInfo = controllerActionDescriptor.MethodInfo;
-            anonymousAttribute = actionMethodInfo.GetCustomAttribute<AllowAnonymousAttribute>();
-            if (anonymousAttribute != null)
-                return false;
-
-            var authorizeAttribute = controllerTypeInfo.GetCustomAttribute<AuthorizeAttribute>();
-            if (authorizeAttribute != null)
-                return true;
-
-            authorizeAttribute = actionMethodInfo.GetCustomAttribute<AuthorizeAttribute>();
-            if (authorizeAttribute != null)
-                return true;
-
-            return false;
-        }
-
-#else
 
             private static bool IsProtectedAction(AuthorizationFilterContext context)
             {
@@ -168,7 +139,7 @@ namespace Kipa_plus.Filters
                 return false;
             }
 
-#endif
+
 
             private static bool IsUserAuthenticated(AuthorizationFilterContext context)
             {
