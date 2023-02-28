@@ -40,7 +40,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Access/Edit
-        [DisplayName("Muokkaa käyttäjän rooleja")]
+        [DisplayName("Muokkaa käyttäjää")]
         public async Task<ActionResult> Edit(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -48,11 +48,13 @@ namespace Kipa_plus.Controllers
                 return NotFound();
 
             var userRoles = await _userManager.GetRolesAsync(user);
+            var claims = await _userManager.GetClaimsAsync(user);
             var userViewModel = new UserRoleViewModel
             {
                 UserId = user.Id.ToString(),
                 UserName = user.UserName,
-                Roles = userRoles
+                Roles = userRoles,
+                Nimi = claims.FirstOrDefault(x => x.Type == "KokoNimi")?.Value
             };
 
             var roles = _roleManager.Roles;
@@ -86,6 +88,28 @@ namespace Kipa_plus.Controllers
 
             if (viewModel.Roles != null)
                 await _userManager.AddToRolesAsync(user, viewModel.Roles);
+
+            if(viewModel.Nimi != null)
+            {
+                
+                var claims = await _userManager.GetClaimsAsync(user);
+
+                if (claims.Where(x => x.Type == "KokoNimi").Any())
+                {
+                    await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "KokoNimi"), new System.Security.Claims.Claim("KokoNimi", viewModel.Nimi));
+                }
+                else
+                {
+                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("KokoNimi", viewModel.Nimi));
+                }
+            }
+
+            if(viewModel.UusiSalasana!= null)
+            {
+                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, viewModel.UusiSalasana);
+            }
+
+            await _userManager.UpdateAsync(user);
 
             return RedirectToAction("Index");
         }
