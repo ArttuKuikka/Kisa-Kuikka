@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Kipa_plus.Data;
+using Kipa_plus.Models.DynamicAuth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,6 +33,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly ApplicationDbContext _context;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
@@ -39,7 +41,8 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            DynamicAuthorizationOptions authorizationOptions)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -48,6 +51,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
             _logger = logger;
             _emailSender = emailSender;
             _context = context;
+            _authorizationOptions = authorizationOptions;
         }
 
         /// <summary>
@@ -91,7 +95,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
             [Display(Name = "Nimi")]
             public string KokoNimi { get; set; }
 
-            [Required(ErrorMessage = "Tämä kenttä on pakollinen")]
+           
             [DataType(DataType.Text)]
             [Display(Name = "LiittymisId")]
             public string LiittymisId { get; set; }
@@ -127,16 +131,19 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            //TODO: tarkista liittymisId
+            
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
                 var kisa = _context.Kisa.Where(x => x.LiittymisId == Input.LiittymisId).FirstOrDefault();
-                if(kisa == null)
+                if (Input.Email != _authorizationOptions.DefaultAdminUser)
                 {
-                    ModelState.AddModelError(string.Empty, "Väärä liittymisID");
-                    return Page();
+                    if (kisa == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Väärä liittymisID");
+                        return Page();
+                    }
                 }
 
 
@@ -151,7 +158,10 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
                     _logger.LogInformation("User created a new account with password.");
 
                     await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("KokoNimi", Input.KokoNimi));
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("OikeusKisaan", kisa.Id.Value.ToString()));
+                    if(kisa != null)
+                    {
+                        await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("OikeusKisaan", kisa.Id.Value.ToString()));
+                    }
 
                     
                     
