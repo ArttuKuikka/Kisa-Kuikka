@@ -7,7 +7,7 @@ using System.ComponentModel;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
-    
+    [SubController(Group = "Rasti")]
     public class TagController : Controller
     {
         private readonly ApplicationDbContext _context;

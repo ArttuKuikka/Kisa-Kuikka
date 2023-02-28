@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Identity;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [SubController(Group = "Rasti")]
+    [DisplayName("Tehtävä")]
     public class TehtavaController : Controller
     {
         private readonly ApplicationDbContext _context;

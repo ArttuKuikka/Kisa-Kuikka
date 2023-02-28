@@ -13,6 +13,6 @@ namespace Kipa_plus.Models.DynamicAuth
         Task<RoleAccess> GetRoleAccessAsync(string roleId);
 
         Task<bool> HasAccessToActionAsync(string actionId, params string[] roles);
-        Task<bool> HasRastiAccessToActionAsync(string RastiMethodName, params string[] roles);
+        Task<bool> HasAccessToCustomActionAsync(int rastiId, int commonId, string controller, string action, int controllerType, string controllerGroup, params string[] roles);
     }
 }

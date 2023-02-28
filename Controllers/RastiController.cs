@@ -14,6 +14,7 @@ namespace Kipa_plus.Controllers
 {
     [Authorize]
     [Route("[controller]")]
+    [MainController(Group = "Rasti")]
     public class RastiController : Controller
     {
         private readonly ApplicationDbContext _context;

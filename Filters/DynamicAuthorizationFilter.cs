@@ -10,6 +10,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Kipa_plus.Models;
+using Kipa_plus.Models.DynamicAuth.Custom;
 
 namespace Kipa_plus.Filters
 {
@@ -107,9 +109,33 @@ namespace Kipa_plus.Filters
                     select role.Id.ToString()
                 ).ToArrayAsync();
 
-            Console.WriteLine(context.HttpContext.Request.Query.FirstOrDefault().Value);
+            
+
+            if (IsCustomController(context))
+            {
+                var rastiId = context.HttpContext.Request.Query.Where(x => x.Key == "RastiId")?.FirstOrDefault().Value;
+                var commonId = context.HttpContext.Request.Query.FirstOrDefault().Value;
+
+               
+                int.TryParse(rastiId, out int parsedRastiId);
+                int.TryParse(commonId, out int parsedCommonId);
+
+                var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+                
+
+                var controllertype = GetCustomControllerType(context); //1=MainController 2=Subcontroller 0=null
+                var controllerGroup = GetCustomControllerGroup(context);
+                
+
+                if (await _roleAccessStore.HasAccessToCustomActionAsync(parsedRastiId, parsedCommonId, controllerActionDescriptor.ControllerName, controllerActionDescriptor.ActionName, controllertype, controllerGroup, roles))
+                    return;
+            }
+            else
+            {
                 if (await _roleAccessStore.HasAccessToActionAsync(actionId, roles))
                     return;
+            }
+                
 
                 context.Result = new ForbidResult();
             }
@@ -139,9 +165,48 @@ namespace Kipa_plus.Filters
                 return false;
             }
 
+            private static bool IsCustomController(AuthorizationFilterContext context)
+        {
+            var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            var maincontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<MainControllerAttribute>();
+            if(maincontroller != null) return true;
+
+            var subcontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<SubControllerAttribute>();
+            if (subcontroller != null) return true;
+
+            return false;
+        }
+
+        private static int GetCustomControllerType(AuthorizationFilterContext context)
+        {
+            var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            var maincontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<MainControllerAttribute>();
+            if (maincontroller != null) return 1;
+
+            var subcontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<SubControllerAttribute>();
+            if (subcontroller != null) return 2;
+
+            return 0;
+        }
+
+        private static string GetCustomControllerGroup(AuthorizationFilterContext context)
+        {
+            var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
+
+            var maincontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<MainControllerAttribute>();
+            if (maincontroller != null) return maincontroller.Group;
+
+            var subcontroller = controllerActionDescriptor.ControllerTypeInfo.GetCustomAttribute<SubControllerAttribute>();
+            if (subcontroller != null) return subcontroller.Group;
+
+            return string.Empty;
+        }
 
 
-            private static bool IsUserAuthenticated(AuthorizationFilterContext context)
+
+        private static bool IsUserAuthenticated(AuthorizationFilterContext context)
             {
                 return context.HttpContext.User.Identity.IsAuthenticated;
             }

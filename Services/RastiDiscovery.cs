@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace Kipa_plus.Services
 {
-    public class RastiDiscovery
+    public class RastiDiscovery //TODO: vaihda käyttämään subcontroller attributeja
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
         private readonly ApplicationDbContext _context;
@@ -68,11 +68,26 @@ namespace Kipa_plus.Services
             //kaikki tehtävä controller methodit ja nimi
             var TehtController = new SubController();
 
-            TehtController.DisplayName = "Tehtävä";
+            
+            
             var tehtactions = new List<Models.DynamicAuth.Custom.Action>();
 
             var TehtactionDescriptor = TehtäväController.First();
             var TehtcontrollerTypeInfo = TehtactionDescriptor.ControllerTypeInfo;
+
+            string tehtControllerName;
+            if (TehtcontrollerTypeInfo.Name.EndsWith("Controller"))
+            {
+                tehtControllerName = TehtcontrollerTypeInfo.Name.Replace("Controller", string.Empty);
+            }
+            else
+            {
+                tehtControllerName= TehtcontrollerTypeInfo.Name;
+
+            }
+
+            TehtController.Name= tehtControllerName;
+            TehtController.DisplayName = TehtcontrollerTypeInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
 
             foreach (var descriptor in TehtäväController.GroupBy(a => a.ActionName).Select(g => g.First()))
             {
@@ -90,11 +105,25 @@ namespace Kipa_plus.Services
             //kaikki tag controller methodit ja nimi
             var TagiController = new SubController();
 
-            TagiController.Name = "Tag";
+            
             var tagactions = new List<Models.DynamicAuth.Custom.Action>();
 
             var tagactionDescriptor = TagController1.First();
             var tagcontrollerTypeInfo = tagactionDescriptor.ControllerTypeInfo;
+
+            string tagControllerName;
+            if (tagcontrollerTypeInfo.Name.EndsWith("Controller"))
+            {
+                tagControllerName = tagcontrollerTypeInfo.Name.Replace("Controller", string.Empty);
+            }
+            else
+            {
+                tagControllerName = tagcontrollerTypeInfo.Name;
+
+            }
+
+            TagiController.Name = tagControllerName;
+            TagiController.DisplayName = tagcontrollerTypeInfo.GetCustomAttribute<DisplayNameAttribute>()?.DisplayName;
 
             foreach (var descriptor in TagController1.GroupBy(a => a.ActionName).Select(g => g.First()))
             {

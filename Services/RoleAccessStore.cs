@@ -1,4 +1,6 @@
-﻿using Kipa_plus.Models.DynamicAuth;
+﻿using Kipa_plus.Data;
+using Kipa_plus.Models;
+using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Models.DynamicAuth.Custom;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
@@ -16,11 +18,13 @@ namespace Kipa_plus.Services
         {
             private readonly SqlOptions _options;
             private readonly ILogger<RoleAccessStore> _logger;
+            private readonly ApplicationDbContext _context;
 
-            public RoleAccessStore(SqlOptions options, ILogger<RoleAccessStore> logger)
+        public RoleAccessStore(SqlOptions options, ILogger<RoleAccessStore> logger, ApplicationDbContext context)
             {
                 _options = options;
                 _logger = logger;
+            _context = context;
             }
 
             public async Task<bool> AddRoleAccessAsync(RoleAccess roleAccess)
@@ -197,7 +201,7 @@ namespace Kipa_plus.Services
                 }
             }
 
-        public async Task<bool> HasRastiAccessToActionAsync(string RastiMethodName, params string[] roles)
+        public async Task<bool> HasAccessToCustomActionAsync(int rastiId, int commonId, string controller, string action, int controllerType, string controllerGroup, params string[] roles)
         {
             try
             {
@@ -220,18 +224,86 @@ namespace Kipa_plus.Services
                         conn.Open();
                         var reader = await cmd.ExecuteReaderAsync();
 
-                        var list = new List<Models.DynamicAuth.Custom.Action>();
-                        while (reader.Read())
+                        if(controllerType== 1) //MainController
                         {
-                            var json = reader[0].ToString();
-                            if (string.IsNullOrEmpty(json))
-                                continue;
+                            if(rastiId == 0) //toivottavasti ei oo 0 idllä olevia
+                            {
+                                return false;
+                            }
+                            var list = new List<Models.DynamicAuth.Custom.Action>();
+                            while (reader.Read())
+                            {
+                                var json = reader[0].ToString();
+                                if (string.IsNullOrEmpty(json))
+                                    continue;
 
-                            var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
-                            list.AddRange(controllers.SelectMany(c => c.Actions));
+                                var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                                var idControllers = controllers.Where(x => x.RastiId == rastiId);
+                                list.AddRange(idControllers.SelectMany(c => c.Actions));
+                            }
+
+                            return list.Any(a => a.Name == action);
                         }
+                        else if(controllerType== 2)//SubController //queryy db että saa RastiId
+                        {
+                            if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
+                            {
+                                return false;
+                            }
+                            //en keksi miten tehdä dynaaminen authentikaatio hyvin tässä kohdassa joten tähän joutuu lisätä erikseen jokaiselle subcontrollerille osan
+                            if (controller == "Tehtava")
+                            {
+                                var list = new List<Models.DynamicAuth.Custom.Action>();
+                                while (reader.Read())
+                                {
+                                    var json = reader[0].ToString();
+                                    if (string.IsNullOrEmpty(json))
+                                        continue;
 
-                        return list.Any(a => a.Name == RastiMethodName);
+                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                                    var tehtava = await _context.Tehtava.FindAsync(rastiId);
+                                    if(tehtava == null)
+                                    {
+                                        return false;
+                                    }
+
+                                    var tehtcontroller = controllers.Where(x => x.RastiId == tehtava.RastiId).First();
+                                    var subcontroller = tehtcontroller.SubControllers.Where(x => x.Name == controller).First();
+                                    list = subcontroller.Actions.ToList();
+                                }
+
+                                return list.Any(a => a.Name == action);
+                            }
+                           else if(controller == "tag")
+                            {
+                                if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
+                                {
+                                    return false;
+                                }
+                                var list = new List<Models.DynamicAuth.Custom.Action>();
+                                while (reader.Read())
+                                {
+                                    var json = reader[0].ToString();
+                                    if (string.IsNullOrEmpty(json))
+                                        continue;
+
+                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                                    var idControllers = controllers.Where(x => x.RastiId == rastiId);
+                                    var subcontroller = idControllers.Where(x => x.Name == controller).First();
+                                    list = subcontroller.Actions.ToList();
+                                }
+
+                                return list.Any(a => a.Name == action);
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
             }
