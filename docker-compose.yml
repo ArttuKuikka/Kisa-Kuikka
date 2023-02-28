@@ -42,6 +42,7 @@ services:
       DB_NAME: "KipaPlus"
       DB_USER: "sa"
       DB_USER_PASSWORD: "S3cur3P@ssW0rd!"
+      DefaultAdminUser: "admin@arttukuikka.fi"
     volumes:
         - type: volume
           source: UploadFiles

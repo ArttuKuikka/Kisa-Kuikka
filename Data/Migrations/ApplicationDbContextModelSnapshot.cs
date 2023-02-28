@@ -17,7 +17,7 @@ namespace Kipaplus.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0")
+                .HasAnnotation("ProductVersion", "7.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -29,6 +29,9 @@ namespace Kipaplus.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<string>("LiittymisId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Nimi")
                         .IsRequired()
@@ -55,9 +58,6 @@ namespace Kipaplus.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("OhjeId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SarjaId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -91,6 +91,139 @@ namespace Kipaplus.Data.Migrations
                     b.ToTable("Sarja");
                 });
 
+            modelBuilder.Entity("Kipa_plus.Models.TagSkannaus", b =>
+                {
+                    b.Property<int?>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int>("RastiId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TagSerial")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeStamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("VartioId")
+                        .HasColumnType("int");
+
+                    b.Property<bool?>("isTulo")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TagSkannaus");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Tehtava", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Nimi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("RastiId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SarjaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TehtavaJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tehtava");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.TehtavaVastaus", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("JatkajaUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Kesken")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("KisaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RastiId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SarjaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TarkistajaUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("Tarkistettu")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("TehtavaId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TehtavaJson")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TäyttäjäUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("VartioId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("JatkajaUserId");
+
+                    b.HasIndex("TarkistajaUserId");
+
+                    b.HasIndex("TäyttäjäUserId");
+
+                    b.ToTable("TehtavaVastaus");
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.Tiedosto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Extension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MimeType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tiedosto");
+                });
+
             modelBuilder.Entity("Kipa_plus.Models.Vartio", b =>
                 {
                     b.Property<int?>("Id")
@@ -114,6 +247,9 @@ namespace Kipaplus.Data.Migrations
 
                     b.Property<int>("SarjaId")
                         .HasColumnType("int");
+
+                    b.Property<string>("TagSerial")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("Tilanne")
                         .HasColumnType("int");
@@ -268,12 +404,10 @@ namespace Kipaplus.Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderKey")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -310,12 +444,10 @@ namespace Kipaplus.Data.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Name")
-                        .HasMaxLength(128)
-                        .HasColumnType("nvarchar(128)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -323,6 +455,27 @@ namespace Kipaplus.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Kipa_plus.Models.TehtavaVastaus", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "JatkajaUser")
+                        .WithMany()
+                        .HasForeignKey("JatkajaUserId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "TarkistajaUser")
+                        .WithMany()
+                        .HasForeignKey("TarkistajaUserId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "TäyttäjäUser")
+                        .WithMany()
+                        .HasForeignKey("TäyttäjäUserId");
+
+                    b.Navigation("JatkajaUser");
+
+                    b.Navigation("TarkistajaUser");
+
+                    b.Navigation("TäyttäjäUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

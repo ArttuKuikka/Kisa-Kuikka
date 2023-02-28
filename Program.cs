@@ -8,6 +8,16 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.StaticFiles;
 
+using Kipa_plus.Auth;
+using Kipa_plus.Services;
+using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Filters;
+using Kipa_plus.Extensions;
+using Microsoft.Extensions.DependencyInjection;
+using Kipa_plus.Controllers;
+using System.Reflection;
+//using static NPOI.XSSF.UserModel.Charts.XSSFLineChartData<Tx, Ty>;
+
 var builder = WebApplication.CreateBuilder(args);
 
 ConfigurationManager configuration = builder.Configuration;
@@ -22,57 +32,29 @@ var DBUSERPASSWD = Environment.GetEnvironmentVariable("DB_USER_PASSWORD");
 var connectionString = $"Server={DBHOST},{DBPORT};Database={DBNAME};User ID={DBUSER};Password={DBUSERPASSWD};TrustServerCertificate=True;MultipleActiveResultSets=true;";
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
+
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddControllers();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+        .AddEntityFrameworkStores<ApplicationDbContext>()
+        .AddErrorDescriber<CustomIdentityErrorDescriber>()
+        .AddDefaultTokenProviders()
+        .AddDefaultUI();
+
+
+var mvcbuilder = builder.Services.AddControllersWithViews();
+builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
+.AddSqlServerStore(options => options.ConnectionString = connectionString)
+.AddUi(mvcbuilder);
+
 builder.Services.AddRazorPages();
 
 
-//lis‰‰ bearer authentication api varten
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = "MultiAuthSchemes";
-    options.DefaultChallengeScheme = "MultiAuthSchemes";
-    options.DefaultScheme = "MultiAuthSchemes";
-}).AddPolicyScheme("MultiAuthSchemes", "Bearer", options =>
-{
-    options.ForwardDefaultSelector = context =>
-    {
-        string authorization = context.Request.Headers[HeaderNames.Authorization];
-        if (!string.IsNullOrEmpty(authorization) && authorization.StartsWith("Bearer "))
-        {
-            var token = authorization.Substring("Bearer ".Length).Trim();
-            var jwtHandler = new JwtSecurityTokenHandler();
-            return (jwtHandler.CanReadToken(token) && jwtHandler.ReadJwtToken(token).Issuer.Equals(configuration["JWT:ValidIssuer"]))
-                ? JwtBearerDefaults.AuthenticationScheme : "Bearer";
-        }
-        return "Identity.Application";
-    };
-}).AddJwtBearer(options =>
-{
-    options.SaveToken = true;
-    options.RequireHttpsMetadata = false;
-    options.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidAudience = configuration["JWT:ValidAudience"],
-        ValidIssuer = configuration["JWT:ValidIssuer"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT:Secret"]))
-    };
-});
-
-//lis‰‰ swagger api a varten
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(e => { e.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Kipa-plus API", Version = "v1" }); });
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -88,15 +70,16 @@ else
 
 //app.UseHttpsRedirection();
 
-//lis‰‰ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
+//lis√§√§ lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
 var provider = new FileExtensionContentTypeProvider();
 provider.Mappings.Add(".lang", "language");
-app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider }) ;
+app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider });
 
 app.UseRouting();
 
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
         name: "default",

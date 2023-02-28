@@ -7,10 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
+    [Static]
+    [Authorize]
     public class KisaController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -19,8 +23,50 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
+        [HttpGet("{kisaId:int}/LiittymisId")]
+        [DisplayName("Luo liittymisID")]
+        public async Task<IActionResult> LiittymisId(int kisaId)
+        {
+            if (kisaId == null || _context.Kisa == null)
+            {
+                return NotFound();
+            }
+
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+
+            if(kisa.LiittymisId == null)
+            {
+                kisa.LiittymisId = Guid.NewGuid().ToString();
+                _context.Update(kisa);
+                _context.SaveChanges();
+            }
+            (string, int) returnitem = (kisa.LiittymisId, kisaId);
+
+
+            return View("LiittymisId",returnitem);
+        }
+
+        [HttpGet("{kisaId:int}/LiittymisIdUudelleenluonti")]
+        [DisplayName("Uudelleenluo liittymisID")]
+        public async Task<IActionResult> LiittymisIdUudelleenluonti(int kisaId)
+        {
+            if (kisaId == null || _context.Kisa == null)
+            {
+                return NotFound();
+            }
+
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+
+            kisa.LiittymisId = Guid.NewGuid().ToString();
+            _context.Update(kisa);
+            _context.SaveChanges();
+
+
+            return Redirect($"/Kisa/{kisaId}/LiittymisId");
+        }
 
         [HttpGet("{kisaId:int}/Lataukset")]
+        [DisplayName("Latausvaihtoedot")]
         public async Task<IActionResult> Lataukset(int kisaId)
         {
             if (kisaId == null || _context.Kisa == null)
@@ -34,6 +80,7 @@ namespace Kipa_plus.Controllers
 
         // GET: Kisa
         [HttpGet("{kisaId:int}/")]
+        [DisplayName("Etusivu")]
         public async Task<IActionResult> Index(int kisaId)
         {
             if(kisaId == 0)
@@ -90,6 +137,7 @@ namespace Kipa_plus.Controllers
 
         // GET: Kisa/Edit/5
         [HttpGet("{kisaId:int}/Edit")]
+        [DisplayName("Muokkaa")]
         public async Task<IActionResult> Edit(int kisaId)
         {
             if (kisaId == null || _context.Kisa == null)
@@ -142,6 +190,7 @@ namespace Kipa_plus.Controllers
 
         // GET: Kisa/Delete/5
         [HttpGet("{kisaId:int}/Delete")]
+        [DisplayName("Poista")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Kisa == null)
@@ -184,6 +233,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpGet("{kisaId:int}/Sarjat")]
+        [DisplayName("Listaa sarjat")]
         public async Task<IActionResult> Sarjat(int kisaId)
         {
             if (kisaId == 0 || _context.Sarja == null)
@@ -202,6 +252,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpGet("{kisaId:int}/Vartiot")]
+        [DisplayName("Listaa vartiot")]
         public async Task<IActionResult> Vartiot(int kisaId)
         {
             if (kisaId == 0 || _context.Vartio == null)
@@ -221,6 +272,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpGet("{kisaId:int}/Rastit")]
+        [DisplayName("Listaa rastit")]
         public async Task<IActionResult> Rastit(int kisaId)
         {
             if (kisaId == 0 || _context.Rasti == null)
