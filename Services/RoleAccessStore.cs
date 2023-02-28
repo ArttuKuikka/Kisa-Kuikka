@@ -201,7 +201,7 @@ namespace Kipa_plus.Services
                 }
             }
 
-        public async Task<bool> HasAccessToCustomActionAsync(int rastiId, int commonId, string controller, string action, int controllerType, string controllerGroup, params string[] roles)
+        public async Task<bool> HasAccessToCustomActionAsync(int rastiId, string controller, string action, int controllerType, string controllerGroup, params string[] roles)
         {
             try
             {
@@ -244,7 +244,7 @@ namespace Kipa_plus.Services
 
                             return list.Any(a => a.Name == action);
                         }
-                        else if(controllerType== 2)//SubController //queryy db että saa RastiId
+                        else if(controllerType== 2)//SubController 
                         {
                             if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
                             {

@@ -114,11 +114,11 @@ namespace Kipa_plus.Filters
             if (IsCustomController(context))
             {
                 var rastiId = context.HttpContext.Request.Query.Where(x => x.Key == "RastiId")?.FirstOrDefault().Value;
-                var commonId = context.HttpContext.Request.Query.FirstOrDefault().Value;
+                
 
                
                 int.TryParse(rastiId, out int parsedRastiId);
-                int.TryParse(commonId, out int parsedCommonId);
+                
 
                 var controllerActionDescriptor = (ControllerActionDescriptor)context.ActionDescriptor;
                 
@@ -127,7 +127,7 @@ namespace Kipa_plus.Filters
                 var controllerGroup = GetCustomControllerGroup(context);
                 
 
-                if (await _roleAccessStore.HasAccessToCustomActionAsync(parsedRastiId, parsedCommonId, controllerActionDescriptor.ControllerName, controllerActionDescriptor.ActionName, controllertype, controllerGroup, roles))
+                if (await _roleAccessStore.HasAccessToCustomActionAsync(parsedRastiId, controllerActionDescriptor.ControllerName, controllerActionDescriptor.ActionName, controllertype, controllerGroup, roles))
                     return;
             }
             else
