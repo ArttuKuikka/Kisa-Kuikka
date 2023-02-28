@@ -274,7 +274,7 @@ namespace Kipa_plus.Services
 
                                 return list.Any(a => a.Name == action);
                             }
-                           else if(controller == "tag")
+                           else if(controller == "Tag")
                             {
                                 if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
                                 {
@@ -288,8 +288,8 @@ namespace Kipa_plus.Services
                                         continue;
 
                                     var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
-                                    var idControllers = controllers.Where(x => x.RastiId == rastiId);
-                                    var subcontroller = idControllers.Where(x => x.Name == controller).First();
+                                    var idControllers = controllers.Where(x => x.RastiId == rastiId).First();
+                                    var subcontroller = idControllers.SubControllers.Where(x => x.Name == controller).First();
                                     list = subcontroller.Actions.ToList();
                                 }
 

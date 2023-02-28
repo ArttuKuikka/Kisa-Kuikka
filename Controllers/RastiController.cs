@@ -81,14 +81,14 @@ namespace Kipa_plus.Controllers
         // GET: Rasti/Edit/5
         [HttpGet("Edit")]
         [DisplayName("Muokkaa")]
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? RastiId)
         {
-            if (id == null || _context.Rasti == null)
+            if (RastiId == null || _context.Rasti == null)
             {
                 return NotFound();
             }
 
-            var rasti = await _context.Rasti.FindAsync(id);
+            var rasti = await _context.Rasti.FindAsync(RastiId);
             if (rasti == null)
             {
                 return NotFound();
@@ -101,9 +101,9 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
         {
-            if (id != rasti.Id)
+            if (RastiId != rasti.Id)
             {
                 return NotFound();
             }
@@ -134,15 +134,15 @@ namespace Kipa_plus.Controllers
         // GET: Rasti/Delete/5
         [HttpGet("Delete")]
         [DisplayName("Poista")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? RastiId)
         {
-            if (id == null || _context.Rasti == null)
+            if (RastiId == null || _context.Rasti == null)
             {
                 return NotFound();
             }
 
             var rasti = await _context.Rasti
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == RastiId);
             if (rasti == null)
             {
                 return NotFound();
@@ -154,13 +154,13 @@ namespace Kipa_plus.Controllers
         // POST: Rasti/Delete/5
         [HttpPost("Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> DeleteConfirmed(int? RastiId)
         {
             if (_context.Rasti == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Rasti'  is null.");
             }
-            var rasti = await _context.Rasti.FindAsync(id);
+            var rasti = await _context.Rasti.FindAsync(RastiId);
             if (rasti != null)
             {
                 _context.Rasti.Remove(rasti);
