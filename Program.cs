@@ -36,11 +36,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-//builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
-//.AddEntityFrameworkStores<ApplicationDbContext>()
-//.AddErrorDescriber<CustomIdentityErrorDescriber>()
-//.AddDefaultTokenProviders()
-//.AddDefaultUI();
+
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddErrorDescriber<CustomIdentityErrorDescriber>()
@@ -53,15 +49,7 @@ builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => option
 .AddSqlServerStore(options => options.ConnectionString = connectionString)
 .AddUi(mvcbuilder);
 
-
-
 builder.Services.AddRazorPages();
-
-//builder.Services.AddSingleton<IMvcControllerDiscovery, MvcControllerDiscovery>();
-//builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => options.DefaultAdminUser = Environment.GetEnvironmentVariable("DefaultAdminUser"))
-//    .AddSqlServerStore(options => options.ConnectionString = connectionString)
-//    .AddUi(mvcBuilder);
-
 
 
 
