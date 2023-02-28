@@ -11,6 +11,6 @@ namespace Kipa_plus.Models.DynamicAuth
 
         public IEnumerable<MvcControllerInfo> Controllers { get; set; }
 
-        public IEnumerable<RastiControllerModel> RastiAccess { get; set; }
+        public IEnumerable<MainController> RastiAccess { get; set; }
     }
 }

@@ -19,9 +19,9 @@ namespace Kipa_plus.Services
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
             _context = context;
         }
-        public IEnumerable<RastiControllerModel> GetRastit()
+        public IEnumerable<MainController> GetRastit()
         {
-            var Rastit = new List<RastiControllerModel>();
+            var Rastit = new List<MainController>();
 
             var RastiController1 = _actionDescriptorCollectionProvider
                 .ActionDescriptors.Items
@@ -147,7 +147,7 @@ namespace Kipa_plus.Services
 
             foreach (var rasti in _context.Rasti)
             {
-                var RCM = new RastiControllerModel() { Name = rasti.Nimi, RastiId = (int)rasti.Id };
+                var RCM = new MainController() { Name = rasti.Nimi, RastiId = (int)rasti.Id };
 
                 RCM.Actions = actions;
                 RCM.SubControllers = subcontrollers;

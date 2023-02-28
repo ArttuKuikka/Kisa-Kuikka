@@ -89,20 +89,21 @@ namespace Kipa_plus.Controllers
                 return View(viewModel);
             }
 
-            if (viewModel.SelectedControllers != null && viewModel.SelectedControllers.Any() && viewModel.ValitutRastit != null && viewModel.ValitutRastit.Any())
+            if (viewModel.SelectedControllers != null && viewModel.SelectedControllers.Any())
             {
                 foreach (var controller in viewModel.SelectedControllers)
                     foreach (var action in controller.Actions)
                         action.ControllerId = controller.Id;
 
-                var roleAccess = new RoleAccess
-                {
-                    Controllers = viewModel.SelectedControllers.ToList(),
-                    RoleId = role.GetType().GetProperty("Id")?.GetValue(role).ToString(),
-                    RastiAccess = viewModel.ValitutRastit.ToList()
-                };
-                await _roleAccessStore.AddRoleAccessAsync(roleAccess);
+               
             }
+            var roleAccess = new RoleAccess
+            {
+                Controllers = viewModel.SelectedControllers?.ToList(),
+                RoleId = role.GetType().GetProperty("Id")?.GetValue(role).ToString(),
+                RastiAccess = viewModel.ValitutRastit?.ToList()
+            };
+            await _roleAccessStore.AddRoleAccessAsync(roleAccess);
 
 
             return RedirectToAction(nameof(Index));

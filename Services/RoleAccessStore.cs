@@ -39,11 +39,25 @@ namespace Kipa_plus.Services
                             cmd.CommandType = CommandType.Text;
                             cmd.Parameters.AddWithValue("@RoleId", roleAccess.RoleId);
 
+                            if(roleAccess.Controllers != null)
+                        {
                             var access = JsonConvert.SerializeObject(roleAccess.Controllers);
                             cmd.Parameters.AddWithValue("@Access", access);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@Access", DBNull.Value);
+                        }
 
+                           if(roleAccess.RastiAccess!= null)
+                        {
                             var rastiAccess = JsonConvert.SerializeObject(roleAccess.RastiAccess);
                             cmd.Parameters.AddWithValue("@RastiAccess", rastiAccess);
+                        }
+                        else
+                        {
+                            cmd.Parameters.AddWithValue("@RastiAccess", DBNull.Value);
+                        }
 
                             conn.Open();
                             var affectedRows = await cmd.ExecuteNonQueryAsync();
@@ -143,7 +157,7 @@ namespace Kipa_plus.Services
                             var json = reader[2].ToString();
                             roleAccess.Controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
                             var json2 = reader[3].ToString();
-                            roleAccess.RastiAccess = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json2);
+                            roleAccess.RastiAccess = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json2);
 
                             return roleAccess;
                         }
@@ -237,9 +251,10 @@ namespace Kipa_plus.Services
                                 if (string.IsNullOrEmpty(json))
                                     continue;
 
-                                var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                                var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
                                 var idControllers = controllers.Where(x => x.RastiId == rastiId);
-                                list.AddRange(idControllers.SelectMany(c => c.Actions));
+                                var notnullidController = idControllers.Where(x => x.Actions != null);
+                                list.AddRange(notnullidController.SelectMany(c => c.Actions));
                             }
 
                             return list.Any(a => a.Name == action);
@@ -260,16 +275,33 @@ namespace Kipa_plus.Services
                                     if (string.IsNullOrEmpty(json))
                                         continue;
 
-                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
+                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
                                     var tehtava = await _context.Tehtava.FindAsync(rastiId);
                                     if(tehtava == null)
                                     {
                                         return false;
                                     }
 
-                                    var tehtcontroller = controllers.Where(x => x.RastiId == tehtava.RastiId).First();
-                                    var subcontroller = tehtcontroller.SubControllers.Where(x => x.Name == controller).First();
-                                    list = subcontroller.Actions.ToList();
+                                   if(controllers != null && controllers.Any())
+                                    {
+                                        var tehtcontroller = controllers.Where(x => x.RastiId == tehtava.RastiId).ToList();
+                                        if(tehtcontroller != null && tehtcontroller.Any())
+                                        {
+                                            var firstsubcontroller = tehtcontroller.First();
+                                            if(firstsubcontroller != null)
+                                            {
+                                                var subcontrollers = firstsubcontroller.SubControllers;
+                                                if(subcontrollers != null && subcontrollers.Any())
+                                                {
+                                                    var subcontroller = subcontrollers.Where(x => x.Name == controller);
+                                                    if(subcontroller != null && subcontroller.Any())
+                                                    {
+                                                        list = subcontroller.First().Actions.ToList();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
                                 return list.Any(a => a.Name == action);
@@ -287,10 +319,27 @@ namespace Kipa_plus.Services
                                     if (string.IsNullOrEmpty(json))
                                         continue;
 
-                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<RastiControllerModel>>(json);
-                                    var idControllers = controllers.Where(x => x.RastiId == rastiId).First();
-                                    var subcontroller = idControllers.SubControllers.Where(x => x.Name == controller).First();
-                                    list = subcontroller.Actions.ToList();
+                                    var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
+                                    if(controllers != null && controllers.Any())
+                                    {
+                                        var idControllers = controllers.Where(x => x.RastiId == rastiId);
+                                        if(idControllers != null && idControllers.Any())
+                                        {
+                                            var firstIdController = idControllers.First();
+                                           if(firstIdController != null)
+                                            {
+                                                var subcontrollers = firstIdController.SubControllers;
+                                                if(subcontrollers != null && subcontrollers.Any())
+                                                {
+                                                    var subcontroller = subcontrollers.Where(x => x.Name == controller);
+                                                    if(subcontroller != null && subcontroller.Any())
+                                                    {
+                                                        list = subcontroller.First().Actions.ToList();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
 
                                 return list.Any(a => a.Name == action);
