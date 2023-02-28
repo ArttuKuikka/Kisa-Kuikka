@@ -7,9 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Data;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
+    [Static]
     public class VartioController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,7 +22,7 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
-
+        [DisplayName("Liitä tag")]
         public async Task<IActionResult> LiitaTag(int? VartioId)
         {
             if (_context.Vartio == null)
@@ -159,6 +163,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Vartio/Edit/5
+        [DisplayName("Muokkaa")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Vartio == null)
@@ -210,6 +215,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Vartio/Delete/5
+        [DisplayName("Poista")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Vartio == null)

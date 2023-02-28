@@ -11,9 +11,13 @@ using Newtonsoft.Json.Linq;
 using System.Diagnostics.Metrics;
 using System.Net;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
+    [Static]
     [Route("[controller]")]
     public class SarjaController : Controller
     {
@@ -75,6 +79,7 @@ namespace Kipa_plus.Controllers
             return View(sarja);
         }
         [HttpGet("Edit")]
+        [DisplayName("Muokkaa")]
         // GET: Sarja/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -126,6 +131,7 @@ namespace Kipa_plus.Controllers
             return View(sarja);
         }
         [HttpGet("Delete")]
+        [DisplayName("Poista")]
         // GET: Sarja/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {

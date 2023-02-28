@@ -10,21 +10,31 @@ using Kipa_plus.Models;
 using Kipaplus.Data.Migrations;
 using Kipa_plus.Models.ViewModels;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
+    [SubController(Group = "Rasti")]
+    [DisplayName("Tehtävä")]
     public class TehtavaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public TehtavaController(ApplicationDbContext context)
+        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-       
+
 
         // GET: Tehtava
+        [DisplayName("Listaa rastin tehtävät")]
         public async Task<IActionResult> Index(int? RastiId)
         {
             if(RastiId == null || _context.Tehtava == null)
@@ -49,8 +59,8 @@ namespace Kipa_plus.Controllers
             return View(ViewModel);
         }
 
-       
 
+        [DisplayName("Näytä")]
         public IActionResult Nayta(int? TehtavaVastausId)
         {
             if (TehtavaVastausId == null)
@@ -65,6 +75,7 @@ namespace Kipa_plus.Controllers
         }
 
         //GET: Tayta
+        [DisplayName("Täytä")]
         public async Task<IActionResult> Tayta(int? TehtavaId)
         {
             if (TehtavaId == null || _context.Tehtava == null)
@@ -168,6 +179,7 @@ namespace Kipa_plus.Controllers
 
                 aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
                 aiempitehtva.Tarkistettu = true;
+                aiempitehtva.TarkistajaUser = await _userManager.GetUserAsync(User);
                 _context.SaveChanges();
 
                 return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
@@ -207,6 +219,7 @@ namespace Kipa_plus.Controllers
 
                 tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
                 tehtvastaus.Kesken = false;
+                tehtvastaus.JatkajaUser = await _userManager.GetUserAsync(User);
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();
@@ -252,7 +265,8 @@ namespace Kipa_plus.Controllers
                 TV.SarjaId = TehtavaPohja.SarjaId;
                 TV.KisaId = TehtavaPohja.KisaId;
                 TV.RastiId= TehtavaPohja.RastiId;
-                
+                TV.TäyttäjäUser = await _userManager.GetUserAsync(User);
+
                 _context.TehtavaVastaus.Add(TV);
                 _context.SaveChanges();
 
@@ -295,6 +309,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtava/Edit/5
+        [DisplayName("Muokkaa")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Tehtava == null)
@@ -359,6 +374,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtava/Delete/5
+        [DisplayName("Poista")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tehtava == null)
@@ -396,6 +412,7 @@ namespace Kipa_plus.Controllers
             return Redirect("/Tehtava/?RastiId=" + rid);
         }
 
+        [DisplayName("Poista vastaus")]
         public async Task<IActionResult> PoistaVastaus(int? id)
         {
             if (id == null || _context.Tehtava == null)

@@ -46,10 +46,10 @@
             </td>
            
             <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id';">Täytä</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id&RastiId=@Model.RastiId';">Täytä</button>
                     
-                <button type="button" class="btn btn-warning" onclick="location.href = '/Tehtava/Edit?id=@item.Id';">Muokkaa</button>
-                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id';">Poista</button>
+                    <button type="button" class="btn btn-warning" onclick="location.href = '/Tehtava/Edit?id=@item.Id&RastiId=@Model.RastiId';">Muokkaa</button>
+                    <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id&RastiId=@Model.RastiId';">Poista</button>
             </td>
         </tr>
 }
@@ -91,9 +91,9 @@
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id';">Jatka</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id&RastiId=@Model.RastiId';">Jatka</button>
                        
-                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id';">Poista</button>
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id&RastiId=@Model.RastiId';">Poista</button>
                     </td>
                 </tr>
             }
@@ -136,8 +136,8 @@
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId';">Tarkista</button>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id';">Näytä aiempi vastaus</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId&RastiId=@Model.RastiId';">Tarkista</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.RastiId';">Näytä aiempi vastaus</button>
                     </td>
                 </tr>
             }
@@ -179,7 +179,7 @@
                     </td>
 
                     <td>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id';">Näytä</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.RastiId';">Näytä</button>
                         
                     </td>
                 </tr>

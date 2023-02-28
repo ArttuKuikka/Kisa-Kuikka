@@ -1,9 +1,13 @@
 ﻿using Kipa_plus.Data;
 using Microsoft.AspNetCore.Mvc;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
+    [Authorize]
+    [SubController(Group = "Rasti")]
     public class TagController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -13,6 +17,7 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
+        [DisplayName("Valintasivu")]
         public IActionResult Index(int? RastiId)
         {
             ViewBag.RastiId = RastiId;
@@ -27,6 +32,7 @@ namespace Kipa_plus.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [DisplayName("Lue lähtö")]
         public IActionResult LueLahto([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {
             bool HyvaSkannusTulos = false;
@@ -87,6 +93,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
+        [DisplayName("Lue tulo")]
         [ValidateAntiForgeryToken]
         public IActionResult LueTulo([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {

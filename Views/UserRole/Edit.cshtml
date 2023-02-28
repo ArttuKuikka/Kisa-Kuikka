@@ -1,0 +1,83 @@
+﻿@using Kipa_plus.Models.DynamicAuth;
+@using Kipa_plus;
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model UserRoleViewModel
+@{
+    ViewData["Title"] = "Edit User Access";
+    Layout = "_Layout";
+    var roles = (IEnumerable<dynamic>)ViewData["Roles"];
+}
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="/css/jquery.bonsai.min.css">
+<link rel="stylesheet" href="/css/site.css">
+
+@*@section header{
+        <style>
+            .form-horizontal .control-label {
+                padding-top: 0;
+            }
+        </style>
+    }*@
+
+<h2>Edit User Access</h2>
+
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="UserId" />
+            <input type="hidden" asp-for="UserName" />
+
+            <div class="form-group row">
+                <label asp-for="UserName" class="col-md-2 col-form-label"></label>
+                <div class="col-md-10">
+                    <span class="form-control">@Html.DisplayFor(m => m.UserName)</span>
+                </div>
+            </div>
+
+            <div class="form-group" style="max-width:500px">
+                <label asp-for="Nimi" class="control-label"></label>
+                <input asp-for="Nimi" class="form-control" />
+                <span asp-validation-for="Nimi" class="text-danger"></span>
+            </div>
+
+            <div class="form-group" style="max-width:500px">
+                <label asp-for="UusiSalasana" class="control-label"></label>
+                <input asp-for="UusiSalasana" class="form-control" />
+                <span asp-validation-for="UusiSalasana" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="col-md-2 control-label">Roles</label>
+                <div class="col-md-10">
+                    @foreach (var role in roles)
+                    {
+                        <label>
+                            <input type="checkbox" name="Roles[]" value="@role.Name"
+                                   @if (Model?.Roles != null && Model.Roles.Contains(role.Name.ToString())) { <text> checked="checked" </text> } />
+                            &nbsp;@role.Name&nbsp;&nbsp;
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-md-10">
+                    <input type="submit" class="btn btn-primary" value="Edit" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+                                   <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js" async></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js" async></script>
+    <script src="/js/jquery.qubit.min.js"></script>
+    <script src="/js/jquery.bonsai.min.js"></script>
+    <script src="/js/site.js"></script>
+    <script>@Html.Raw(ViewData["Scripts"])</script>
