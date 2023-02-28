@@ -22,10 +22,10 @@
             <h2>Rekisteröidy</h2>
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form login">
 
-
+                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
                 <div class="form__field">
                     <label for="login__LiittymisId"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#input"></use></svg><span class="hidden">LiittymisId</span></label>
-                    <input asp-for="Input.LiittymisId" autocomplete="LiittymisId" type="text" class="form__input form-control" placeholder="LiittymisId" aria-required="true" />
+                    <input asp-for="Input.LiittymisId" autocomplete="LiittymisId" type="text" class="form__input form-control" placeholder="LiittymisId" aria-required="true" value="@Model.ModelLiittymisId" />
 
                 </div>
                 <span asp-validation-for="Input.LiittymisId" class="text-danger"></span>
@@ -38,10 +38,7 @@
                 </div>
                 <span asp-validation-for="Input.KokoNimi" class="text-danger"></span>
                 
-               
-
-
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                
                 <div class="form__field">
                     <label for="login__username"><svg class="icon"><use xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use></svg><span class="hidden">Sähköposti</span></label>
                     <input asp-for="Input.Email" autocomplete="email" type="text" class="form__input form-control" placeholder="Sähköposti" aria-required="true" />

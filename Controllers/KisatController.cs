@@ -1,4 +1,5 @@
 ﻿using Kipa_plus.Data;
+using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [AllowAllAuthorized]
     [Route("[controller]")]
     public class KisatController : Controller
     {

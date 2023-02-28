@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Kipa_plus.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kipa_plus.Controllers
 {
     [Authorize]
+    [AllowAllAuthorized]
     [Route("[controller]")]
     public class TestiController1 : Controller
     {
