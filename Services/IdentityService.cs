@@ -77,7 +77,8 @@ namespace Kipa_plus.Services
                 {
                     UserId = first.user.Id.ToString(),
                     UserName = first.user.UserName,
-                    Roles = first.role != null ? grp.Select(g => g.role).Select(r => r.Name).ToList() : new List<string>()
+                    Roles = first.role != null ? grp.Select(g => g.role).Select(r => r.Name).ToList() : new List<string>(),
+                    
                 });
             }
 

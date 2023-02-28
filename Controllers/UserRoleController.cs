@@ -35,6 +35,19 @@ namespace Kipa_plus.Controllers
         public async Task<ActionResult> Index([FromServices] IIdentityService identityService)
         {
             var usersRoles = await identityService.GetUsersRolesAsync();
+            foreach(var user in usersRoles)
+            {
+                var käyttäjä = await _userManager.FindByIdAsync(user.UserId);
+                if(käyttäjä != null)
+                {
+                    var claims = await _userManager.GetClaimsAsync(käyttäjä);
+                    user.Nimi = claims.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? "[EI NIMEÄ]";
+                }
+                else
+                {
+                    user.Nimi = "[EI NIMEÄ]";
+                }
+            }
 
             return View(usersRoles);
         }

@@ -15,6 +15,7 @@
         <table class="table table-bordered" style="color:white">
             <thead>
                 <tr>
+                    <th scope="col"> @Html.DisplayNameFor(m => m.Nimi) </th>
                     <th scope="col"> @Html.DisplayNameFor(m => m.UserName) </th>
                     <th scope="col"> @Html.DisplayNameFor(m => m.Roles) </th>
                     <th> </th>
@@ -24,6 +25,7 @@
                 @foreach (var user in Model)
                 {
                     <tr>
+                        <td>@Html.DisplayFor(m => user.Nimi)</td>
                         <td>@Html.DisplayFor(m => user.UserName)</td>
                         <td>
                             @for (var i = 0; i < user.Roles.Count(); i++)
