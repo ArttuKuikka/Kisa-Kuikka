@@ -1,4 +1,4 @@
-﻿@model string
+﻿@model (string, int)
 @{
     ViewData["Title"] = "liittymisId";
 }
@@ -6,12 +6,15 @@
 <h3>LiittymisId</h3>
 <br />
 <br />
-<h2>@Model</h2>
+<h2>@Model.Item1</h2>
 @{
-    var url = "https://" + Context.Request.Host.ToString() + "/Identity/Account/Register?LiittymisId=" + Model;
+    var url = "https://" + Context.Request.Host.ToString() + "/Identity/Account/Register?LiittymisId=" + Model.Item1;
 }
 <br />
 <h5>@url</h5>
+
+<button type="button" class="btn btn-light" onclick="location.href = '/Kisa/@Model.Item2/LiittymisIdUudelleenluonti';">Uudelleenluo liittymisId</button>
+<span class="text-danger">HUOM! LiittymisIdn uudellenluonti estää rekisteröitymisen vanhalla id llä!</span>
 
 
 

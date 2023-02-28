@@ -40,9 +40,29 @@ namespace Kipa_plus.Controllers
                 _context.Update(kisa);
                 _context.SaveChanges();
             }
+            (string, int) returnitem = (kisa.LiittymisId, kisaId);
 
-            
-            return View("LiittymisId",kisa.LiittymisId);
+
+            return View("LiittymisId",returnitem);
+        }
+
+        [HttpGet("{kisaId:int}/LiittymisIdUudelleenluonti")]
+        [DisplayName("Uudelleenluo liittymisID")]
+        public async Task<IActionResult> LiittymisIdUudelleenluonti(int kisaId)
+        {
+            if (kisaId == null || _context.Kisa == null)
+            {
+                return NotFound();
+            }
+
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+
+            kisa.LiittymisId = Guid.NewGuid().ToString();
+            _context.Update(kisa);
+            _context.SaveChanges();
+
+
+            return Redirect($"/Kisa/{kisaId}/LiittymisId");
         }
 
         [HttpGet("{kisaId:int}/Lataukset")]
