@@ -13,7 +13,8 @@
 <hr />
 <div class="row">
     <div >
-        <form asp-action="Luo">
+        <form action="/Tehtava/Luo?RastiId=@Model.RastiId" method="post">
+            @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="col-md-10" style="max-width:500px">  
                 <label class="control-label">Kisa</label>

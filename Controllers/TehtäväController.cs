@@ -97,7 +97,7 @@ namespace Kipa_plus.Controllers
 
             vt.VartioList.RemoveAll( x => VIdList.Contains((int)x.Id));
 
-
+            vt.RastiId = Tehtava.RastiId;
             return View(vt);
         }
 
@@ -134,6 +134,7 @@ namespace Kipa_plus.Controllers
             vm.VertausMalli = Malli;
             vm.TehtavaNimi = Tehtava.Nimi;
             vm.TehtavaId = (int)TehtavaId;
+            vm.RastiId = Malli.RastiId;
 
 
             return View(vm);
