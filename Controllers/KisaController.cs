@@ -24,7 +24,7 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
         [HttpGet("{kisaId:int}/LiittymisId")]
-        [DisplayName("Luo liittymisID")]
+        [DisplayName("Näytä liittymisID")]
         public async Task<IActionResult> LiittymisId(int kisaId)
         {
             if (kisaId == null || _context.Kisa == null)
