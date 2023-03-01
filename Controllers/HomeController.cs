@@ -3,41 +3,47 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Kipa_plus.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace Kipa_plus.Controllers
 {
     [Authorize]
     [AllowAllAuthorized]
     
-    public class HomeController : Controller //home controller näyttä käytejellä oman kotisivun jossa painikkeet kaikkin käyttäjän roolille hyödyllisiin ominaisuukisiin ja tarvittaessa redirectaa kisa näkymään
+    public class HomeController : Controller
     {
+        private readonly UserManager<IdentityUser> _userManager;
+        public HomeController(UserManager<IdentityUser> userManager) 
+        {
+            _userManager = userManager;
+        }
         
         public async Task<IActionResult> Index() //redirectaa käyttäjän oikeaan paikka
         {
-            //if user has acces to 1 or more or 0 kisat redirectaa /kisat
+           
             if(User.Identity != null)
             {
                 if (User.Identity.IsAuthenticated)
                 {
-                    
+                    var user = await _userManager.GetUserAsync(User);
+                    if (user != null) 
+                    {
+                        var claims = await _userManager.GetClaimsAsync(user);
+                        var kisaclaims = claims.Where(x => x.Type == "OikeusKisaan");
+                        if (kisaclaims != null)
+                        {
+                            if(kisaclaims.Count() == 1)
+                            {
+                                return Redirect("/Kisa/" + kisaclaims.FirstOrDefault()?.Value);
+                            }
+                        }
+                    }
                    
                 }
             }
             return Redirect("/Kisat");
         }
 
-        public async Task<IActionResult> Koti()
-        {
-
-            if (User.Identity != null)
-            {
-                if (User.Identity.IsAuthenticated)
-                {
-
-
-                }
-            }
-            return BadRequest();
-        }
+        
     }
 }
