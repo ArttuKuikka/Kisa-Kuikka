@@ -37,7 +37,8 @@
         </dd>
     </dl>
 
-    <form asp-action="PoistaVastaus">
+    <form action="/Tehtava/PoistaVastaus?RastiId=@Model.RastiId" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Poista" class="btn btn-danger" /> |
 

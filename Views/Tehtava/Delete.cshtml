@@ -44,7 +44,8 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form action="/Tehtava/Delete?RastiId=@Model.RastiId" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
        

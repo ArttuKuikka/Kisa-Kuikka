@@ -13,8 +13,8 @@
 <hr />
 <div class="row">
     <div>
-       <form asp-action="Tayta" id="Formi">
-        
+       <form action="/Tehtava/Tayta?RastiId=@Model.RastiId" method="post" id="Formi">
+            @Html.AntiForgeryToken()
             <dd class = "h1">
                 @Html.DisplayFor(model => model.Nimi)
             </dd>

@@ -7,7 +7,8 @@
 <hr />
 <div class="row">
 
-    <form asp-action="LueTulo" id="Formi">
+    <form action="/Tag/LueTulo?RastiId=@Model.RastiId" method="post" id="Formi">
+        @Html.AntiForgeryToken()
         <div class="col-md-10" style="max-width:500px">
             <label class="control-label">Rasti</label>
             @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )
