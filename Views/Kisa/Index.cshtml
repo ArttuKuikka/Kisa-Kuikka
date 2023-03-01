@@ -1,5 +1,6 @@
 ﻿@model Models.Kisa
 
+
 @{
     ViewData["Title"] = Model.Nimi;
 }
@@ -10,14 +11,41 @@
 <h3>@Model.Id</h3>
 
 <div class="grid-container">
-    <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png"><p class="grid-item-text">Vartiot</p></div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Sarjat'"><img class="grid-item-image" alt="Sarjat" src="/images/sarja.png"><p class="grid-item-text">Sarjat</p></div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
-    <div class="grid-item" onClick="location.href='/TagTilastot?id=@Model.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tag tilastot</p></div>
-    <div class="grid-item" onClick="location.href='@Model.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>
-    <div class="grid-item" onClick="location.href='@Model.Id/LiittymisId'"><img class="grid-item-image" alt="LiittymisId" src="/images/password-field-with-asterisks.png"><p class="grid-item-text">LiittymisId</p></div>
+    
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="Rastit">
+        <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="Vartiot">
+        <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png"><p class="grid-item-text">Vartiot</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="Sarjat">
+        <div class="grid-item" onClick="location.href='@Model.Id/Sarjat'"><img class="grid-item-image" alt="Sarjat" src="/images/sarja.png"><p class="grid-item-text">Sarjat</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="Edit">
+        <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="TagTilastot" asp-action="Index">
+        <div class="grid-item" onClick="location.href='/TagTilastot?id=@Model.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tag tilastot</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="Lataukset">
+        <div class="grid-item" onClick="location.href='@Model.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="LiittymisId">
+        <div class="grid-item" onClick="location.href='@Model.Id/LiittymisId'"><img class="grid-item-image" alt="LiittymisId" src="/images/password-field-with-asterisks.png"><p class="grid-item-text">LiittymisId</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="RoleController`2" asp-action="Index">
+        <div class="grid-item" onClick="location.href='/Role'"><img class="grid-item-image" alt="Roolit" src="/images/vartio.png"><p class="grid-item-text">Roolit</p></div>
+    </secure-content>
+    <secure-content asp-area="" asp-controller="UserRoleController`3" asp-action="Index">
+        <div class="grid-item" onClick="location.href='/UserRole'"><img class="grid-item-image" alt="Käyttäjät" src="/images/vartio.png"><p class="grid-item-text">Käyttäjät</p></div>
+    </secure-content>
+    
+    
+    
+   
+    
+    
 
-    <div class="grid-item" onClick="location.href='/Role'"><img class="grid-item-image" alt="Roolit" src="/images/vartio.png"><p class="grid-item-text">Roolit</p></div>
-    <div class="grid-item" onClick="location.href='/UserRole'"><img class="grid-item-image" alt="Käyttäjät" src="/images/vartio.png"><p class="grid-item-text">Käyttäjät</p></div>
+   
+    
 </div>
