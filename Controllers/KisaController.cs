@@ -20,11 +20,13 @@ namespace Kipa_plus.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IRoleAccessStore _roleAccessStore;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public KisaController(ApplicationDbContext context, IRoleAccessStore roleAccessStore)
+        public KisaController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
         {
             _context = context;
             _roleAccessStore = roleAccessStore;
+            _authorizationOptions = authorizationOptions;
         }
         [HttpGet("{kisaId:int}/LiittymisId")]
         [DisplayName("Näytä liittymisID")]
@@ -293,8 +295,20 @@ namespace Kipa_plus.Controllers
 
             var rastitjoihinoikeudet = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
 
-            var rastit = _context.Rasti
+            IQueryable rastit;
+
+            if(User.Identity.Name == _authorizationOptions.DefaultAdminUser)
+            {
+                rastit = _context.Rasti
+                .Where(m => m.KisaId == kisaId);
+            }
+            else
+            {
+                rastit = _context.Rasti
                 .Where(m => m.KisaId == kisaId).Where(x => rastitjoihinoikeudet.Contains((int)x.Id));
+            }
+
+
             if (rastit == null)
             {
                 return NotFound();

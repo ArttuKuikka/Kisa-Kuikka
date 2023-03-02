@@ -365,7 +365,7 @@ namespace Kipa_plus.Services
 
         public async Task<List<int>> HasAccessToRastiIdsAsync(params string[] roles)
         {
-            try //admin override ja tupla entryjen poisto
+            try
             {
                 using (var conn = new SqlConnection(_options.ConnectionString))
                 {
@@ -396,7 +396,10 @@ namespace Kipa_plus.Services
                             var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
                             foreach(var con in controllers)
                             {
-                                list.Add((int)con.RastiId);
+                                if (!list.Contains((int)con.RastiId))
+                                {
+                                    list.Add((int)con.RastiId);
+                                }
                             }
                         }
 
