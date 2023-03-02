@@ -133,6 +133,7 @@ namespace Kipa_plus.Areas.Identity.Pages.Account
         {
             
             returnUrl ??= Url.Content("~/");
+            ModelLiittymisId = Input.LiittymisId;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {

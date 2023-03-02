@@ -28,7 +28,7 @@
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" value="@Model.UserId" />
+        <input type="hidden" asp-for="UserId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
        
     </form>

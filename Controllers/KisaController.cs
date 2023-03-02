@@ -92,8 +92,30 @@ namespace Kipa_plus.Controllers
             {
                 return Redirect("/");
             }
-            var kisa = await _context.Kisa
+            Kisa? kisa; 
+            if(User.Identity.Name == _authorizationOptions.DefaultAdminUser)
+            {
+                kisa = await _context.Kisa
                 .FirstOrDefaultAsync(m => m.Id == kisaId);
+            }
+            else
+            {
+                kisa = await _context.Kisa
+                .FirstOrDefaultAsync(m => m.Id == kisaId);
+
+                var roles = await (
+               from usr in _context.Users
+               join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+               join role in _context.Roles on userRole.RoleId equals role.Id
+               where usr.UserName == User.Identity.Name
+               select role.Id.ToString()
+           ).ToArrayAsync();
+
+                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
+
+                kisa.OikeusRasteihin = rastit;
+
+            }
             return View(kisa);
         }
 

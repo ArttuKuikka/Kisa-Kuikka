@@ -154,20 +154,25 @@ namespace Kipa_plus.Controllers
         // POST: Rasti/Delete/5
         [HttpPost("Delete"), ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? RastiId)
+        public async Task<IActionResult> DeleteConfirmed(Rasti viewModel)
         {
             if (_context.Rasti == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Rasti'  is null.");
             }
-            var rasti = await _context.Rasti.FindAsync(RastiId);
+            var rasti = await _context.Rasti.FindAsync(viewModel.Id);
+            
             if (rasti != null)
             {
                 _context.Rasti.Remove(rasti);
+
+                var KisaId = rasti.KisaId;
+
+                await _context.SaveChangesAsync();
+                return Redirect("/Kisa/" + KisaId + "/Rastit");
             }
-            
-            await _context.SaveChangesAsync();
-            return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
+
+            return BadRequest();
         }
 
         private bool RastiExists(int? id)

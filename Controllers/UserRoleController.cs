@@ -24,11 +24,13 @@ namespace Kipa_plus.Controllers
     {
         private readonly RoleManager<TRole> _roleManager;
         private readonly UserManager<TUser> _userManager;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public UserRoleController(RoleManager<TRole> roleManager, UserManager<TUser> userManager)
+        public UserRoleController(RoleManager<TRole> roleManager, UserManager<TUser> userManager, DynamicAuthorizationOptions authorizationOptions)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _authorizationOptions = authorizationOptions;
         }
 
         // GET: Access
@@ -78,7 +80,7 @@ namespace Kipa_plus.Controllers
         }
 
         [DisplayName("Poista käyttäjä")]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<ActionResult> Delete(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
             var claims = await _userManager.GetClaimsAsync(user);
@@ -95,13 +97,17 @@ namespace Kipa_plus.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(UserRoleViewModel viewModel)
+        public async Task<ActionResult> Delete(UserRoleViewModel viewModel)
         {
             var user = await _userManager.FindByIdAsync(viewModel.UserId);
+            if(user.UserName == _authorizationOptions.DefaultAdminUser)
+            {
+                return Forbid();
+            }
             
             if(user != null)
             {
-                _userManager.DeleteAsync(user);
+                await _userManager.DeleteAsync(user);
             }
             else
             {
@@ -128,6 +134,11 @@ namespace Kipa_plus.Controllers
                 ModelState.AddModelError("", "User not found");
                 ViewData["Roles"] = _roleManager.Roles;
                 return View();
+            }
+
+            if (user.UserName == _authorizationOptions.DefaultAdminUser)
+            {
+                return Forbid();
             }
 
             var userRoles = await _userManager.GetRolesAsync(user);

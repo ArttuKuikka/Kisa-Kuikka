@@ -1,4 +1,6 @@
-﻿namespace Kipa_plus.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Kipa_plus.Models
 {
     public class Kisa
     {
@@ -6,8 +8,9 @@
         public string Nimi { get; set; }
        
         public string? LiittymisId { get; set; }
-        
-       
+
+        [NotMapped]
+        public List<int>? OikeusRasteihin { get; set; }
 
 
 
