@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Filters;
 using Kipa_plus.Models;
+using System.Security.Claims;
 
 namespace Kipa_plus.Controllers
 {
@@ -74,6 +75,40 @@ namespace Kipa_plus.Controllers
             ViewData["Roles"] = roles;
 
             return View(userViewModel);
+        }
+
+        [DisplayName("Poista käyttäjä")]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var userViewModel = new UserRoleViewModel
+            {
+                UserId = user.Id.ToString(),
+                UserName = user.UserName,
+                Nimi = claims.FirstOrDefault(x => x.Type == "KokoNimi")?.Value
+            };
+
+            return View(userViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(UserRoleViewModel viewModel)
+        {
+            var user = await _userManager.FindByIdAsync(viewModel.UserId);
+            
+            if(user != null)
+            {
+                _userManager.DeleteAsync(user);
+            }
+            else
+            {
+                return BadRequest();
+            }
+
+            return RedirectToAction("Index");
         }
 
         // POST: Access/Edit
