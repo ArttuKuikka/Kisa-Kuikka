@@ -37,6 +37,11 @@
   <ItemGroup>
     <None Include=".github\workflows\dev.yml" />
     <None Include=".github\workflows\main.yml" />
+    <None Include="wwwroot\lib\davidshimjs-qrcodejs\jquery.min.js" />
+    <None Include="wwwroot\lib\davidshimjs-qrcodejs\LICENSE" />
+    <None Include="wwwroot\lib\davidshimjs-qrcodejs\qrcode.js" />
+    <None Include="wwwroot\lib\davidshimjs-qrcodejs\qrcode.min.js" />
+    <None Include="wwwroot\lib\davidshimjs-qrcodejs\README.md" />
   </ItemGroup>
 
 </Project>
