@@ -9,7 +9,7 @@ namespace Kipa_plus.Models.DynamicAuth
 
         public string UserName { get; set; }
 
-        public IList<string> Roles { get; set; }
+        public IList<string>? Roles { get; set; }
 
         public string? Nimi { get; set; }
 

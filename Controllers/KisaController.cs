@@ -9,6 +9,7 @@ using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kipa_plus.Models.DynamicAuth;
 
 namespace Kipa_plus.Controllers
 {
@@ -18,13 +19,17 @@ namespace Kipa_plus.Controllers
     public class KisaController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRoleAccessStore _roleAccessStore;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public KisaController(ApplicationDbContext context)
+        public KisaController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
         {
             _context = context;
+            _roleAccessStore = roleAccessStore;
+            _authorizationOptions = authorizationOptions;
         }
         [HttpGet("{kisaId:int}/LiittymisId")]
-        [DisplayName("Luo liittymisID")]
+        [DisplayName("Näytä liittymisID")]
         public async Task<IActionResult> LiittymisId(int kisaId)
         {
             if (kisaId == null || _context.Kisa == null)
@@ -280,8 +285,30 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
 
-            var rastit = _context.Rasti
+            var roles = await (
+                from usr in _context.Users
+                join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+                join role in _context.Roles on userRole.RoleId equals role.Id
+                where usr.UserName == User.Identity.Name
+                select role.Id.ToString()
+            ).ToArrayAsync();
+
+            var rastitjoihinoikeudet = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
+
+            IQueryable rastit;
+
+            if(User.Identity.Name == _authorizationOptions.DefaultAdminUser)
+            {
+                rastit = _context.Rasti
                 .Where(m => m.KisaId == kisaId);
+            }
+            else
+            {
+                rastit = _context.Rasti
+                .Where(m => m.KisaId == kisaId).Where(x => rastitjoihinoikeudet.Contains((int)x.Id));
+            }
+
+
             if (rastit == null)
             {
                 return NotFound();

@@ -14,5 +14,7 @@ namespace Kipa_plus.Models.DynamicAuth
 
         Task<bool> HasAccessToActionAsync(string actionId, params string[] roles);
         Task<bool> HasAccessToCustomActionAsync(int rastiId, string controller, string action, int controllerType, string controllerGroup, params string[] roles);
+
+        Task<List<int>> HasAccessToRastiIdsAsync(params string[] roles);
     }
 }
