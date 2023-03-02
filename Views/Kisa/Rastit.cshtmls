@@ -29,7 +29,7 @@
                
                 
                 <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skanna tag</button>
+                    <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
                     <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtavat</button>
                     <button type="button" class="btn btn-danger" onclick="location.href = '/Rasti/Delete/?RastiId=@item.Id';">Poista</button>
