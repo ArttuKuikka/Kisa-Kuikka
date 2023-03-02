@@ -362,6 +362,54 @@ namespace Kipa_plus.Services
                 return false;
             }
         }
+
+        public async Task<List<int>> HasAccessToRastiIdsAsync(params string[] roles)
+        {
+            try //admin override ja tupla entryjen poisto
+            {
+                using (var conn = new SqlConnection(_options.ConnectionString))
+                {
+                    using (var cmd = new SqlCommand())
+                    {
+                        var parameters = new string[roles.Length];
+                        for (var i = 0; i < roles.Length; i++)
+                        {
+                            parameters[i] = $"@RoleId{i}";
+                            cmd.Parameters.AddWithValue(parameters[i], roles[i]);
+                        }
+                        var query = $"SELECT [RastiAccess] FROM [RoleAccess] WHERE [RoleId] IN ({string.Join(", ", parameters)})";
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = query;
+                        cmd.Connection = conn;
+
+                        conn.Open();
+                        var reader = await cmd.ExecuteReaderAsync();
+
+                        var list = new List<int>();
+                        while (reader.Read())
+                        {
+                            var json = reader[0].ToString();
+                            if (string.IsNullOrEmpty(json))
+                                continue;
+
+                            var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
+                            foreach(var con in controllers)
+                            {
+                                list.Add((int)con.RastiId);
+                            }
+                        }
+
+                        return list;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
+                return new List<int>();
+            }
+        }
     }
     
 }
