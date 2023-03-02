@@ -12,9 +12,19 @@
 
 <div class="grid-container">
     
-    <secure-content asp-area="" asp-controller="Kisa" asp-action="Rastit">
-        <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
-    </secure-content>
+    @if(Model.OikeusRasteihin?.Count == 1)
+    {
+        var RastiId = Model.OikeusRasteihin.First();
+        
+        <div class="grid-item" onClick="location.href='/Tehtava/?RastiId=@RastiId'"><img class="grid-item-image" alt="Rastin tehtävät" src="/images/rasti.png"><p class="grid-item-text">Rastin tehtävät</p></div>
+        <div class="grid-item" onClick="location.href='/Tag?RastiId=@RastiId'"><img class="grid-item-image" alt="Skannaa tag" src="/images/tagtilastot.png"><p class="grid-item-text">Skannaa tag</p></div>
+    }
+    else
+    {
+        <secure-content asp-area="" asp-controller="Kisa" asp-action="Rastit">
+            <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
+        </secure-content>
+    }
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Vartiot">
         <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png"><p class="grid-item-text">Vartiot</p></div>
     </secure-content>
