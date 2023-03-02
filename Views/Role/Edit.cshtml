@@ -3,7 +3,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model RoleViewModel
 @{
-    ViewData["Title"] = "Edit Role";
+    ViewData["Title"] = "Muokkaa roolia";
     var controllers = (IEnumerable<MvcControllerInfo>)ViewData["Controllers"];
     Layout = "_Layout";
 }
@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="/css/jquery.bonsai.min.css">
 <link rel="stylesheet" href="/css/site.css">
 
-<h2>Edit Role</h2>
+<h2>Muokka roolia</h2>
 
 <hr />
 
@@ -63,7 +63,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Edit" class="btn btn-primary" />
+                <input type="submit" value="Muokkaa" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -79,5 +79,5 @@
     <script src="/js/site.js"></script>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Takaisin listaan</a>
 </div>
