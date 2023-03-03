@@ -4,7 +4,7 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model RoleViewModel
 @{
-    ViewData["Title"] = "Create Role";
+    ViewData["Title"] = "Luo rooli";
     var controllers = (IEnumerable<MvcControllerInfo>)ViewData["Controllers"];
     var rastit = (IEnumerable<MainController>)ViewData["Rastit"];
     Layout = "_Layout";
@@ -14,7 +14,7 @@
 <link rel="stylesheet" href="/css/jquery.bonsai.min.css">
 <link rel="stylesheet" href="/css/site.css">
 
-<h2>Create Role</h2>
+<h2>Luo rooli</h2>
 
 <hr />
 
@@ -32,7 +32,7 @@
             </div>
 
             <div class="form-group row">
-                <label class="col-md-12 col-form-label">Rasti list</label>
+                <label class="col-md-12 col-form-label">Rastit</label>
                 <div class="col-md-9">
                     <ol id="rastitree">
                         
@@ -85,7 +85,7 @@
                             </li>
                         }
                     </ol>
-                    <label class="col-md-12 col-form-label">Access List</label>
+                    <label class="col-md-12 col-form-label">Yleiset</label>
                     <ol id="tree">
                         @foreach (var controller in controllers)
                         {
@@ -110,7 +110,7 @@
                 </div>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Luo" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -127,5 +127,5 @@
 
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Takaisin listaan</a>
 </div>
