@@ -83,6 +83,92 @@ namespace Kipa_plus.Controllers
             return View(kisaId);
         }
 
+        [DisplayName("Luo Rasti")]
+        [HttpGet("{kisaId:int}/LuoRasti")]
+        // GET: Rasti/Luo
+        public IActionResult LuoRasti(int kisaId)
+        {
+
+            ViewBag.Kisat = _context.Kisa.ToList();
+
+            return View(new Rasti() { KisaId = kisaId });
+        }
+
+        // POST: Rasti/Luo
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost("LuoRasti")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LuoRasti([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
+        {
+            ViewBag.Sarjat = _context.Sarja.ToList();
+            ViewBag.Kisat = _context.Kisa.ToList();
+            if (ModelState.IsValid)
+            {
+                if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Where(x => x.KisaId == rasti.KisaId).Any())
+                {
+                    ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
+                    return View(rasti);
+                }
+
+                _context.Add(rasti);
+                await _context.SaveChangesAsync();
+                return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
+            }
+            return View(rasti);
+        }
+
+
+        // GET: Rasti/Delete/5
+        [HttpGet("{kisaId:int}/PoistaRasti")]
+        [DisplayName("Poista rasti")]
+        public async Task<IActionResult> PoistaRasti(int? RastiId)
+        {
+            if (RastiId == null || _context.Rasti == null)
+            {
+                return NotFound();
+            }
+
+            var rasti = await _context.Rasti
+                .FirstOrDefaultAsync(m => m.Id == RastiId);
+            if (rasti == null)
+            {
+                return NotFound();
+            }
+
+            return View(rasti);
+        }
+
+        // POST: Rasti/Delete/5
+        [HttpPost("{kisaId:int}/PoistaRasti"), ActionName("PoistaRasti")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RastiDeleteConfirmed(Rasti viewModel)
+        {
+            if (_context.Rasti == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.Rasti'  is null.");
+            }
+            var rasti = await _context.Rasti.FindAsync(viewModel.Id);
+
+            if (rasti != null)
+            {
+                _context.Rasti.Remove(rasti);
+
+                var KisaId = rasti.KisaId;
+
+                await _context.SaveChangesAsync();
+                return Redirect("/Kisa/" + KisaId + "/Rastit");
+            }
+
+            return BadRequest();
+        }
+
+        private bool RastiExists(int? id)
+        {
+            return (_context.Rasti?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+
         // GET: Kisa
         [HttpGet("{kisaId:int}/")]
         [DisplayName("Etusivu")]
@@ -119,24 +205,7 @@ namespace Kipa_plus.Controllers
             return View(kisa);
         }
 
-        // GET: Kisa/Details/5
-        [HttpGet("{kisaId:int}/Details")]
-        public async Task<IActionResult> Details(int kisaId)
-        {
-            if (kisaId == null || _context.Kisa == null)
-            {
-                return NotFound();
-            }
-
-            var kisa = await _context.Kisa
-                .FirstOrDefaultAsync(m => m.Id == kisaId);
-            if (kisa == null)
-            {
-                return NotFound();
-            }
-
-            return View(kisa);
-        }
+        
 
         // GET: Kisa/Luo
         [HttpGet("Luo")]

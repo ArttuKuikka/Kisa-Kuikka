@@ -45,6 +45,11 @@
                         <td>
                             <a asp-action="Edit" asp-route-id="@user.UserId">Muokkaa</a>
                             <a asp-action="Delete" asp-route-id="@user.UserId">Poista</a>
+                            @if (user.Has2FA)
+                            {
+                                <a asp-action="Delete2FA" asp-route-id="@user.UserId">Poista kaksivaiheinen tunnistus</a>
+                            }
+
                         </td>
                     </tr>
                 }

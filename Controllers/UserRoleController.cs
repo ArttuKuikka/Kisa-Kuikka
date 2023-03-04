@@ -45,11 +45,16 @@ namespace Kipa_plus.Controllers
                 {
                     var claims = await _userManager.GetClaimsAsync(käyttäjä);
                     user.Nimi = claims.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? "[EI NIMEÄ]";
+                    if(await _userManager.GetTwoFactorEnabledAsync(käyttäjä))
+                    {
+                        user.Has2FA = true;
+                    }
                 }
                 else
                 {
                     user.Nimi = "[EI NIMEÄ]";
                 }
+
             }
 
             return View(usersRoles);
@@ -113,6 +118,48 @@ namespace Kipa_plus.Controllers
             {
                 return BadRequest();
             }
+
+            return RedirectToAction("Index");
+        }
+
+
+        [DisplayName("Poista kaksivaiheinen tunnistus")]
+        public async Task<ActionResult> Delete2FA(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            var claims = await _userManager.GetClaimsAsync(user);
+
+            var userViewModel = new UserRoleViewModel
+            {
+                UserId = user.Id.ToString(),
+                UserName = user.UserName,
+                Nimi = claims.FirstOrDefault(x => x.Type == "KokoNimi")?.Value
+            };
+
+            return View(userViewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete2FA(UserRoleViewModel viewModel)
+        {
+            var user = await _userManager.FindByIdAsync(viewModel.UserId);
+            if (user.UserName == _authorizationOptions.DefaultAdminUser)
+            {
+                return Forbid();
+            }
+            
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with ID '{viewModel.UserId}'.");
+            }
+
+            var disable2faResult = await _userManager.SetTwoFactorEnabledAsync(user, false);
+            if (!disable2faResult.Succeeded)
+            {
+                throw new InvalidOperationException($"Unexpected error occurred disabling 2FA.");
+            }
+
 
             return RedirectToAction("Index");
         }
