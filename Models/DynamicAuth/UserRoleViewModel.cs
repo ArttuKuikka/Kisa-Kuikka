@@ -16,5 +16,12 @@ namespace Kipa_plus.Models.DynamicAuth
         [StringLength(100, ErrorMessage = "Salasanan pitää olla ainakin {2} merkkiä pitkä ja saa olla enintään {1} merkkiä pitkä", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string? UusiSalasana { get; set; }
+
+        public bool Has2FA { get; set; }
+
+        public UserRoleViewModel() 
+        {
+            Has2FA = false;
+        }
     }
 }
