@@ -1,4 +1,5 @@
 ﻿@model Kipa_plus.Models.Tehtava
+@using Kipa_plus.Models;
 
 @{
     ViewData["Title"] = "Luo";
@@ -21,17 +22,28 @@
                 @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
                 @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
             </div> 
-            <div class="col-md-10" style="max-width:500px">
-                <label class="control-label">Sarja</label>
-                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
-            </div>  
+            
              
             <div class="col-md-10" style="max-width:500px">
                 <label class="control-label">Rasti</label>
                 @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )  
                 @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })  
             </div>  
+
+            <br />
+            <div class="col-md-10" style="max-width:500px">
+                <label class="col-md-12 col-form-label">Valitse sarjat joille tämä tehtävä on</label>
+                @{
+                    List<Sarja> Sarjat = ViewBag.Sarjat;
+                }
+                <ol id="RastiTree" name="SarjaId" >
+                    @foreach(var sarja in Sarjat)
+                    {
+                        <li class="RastiTreeItem" name="SarjaId" style="padding-left: 0em !important" data-value="@sarja.Id">@sarja.Nimi</li>
+                    }
+                </ol>
+            </div>
+            <br />
             <div class="form-group" style="max-width:500px">
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
@@ -76,6 +88,9 @@
 <link href="assets/picker.css" rel="stylesheet">
 <script src="assets/js/arviointivali.js"></script>
 <script src="assets/js/fileUpload.js"></script>
+<script src="/js/jquery.bonsai.min.js"></script>
+<script src="/js/jquery.qubit.min.js"></script>
+<link rel="stylesheet" href="/css/jquery.bonsai.min.css">
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
@@ -86,6 +101,8 @@
 
         jQuery(function ($) {
             //lisää formbuilder
+
+            
             
            var fbeditor = document.getElementById('json-editor');
 
@@ -140,9 +157,16 @@
 
            var fb = $(fbeditor).formBuilder(options);
 
+            var tree = $("#RastiTree").bonsai({
+                expandAll: true,
+                checkboxes: true,
+                createInputs: "checkbox"
+            });
+
            //Lähetä nappia painaessa formbuilderin data siirretään json muodossa piilotettuun kentään formissa jonka kautta se lähetetään palvelimelle
             document.getElementById('submit-button').addEventListener('click', function () {
                 var data = fb.actions.getData('json');
+                var treedata = tree.serialize();
                 document.getElementById('json-input').value = data;
                 
             });
