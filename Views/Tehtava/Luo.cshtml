@@ -33,15 +33,19 @@
             <br />
             <div class="col-md-10" style="max-width:500px">
                 <label class="col-md-12 col-form-label">Valitse sarjat joille tämä tehtävä on</label>
+                
                 @{
                     List<Sarja> Sarjat = ViewBag.Sarjat;
                 }
-                <ol id="RastiTree" name="SarjaId" >
+                
                     @foreach(var sarja in Sarjat)
                     {
-                        <li class="RastiTreeItem" name="SarjaId" style="padding-left: 0em !important" data-value="@sarja.Id">@sarja.Nimi</li>
+                        <label>
+                        <input type="checkbox" name="SarjaIdt[]" value="@sarja.Id" />
+                        @sarja.Nimi
+                        </label>
                     }
-                </ol>
+                
             </div>
             <br />
             <div class="form-group" style="max-width:500px">
@@ -157,17 +161,13 @@
 
            var fb = $(fbeditor).formBuilder(options);
 
-            var tree = $("#RastiTree").bonsai({
-                expandAll: true,
-                checkboxes: true,
-                createInputs: "checkbox"
-            });
+            
 
            //Lähetä nappia painaessa formbuilderin data siirretään json muodossa piilotettuun kentään formissa jonka kautta se lähetetään palvelimelle
             document.getElementById('submit-button').addEventListener('click', function () {
                 var data = fb.actions.getData('json');
-                var treedata = tree.serialize();
                 document.getElementById('json-input').value = data;
+
                 
             });
         });

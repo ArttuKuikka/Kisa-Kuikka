@@ -1,6 +1,8 @@
 ﻿
 
 
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Kipa_plus.Models
 {
     public class Tehtava
@@ -11,6 +13,9 @@ namespace Kipa_plus.Models
         public int RastiId { get; set; }
         public string? Nimi { get; set; }
         public string? TehtavaJson { get; set; }
+
+        [NotMapped]
+        public IList<int>? SarjaIdt{ get; set; }
 
     }
 }
