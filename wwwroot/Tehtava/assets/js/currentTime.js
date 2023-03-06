@@ -56,32 +56,40 @@ window.fbControls.push(function media(controlClass) {
                 controls: true,
                 format: 'DD.MM.YYYY HH:mm:ss',
                 headers: true,
-                pick: function (e) { var aika = picker.getDate(); aika.setMilliseconds(0); div.value = JSON.stringify(aika); console.log(div.value); }
+                pick: function (e) { var aika = picker.getDate(); aika.setMilliseconds(0); div.value = aika.toISOString(); console.log(div.value); }
             });
 
             
 
             currentTimeButton.addEventListener('click', () => {
 
-                var currentDate = new Date();
+                let tama = this;
+                let currentDate;
                 fetch('/Aika').then(function (response) {
                     return response.json();
                 }).then(function (data) {
                     console.log(data);
                     currentDate = data.aika;
+
+                    if (typeof currentDate === 'undefined') {
+                        alert("Virhe asettaessa aikaa, syötä aika manuaalisesti");
+                        return;
+                    }
+
+                    picker.setDate(currentDate);
+                    var dtoptions = { day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' }
+                    dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
+                    var aika = picker.getDate();
+                    aika.setMilliseconds(0);
+                    tama.div.value = aika.toISOString();
+
+                    console.log(tama.div.value);
+
                 }).catch(function (err) {
-                    console.log('Server Time Fetch Error :-S', err);
+                    console.log('virhe asettaessa aikaa', err);
                 });
-            
 
-              picker.setDate(currentDate);
-              var dtoptions = {day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit'}
-              dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
-              var aika = picker.getDate();
-              aika.setMilliseconds(0);
-              this.div.value = JSON.stringify(aika);
-
-              console.log(this.div.value);
+                
           });
 
             
@@ -95,7 +103,7 @@ window.fbControls.push(function media(controlClass) {
                 dateTimePicker.value = picker.getDate().toLocaleDateString('fi-FI', dtoptions);
                 var aika = picker.getDate();
                 aika.setMilliseconds(0);
-                this.div.value = JSON.stringify(aika);
+                this.div.value = aika.toISOString();
             }
             catch (err) {
                 console.log("Ei dataa currentTime elementillä");
