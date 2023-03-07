@@ -116,6 +116,10 @@ namespace Kipa_plus.Controllers
         public async Task<ActionResult> Edit(string id)
         {
             ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+
+            var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+            ViewData["Rastit"] = rastit.GetRastit();
+
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
                 return NotFound();
@@ -124,7 +128,8 @@ namespace Kipa_plus.Controllers
             var viewModel = new RoleViewModel
             {
                 Name = role.Name,
-                SelectedControllers = accessList?.Controllers
+                SelectedControllers = accessList?.Controllers,
+                ValitutRastit = accessList?.RastiAccess
             };
 
             return View(viewModel);
@@ -137,6 +142,10 @@ namespace Kipa_plus.Controllers
             if (!ModelState.IsValid)
             {
                 ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+
+                var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+                ViewData["Rastit"] = rastit.GetRastit();
+
                 return View(viewModel);
             }
 

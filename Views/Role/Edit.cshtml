@@ -1,10 +1,12 @@
 ﻿@using Kipa_plus.Models.DynamicAuth;
 @using Kipa_plus;
+@using Kipa_plus.Models.DynamicAuth.Custom;
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model RoleViewModel
 @{
     ViewData["Title"] = "Muokkaa roolia";
     var controllers = (IEnumerable<MvcControllerInfo>)ViewData["Controllers"];
+    var rastit = (IEnumerable<MainController>)ViewData["Rastit"];
     Layout = "_Layout";
 }
 
@@ -30,8 +32,62 @@
             </div>
 
             <div class="form-group">
-                <label class="col-md-3 col-form-label">Access List</label>
+                <label class="col-md-3 col-form-label">Rastit</label>
                 <div class="col-md-9">
+                    <ol id="rastitree">
+
+                        @foreach (var rasti in rastit)
+                        {
+                            var selectedrasti = Model?.ValitutRastit?.SingleOrDefault(x => x.RastiId == rasti.RastiId);
+                            <li class="rasticontroller" data-value="@rasti.Name">
+                                <input type="hidden" class="area" value="@rasti.RastiId" />
+                                @rasti.Name
+                                <ol>
+                                    @if (rasti.Actions.Any())
+                                    {
+                                        <li class="commonactions" data-value="@rasti.Name">
+                                            <input type="hidden" class="area" value="@rasti.RastiId" />
+                                            Yleistä
+                                            <ul>
+
+                                                @foreach (var action in rasti.Actions)
+                                                {
+                                                    var name = action.DisplayName ?? action.Name;
+                                                    <li data-value="@action.Name" @if(selectedrasti != null && selectedrasti.Actions.Any(c => c.Name == action.Name)){<text> data-checked='1' </text>}>@name</li>
+                                                }
+                                            </ul>
+                                        </li>
+                                    }
+
+                                    @foreach (var subcontroller in rasti.SubControllers)
+                                    {
+                                        var name2 = subcontroller.DisplayName ?? subcontroller.Name;
+                                        var selectedsubcontroller = Model?.ValitutRastit?.SingleOrDefault(x => x.RastiId == rasti.RastiId)?.SubControllers?.SingleOrDefault(x => x.Name == subcontroller.Name);
+
+
+                                        <li class="subcontroller" data-value="@subcontroller.Name">
+                                            <input type="hidden" class="area" value="@subcontroller.Name" />
+                                            @name2
+                                            @if (subcontroller.Actions.Any())
+                                            {
+                                                <ul>
+                                                    @foreach (var action in subcontroller.Actions)
+                                                    {
+                                                        name2 = action.DisplayName ?? action.Name;
+                                                        <li data-value="@action.Name" @if(selectedsubcontroller != null && selectedsubcontroller.Actions.Any(c => c.Name == action.Name)){<text> data-checked='1' </text>}>@name2</li>
+                                                    }
+                                                </ul>
+                                            }
+
+                                        </li>
+
+
+                                    }
+                                </ol>
+                            </li>
+                        }
+                    </ol>
+                    <label class="col-md-12 col-form-label">Yleiset</label>
                     <ol id="tree">
                         @foreach (var controller in controllers)
                         {
