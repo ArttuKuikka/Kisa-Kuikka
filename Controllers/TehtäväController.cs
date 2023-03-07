@@ -280,13 +280,28 @@ namespace Kipa_plus.Controllers
         
 
         // GET: Tehtava/Luo
-        public IActionResult Luo(int KisaId, int SarjaId, int RastiId)
+        public IActionResult Luo(int? KisaId, int? RastiId)
         {
+            if(KisaId != null && RastiId != null)
+            {
+                var viewModel = new LuoTehtavaViewModel() { KisaId = (int)KisaId, RastiId = (int)RastiId};
 
-            ViewBag.Sarjat = _context.Sarja.Where(x => x.KisaId == KisaId).ToList(); //check että mihkä on oikeudet //ottaa defaulttina kaikki kisan sarjat ja rastit mutta jos ei saa id:tä querystä niin fallback siihen että ei mitään ja tulee valitun kisan perusteel (TAI mihkä oikeudet)
-            ViewBag.Kisat = _context.Kisa.ToList();
-            ViewBag.Rastit = _context.Rasti.Where(x => x.KisaId == KisaId).ToList();
-            return View(new Tehtava() { KisaId = KisaId, SarjaId = SarjaId, RastiId = RastiId});
+                var sarjaList = new List<CheckboxViewModel>();
+                foreach(var sarja in _context.Sarja)
+                {
+                   if(sarja.Id != null)
+                    {
+                        sarjaList.Add(new CheckboxViewModel() { Id = (int)sarja.Id, DisplayName = sarja.Nimi, IsChecked = false });
+                    }
+                }
+                viewModel.Sarjat = sarjaList;
+
+                return View(viewModel);
+            }
+
+            
+            
+            return BadRequest();
         }
 
         // POST: Tehtava/Luo
@@ -294,19 +309,38 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,SarjaId,KisaId,RastiId,Nimi,Tarkistettu,TehtavaJson")] Tehtava Tehtava)
+        public async Task<IActionResult> Luo([Bind("RastiId,KisaId,Sarjat,Nimi,TehtavaJson")] LuoTehtavaViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                if(Tehtava.Nimi == null || Tehtava.Nimi == "")
+                if(viewModel.KisaId == 0 || viewModel.RastiId == 0)
                 {
-                    Tehtava.Nimi = _context.Sarja.First(x => x.Id == Tehtava.SarjaId).Nimi + "-sarjan tehtävä";
+                    return BadRequest("Virheellinen KisaId tai RastiId");
                 }
-                _context.Add(Tehtava);
-                await _context.SaveChangesAsync();
-                return Redirect("/Tehtava/?RastiId=" + Tehtava.RastiId);
+                var checklist = viewModel.Sarjat?.Where(x => x.IsChecked == true).ToList();
+                if(checklist != null)
+                {
+                    foreach (var sarja in checklist)
+                    {
+                        var teht = new Tehtava() { KisaId = viewModel.KisaId, RastiId = viewModel.RastiId, TehtavaJson = viewModel.TehtavaJson, SarjaId = sarja.Id };
+
+                        if (viewModel.Nimi == null || viewModel.Nimi == "")
+                        {
+                            teht.Nimi = _context.Sarja.First(x => x.Id == sarja.Id).Nimi + "-sarjan tehtävä";
+                        }
+                        else
+                        {
+                            teht.Nimi = viewModel.Nimi;
+                        }
+                        _context.Add(teht);
+                    }
+
+                    _context.SaveChanges();
+                }
+
+                return Redirect("/Tehtava/?RastiId=" + viewModel.RastiId);
             }
-            return View(Tehtava);
+            return View(viewModel);
         }
 
         // GET: Tehtava/Edit/5
@@ -394,7 +428,7 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Tehtava/Delete/5
-        [HttpPost, ActionName("Poista")]
+        [HttpPost, ActionName("VarmistaPoisto")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int? id)
         {
@@ -403,14 +437,23 @@ namespace Kipa_plus.Controllers
                 return Problem("Entity set 'ApplicationDbContext.Tehtava'  is null.");
             }
             var Tehtava = await _context.Tehtava.FindAsync(id);
-            var rid = Tehtava.RastiId;
+            
             if (Tehtava != null)
             {
+                var rid = Tehtava.RastiId;
                 _context.Tehtava.Remove(Tehtava);
+
+                var poistettavatVastaukset = _context.TehtavaVastaus.Where(x => x.TehtavaId == rid).ToList();
+                foreach(var vastaus in poistettavatVastaukset)
+                {
+                    _context.TehtavaVastaus.Remove(vastaus);
+                }
+
+                await _context.SaveChangesAsync();
+                return Redirect("/Tehtava/?RastiId=" + rid);
             }
-            
-            await _context.SaveChangesAsync();
-            return Redirect("/Tehtava/?RastiId=" + rid);
+
+            return BadRequest("Tehtävää ei ole olemassa");
         }
 
         [DisplayName("Poista vastaus")]
