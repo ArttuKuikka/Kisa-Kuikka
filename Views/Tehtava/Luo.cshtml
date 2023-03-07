@@ -1,4 +1,5 @@
-﻿@model Kipa_plus.Models.Tehtava
+﻿@model Kipa_plus.Models.ViewModels.LuoTehtavaViewModel
+@using Kipa_plus.Models;
 
 @{
     ViewData["Title"] = "Luo";
@@ -16,31 +17,44 @@
         <form action="/Tehtava/Luo?RastiId=@Model.RastiId" method="post">
             @Html.AntiForgeryToken()
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="col-md-10" style="max-width:500px">  
-                <label class="control-label">Kisa</label>
-                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
-            </div> 
+            <div class="form-group">
+                
+                <input asp-for="KisaId" class="form-control" hidden="hidden" />
+                <span asp-validation-for="KisaId" class="text-danger"></span>
+            </div>
+
+
+            <div class="form-group">
+                
+                <input asp-for="RastiId" class="form-control" hidden="hidden" />
+                <span asp-validation-for="RastiId" class="text-danger"></span>
+            </div>
+
+            
             <div class="col-md-10" style="max-width:500px">
-                <label class="control-label">Sarja</label>
-                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
-            </div>  
-             
-            <div class="col-md-10" style="max-width:500px">
-                <label class="control-label">Rasti</label>
-                @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })  
-            </div>  
+                <label class="col-md-12 col-form-label">Valitse sarjat joille tämä tehtävä on</label>
+
+                @for (var index = 0; index < @Model.Sarjat?.Count(); index++)
+                {
+                    <input type="checkbox" asp-for="@Model.Sarjat[index].IsChecked" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.Sarjat[index].IsChecked">
+                    @Model.Sarjat[index].DisplayName
+                    </label>
+                    <input type="hidden" asp-for="@Model.Sarjat[index].Id" />
+                    <input type="hidden" asp-for="@Model.Sarjat[index].DisplayName" />
+                }
+
+            </div>
+            
             <div class="form-group" style="max-width:500px">
                 <label asp-for="Nimi" class="control-label"></label>
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
             <br />
-            <div class="form-group" hidden="hidden">
-                <label asp-for="TehtavaJson" class="control-label"></label>
-                <input asp-for="TehtavaJson" id="json-input" class="form-control" />
+            <div class="form-group" >
+                
+                <input asp-for="TehtavaJson" id="json-input" class="form-control" hidden="hidden" />
                 <span asp-validation-for="TehtavaJson" class="text-danger"></span>
             </div>
             <div class="json-editor" id="json-editor" style="color:black">
@@ -77,6 +91,7 @@
 <script src="assets/js/arviointivali.js"></script>
 <script src="assets/js/fileUpload.js"></script>
 
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
@@ -86,6 +101,8 @@
 
         jQuery(function ($) {
             //lisää formbuilder
+
+            
             
            var fbeditor = document.getElementById('json-editor');
 
@@ -140,10 +157,13 @@
 
            var fb = $(fbeditor).formBuilder(options);
 
+            
+
            //Lähetä nappia painaessa formbuilderin data siirretään json muodossa piilotettuun kentään formissa jonka kautta se lähetetään palvelimelle
             document.getElementById('submit-button').addEventListener('click', function () {
                 var data = fb.actions.getData('json');
                 document.getElementById('json-input').value = data;
+
                 
             });
         });

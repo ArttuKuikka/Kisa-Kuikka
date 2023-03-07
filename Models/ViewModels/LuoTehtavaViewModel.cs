@@ -1,12 +1,13 @@
-﻿namespace Kipa_plus.Models
+﻿namespace Kipa_plus.Models.ViewModels
 {
-    public class Tehtava
+    public class LuoTehtavaViewModel
     {
-        public int Id { get; set; }
-        public int SarjaId { get; set; }
         public int KisaId { get; set; }
         public int RastiId { get; set; }
+        public List<CheckboxViewModel>? Sarjat { get; set; }
         public string? Nimi { get; set; }
         public string? TehtavaJson { get; set; }
+
+
     }
 }
