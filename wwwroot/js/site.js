@@ -37,13 +37,13 @@
     });
 
     $("#rastitree").bonsai({
-        expandAll: true,
+        expandAll: false,
         checkboxes: true,
         createInputs: "checkbox"
     });
 
     $("#subcontroller").bonsai({
-        expandAll: true,
+        expandAll: false,
         checkboxes: true,
         createInputs: "checkbox"
     });

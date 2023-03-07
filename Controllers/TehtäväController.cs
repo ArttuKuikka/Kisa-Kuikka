@@ -241,6 +241,10 @@ namespace Kipa_plus.Controllers
             }
             if (ModelState.IsValid) 
             {
+                if(await _context.Vartio.FindAsync(vastausTemp.VartioId) == null)
+                {
+                    return BadRequest("Vartiota ei ole olemassa");
+                }
                 if(_context.TehtavaVastaus.Where(x => x.TehtavaId == vastausTemp.TehtavaId).Where(X => X.VartioId == vastausTemp.VartioId).Any())
                 {
                     return BadRequest("Vartiolla on jo tehtävä vastaus, jatka olemassa olevaa vastausta tai tarkista odottava vastaus.");
