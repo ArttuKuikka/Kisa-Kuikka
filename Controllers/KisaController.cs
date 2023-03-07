@@ -152,9 +152,15 @@ namespace Kipa_plus.Controllers
 
             if (rasti != null)
             {
+                var rId = rasti.Id;
+                var KisaId = rasti.KisaId;
                 _context.Rasti.Remove(rasti);
 
-                var KisaId = rasti.KisaId;
+                _context.Tehtava.Where(x => x.RastiId == rId).ToList().ForEach(x => _context.Tehtava.Remove(x));
+                _context.TehtavaVastaus.Where(x => x.RastiId == rId).ToList().ForEach(x => _context.TehtavaVastaus.Remove(x));
+
+                
+                
 
                 await _context.SaveChangesAsync();
                 return Redirect("/Kisa/" + KisaId + "/Rastit");
