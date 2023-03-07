@@ -14,9 +14,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
            
             <div class="col-md-10">  
-                <label class="control-label">Kisa</label>
-                @Html.DropDownListFor(model => model.KisaId,new SelectList(ViewBag.Kisat, "Id", "Nimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.KisaId, "", new { @class = "text-danger" })  
+                
+                <input asp-for="KisaId" class="form-control" hidden="hidden" />
+                <span asp-validation-for="KisaId" class="text-danger"></span>
             </div> 
             <div class="form-group">
                 
