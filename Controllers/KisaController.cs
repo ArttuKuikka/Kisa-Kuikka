@@ -10,6 +10,7 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Models.ViewModels;
 
 namespace Kipa_plus.Controllers
 {
@@ -368,9 +369,18 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            ViewBag.KisaId = kisaId;
-            ViewBag.Sarjat = _context.Sarja.Where(x=> x.KisaId == kisaId).ToList();
-            return View(vartiot);
+            
+
+            var sarjat = _context.Sarja
+                .Where(m => m.KisaId == kisaId);
+            if (sarjat == null)
+            {
+                return NotFound();
+            }
+
+            var ViewModel = new VartiotViewModel() { Vartiot = vartiot, Sarjat = sarjat, KisaId = kisaId};
+
+            return View(ViewModel);
         }
 
         [HttpGet("{kisaId:int}/Rastit")]

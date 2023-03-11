@@ -321,11 +321,21 @@ namespace Kipa_plus.Controllers
                 {
                     return BadRequest("Virheellinen KisaId tai RastiId");
                 }
+                if (viewModel.Sarjat != null && !viewModel.Sarjat.Any())
+                {
+                    return BadRequest("Ei sarjoja");
+                }
                 var checklist = viewModel.Sarjat?.Where(x => x.IsChecked == true).ToList();
                 if(checklist != null)
                 {
                     foreach (var sarja in checklist)
                     {
+                        var testisarja = await _context.Sarja.FindAsync(sarja.Id);
+                        if (testisarja == null)
+                        {
+                            return BadRequest("Sarjaa ei ole olemassa");
+                        }
+
                         var teht = new Tehtava() { KisaId = viewModel.KisaId, RastiId = viewModel.RastiId, TehtavaJson = viewModel.TehtavaJson, SarjaId = sarja.Id };
 
                         if (viewModel.Nimi == null || viewModel.Nimi == "")
