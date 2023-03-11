@@ -18,7 +18,7 @@ namespace Kipa_plus.Controllers
     [Authorize]
     [Static]
     [Route("[controller]")]
-    [DisplayName("Tiedoston lataus")]
+    [DisplayName("Kisan tietojen lataus")]
     public class LatausController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -28,7 +28,7 @@ namespace Kipa_plus.Controllers
             _context = context;
         }
 
-        [DisplayName("Lataa tiedosto")]
+        [DisplayName("Lataa excel tiedosto")]
         public async Task<IActionResult> index(int? kisaid, string? format)
         {
             if (kisaid == null) { return BadRequest("KisaId null"); }
@@ -178,6 +178,9 @@ namespace Kipa_plus.Controllers
                                                     break;
                                                 case "fileUpload":
                                                     cell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
+                                                    break;
+                                                case "number":
+                                                    cell.SetCellValue(double.Parse(data0.ToString().Replace('.', ',')));
                                                     break;
                                                 default:
                                                     cell.SetCellValue(data0.ToString());
