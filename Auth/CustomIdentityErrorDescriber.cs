@@ -20,7 +20,7 @@ namespace Kipa_plus.Auth
         public override IdentityError UserAlreadyInRole(string role) { return new IdentityError { Code = nameof(UserAlreadyInRole), Description = $"Käyttäjä on jo roolissa '{role}'." }; }
         public override IdentityError UserNotInRole(string role) { return new IdentityError { Code = nameof(UserNotInRole), Description = $"Käyttäjä ei ole roolissa '{role}'." }; }
         public override IdentityError PasswordTooShort(int length) { return new IdentityError { Code = nameof(PasswordTooShort), Description = $"Salasanan täytyy olla vähintään {length} merkkiä pitkä." }; }
-        public override IdentityError PasswordRequiresNonAlphanumeric() { return new IdentityError { Code = nameof(PasswordRequiresNonAlphanumeric), Description = "Salasanan täytyy sisältää vähintää yksi numero." }; }
+        public override IdentityError PasswordRequiresNonAlphanumeric() { return new IdentityError { Code = nameof(PasswordRequiresNonAlphanumeric), Description = "Salasanan täytyy sisältää vähintää yksi erikoismerkki (esim. '!' tai '$')." }; }
         public override IdentityError PasswordRequiresDigit() { return new IdentityError { Code = nameof(PasswordRequiresDigit), Description = "Salasanan täytyy sisältää vähintää yksi numero ('0'-'9')." }; }
         public override IdentityError PasswordRequiresLower() { return new IdentityError { Code = nameof(PasswordRequiresLower), Description = "Salasanan täytyy sisältää vähintää yksi pieni kirjain ('a'-'z')." }; }
         public override IdentityError PasswordRequiresUpper() { return new IdentityError { Code = nameof(PasswordRequiresUpper), Description = "Salasanan täytyy sisältää vähintää yksi iso kirjain ('A'-'Z')." }; }
