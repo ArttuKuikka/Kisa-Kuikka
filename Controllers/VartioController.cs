@@ -246,6 +246,11 @@ namespace Kipa_plus.Controllers
             if (vartio != null)
             {
                 _context.Vartio.Remove(vartio);
+
+                foreach(var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
+                {
+                    _context.TehtavaVastaus.Remove(vastaus);
+                }
             }
             
             await _context.SaveChangesAsync();

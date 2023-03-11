@@ -163,6 +163,16 @@ namespace Kipa_plus.Controllers
             if (sarja != null)
             {
                 _context.Sarja.Remove(sarja);
+
+                foreach(var vastaus in _context.TehtavaVastaus.Where(x => x.SarjaId == sarja.Id)) 
+                {
+                    _context.TehtavaVastaus.Remove(vastaus);
+                }
+
+                foreach(var tehtpohja in _context.Tehtava.Where(x => x.SarjaId == sarja.Id))
+                {
+                    _context.Tehtava.Remove(tehtpohja);
+                }
             }
             
             await _context.SaveChangesAsync();
