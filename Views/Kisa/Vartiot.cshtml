@@ -27,7 +27,7 @@
                     Nimi ja numero
                 </th>
                 <th>
-                    Sarja ja lippukunta
+                    Sarja ja tilanne
                 </th>
 
 
@@ -48,7 +48,15 @@
                     <td>
 
                         <h5>@sarja.Nimi</h5>
-                        <h5>@item.Lippukunta</h5>
+                            @if (item.Keskeytetty)
+                            {
+                                <h5 class="text-danger">Keskeyttänyt</h5>
+                            }
+                            else
+                            {
+                                <h5 class="text-success">Kisassa</h5>
+                            }
+
                     </td>
 
 
@@ -57,7 +65,7 @@
                         <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
                         <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
                         <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
-
+                            <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
                     </td>
                 </tr>
             }

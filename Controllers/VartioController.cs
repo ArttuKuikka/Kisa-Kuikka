@@ -257,6 +257,23 @@ namespace Kipa_plus.Controllers
             return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
         }
 
+        public async Task<IActionResult> Keskeyta(int? id)
+        {
+            if(id != null)
+            {
+                var vartio = await _context.Vartio.FindAsync(id);
+                if(vartio != null)
+                {
+                    vartio.Keskeytetty = true;
+                    _context.Vartio.Update(vartio);
+                    _context.SaveChanges();
+
+                    return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+                }
+            }
+            return BadRequest();
+        }
+
         private bool VartioExists(int? id)
         {
           return (_context.Vartio?.Any(e => e.Id == id)).GetValueOrDefault();

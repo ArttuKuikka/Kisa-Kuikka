@@ -85,20 +85,41 @@
 
                         if (tulo != null && lahto != null)
                         {
-                            sb.Append("<td>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
 
                         }
                         else if (tulo != null && lahto == null)
                         {
-                            sb.Append("<td>" + tulo.TimeStamp.ToLocalTime().ToString("HH.mm") + " - " + "Ei dataa" + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Keskeyttänyt" + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Ei dataa" + "</td>");
+                            }
                         }
                         else if (tulo == null && lahto != null)
                         {
-                            sb.Append("<td>" + "Ei dataa" + " - " + lahto.TimeStamp.ToLocalTime().ToString("HH.mm") + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + "Keskeyttänyt" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
+                            }
                         }
                         else
                         {
-                            sb.Append("<td>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + "Keskeyttänyt" + " - " + "Keskeyttänyt" + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+                            }
 
                         }
 
