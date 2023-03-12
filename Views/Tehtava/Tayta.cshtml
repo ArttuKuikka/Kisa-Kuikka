@@ -13,47 +13,47 @@
 <hr />
 <div class="row">
     <div>
-       <form action="/Tehtava/Tayta?RastiId=@Model.RastiId" method="post" id="Formi">
+        <form action="/Tehtava/Tayta?RastiId=@Model.RastiId" method="post" id="Formi">
             @Html.AntiForgeryToken()
-            <dd class = "h1">
+        <dd class="h1">
                 @Html.DisplayFor(model => model.Nimi)
-            </dd>
+        </dd>
 
-            <div class="form-group" hidden="hidden">
-                <label asp-for="TehtavaId" class="control-label"></label>
-                <input asp-for="TehtavaId" class="form-control" />
-                <span asp-validation-for="TehtavaId" class="text-danger"></span>
-            </div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaId" class="control-label"></label>
+            <input asp-for="TehtavaId" class="form-control" />
+            <span asp-validation-for="TehtavaId" class="text-danger"></span>
+        </div>
 
-            <div class="col-md-10" style="max-width:500px">
-                <label class="control-label">Vartio</label>
-                @Html.DropDownListFor(model => model.VartioId,new SelectList(Model.VartioList, "Id", "NumeroJaNimi"),  new { @class = "form-control"} )  
-                @Html.ValidationMessageFor(model => model.VartioId, "", new { @class = "text-danger" })  
-            </div>
+        <div class="col-md-10" style="max-width:500px">
+            <label class="control-label">Vartio</label>
+                @Html.DropDownListFor(model => model.VartioId,new SelectList(Model.VartioList, "Id", "NumeroJaNimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.VartioId, "", new { @class = "text-danger" })
+        </div>
 
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input hidden="hidden" id="Kesken-CheckBox" class="form-check-input" asp-for="Kesken" />
-                </label>
-            </div>
+        <div class="form-group form-check">
+            <label class="form-check-label">
+                <input hidden="hidden" id="Kesken-CheckBox" class="form-check-input" asp-for="Kesken" />
+            </label>
+        </div>
 
 
-           
-            <div class="form-group" hidden="hidden">
-                <label asp-for="PohjaJson" class="control-label"></label>
-                <input asp-for="PohjaJson" id="json-input" class="form-control" />
-                <span asp-validation-for="PohjaJson" class="text-danger"></span>
-            </div>
 
-            <div class="json-viewer" id="json-viewer"></div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="PohjaJson" class="control-label"></label>
+            <input asp-for="PohjaJson" id="json-input" class="form-control" />
+            <span asp-validation-for="PohjaJson" class="text-danger"></span>
+        </div>
 
-            <br />
-       
-            <div class="form-group">
-                <input type="button" id="submit-button" value="Lähetä" class="btn btn-primary noPrint" />
-                <input type="button" id="submit-kesken-button" value="Jatka täyttöä myöhemmin" class="btn btn-primary noPrint" />
-       
-            </div>
+        <div class="json-viewer" id="json-viewer"></div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="button" id="submit-button" value="Lähetä" class="btn btn-primary noPrint" />
+            <input type="button" id="submit-kesken-button" value="Jatka täyttöä myöhemmin" class="btn btn-primary noPrint" />
+
+        </div>
 
         </form>
     </div>
@@ -93,6 +93,94 @@
                 formData: getdata
             });
 
+
+
+            Formi.addEventListener("focusout", () => {
+                let elements = Formi.getElementsByTagName('input');
+                for (index = 0; index < elements.length; ++index) {
+                    var input = elements[index];
+
+                    if (input.hasAttribute("max")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var max = input.getAttribute("max");
+
+                        // Check if the value is within the range
+                        if (value > max) {
+                            // Do something if the value is out of range
+                            
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "maxvaroitus"
+                            span.textContent = "Numero on suurempi kuin suurin sallittu arvo (" + max + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#maxvaroitus') == null) {
+                                input.parentElement.append(span);
+
+                            }
+
+                        } else {
+                            // Do something else if the value is within range
+                            
+                            var varoitukset = input.parentElement.querySelectorAll('#maxvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+                                
+                            }
+
+                        }
+                    }
+
+                    if (input.hasAttribute("min")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var min = input.getAttribute("min");
+
+                        // Check if the value is within the range
+                        if (value < min) {
+                            // Do something if the value is out of range
+                            
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "minvaroitus"
+                            span.textContent = "Numero on pienempi kuin pienin sallittu arvo (" + min + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#minvaroitus') == null) {
+                                input.parentElement.append(span);
+
+                                
+                            }
+
+
+                        } else {
+                            // Do something else if the value is within range
+                            
+                            var varoitukset = input.parentElement.querySelectorAll('#minvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+            });
+
             //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata
             function Submittaa(Kesken) {
                 var data = fb.userData;
@@ -105,31 +193,52 @@
 
                     if (field.required == true) {
 
-                        try{
-                                if (!field.hasOwnProperty('userData')) {
-                            //luo teksti ja siihen liittyvät asiat
-                            var elem = document.createElement('span');
-                            var parent = document.getElementsByName(field.name)[0].parentElement;
-                            elem.textContent = 'Tämä kenttä on pakollinen';
-                            elem.style.color = 'red';
-                            elem.id = 'elementti';
+                        try {
+                            if (!field.hasOwnProperty('userData')) {
+                                //luo teksti ja siihen liittyvät asiat
+                                var elem = document.createElement('span');
+                                var parent = document.getElementsByName(field.name)[0].parentElement;
+                                elem.textContent = 'Tämä kenttä on pakollinen';
+                                elem.style.color = 'red';
+                                elem.id = 'elementti';
 
-                            //lisää teksti vain jos sitä ei ole jo
-                            if (parent.querySelector('#elementti') == null) {
-                                parent.appendChild(elem);
+                                //lisää teksti vain jos sitä ei ole jo
+                                if (parent.querySelector('#elementti') == null) {
+                                    parent.appendChild(elem);
+                                }
+
+                                //lisää fade elementtiin
+                                $(elem).fadeOut(6000, function () {
+                                    elem.remove();
+
+                                });
+                                return;
                             }
+                            else {
+                                if (field.userData != null) {
+                                    if (Array.isArray(field.userData)) {
+                                        if (field.userData[0].length < 1) {
+                                            //luo teksti ja siihen liittyvät asiat
+                                            var elem = document.createElement('span');
+                                            var parent = document.getElementsByName(field.name)[0].parentElement;
+                                            elem.textContent = 'Tämä kenttä on pakollinen';
+                                            elem.style.color = 'red';
+                                            elem.id = 'elementti';
 
-                            //lisää fade elementtiin
-                            $(elem).fadeOut(6000, function () {
-                                elem.remove();
+                                            //lisää teksti vain jos sitä ei ole jo
+                                            if (parent.querySelector('#elementti') == null) {
+                                                parent.appendChild(elem);
+                                            }
 
-                            });
-                            return;
-                        }
-                        else {
-                            if (field.userData != null) {
-                                if (Array.isArray(field.userData)) {
-                                    if (field.userData[0].length < 1) {
+                                            //lisää fade elementtiin
+                                            $(elem).fadeOut(6000, function () {
+                                                elem.remove();
+
+                                            });
+                                            return;
+                                        }
+                                    }
+                                    else if (field.userData.length < 1) {
                                         //luo teksti ja siihen liittyvät asiat
                                         var elem = document.createElement('span');
                                         var parent = document.getElementsByName(field.name)[0].parentElement;
@@ -150,8 +259,7 @@
                                         return;
                                     }
                                 }
-                                else if (field.userData.length < 1) {
-                                    //luo teksti ja siihen liittyvät asiat
+                                else {
                                     var elem = document.createElement('span');
                                     var parent = document.getElementsByName(field.name)[0].parentElement;
                                     elem.textContent = 'Tämä kenttä on pakollinen';
@@ -171,28 +279,8 @@
                                     return;
                                 }
                             }
-                            else {
-                                var elem = document.createElement('span');
-                                var parent = document.getElementsByName(field.name)[0].parentElement;
-                                elem.textContent = 'Tämä kenttä on pakollinen';
-                                elem.style.color = 'red';
-                                elem.id = 'elementti';
-
-                                //lisää teksti vain jos sitä ei ole jo
-                                if (parent.querySelector('#elementti') == null) {
-                                    parent.appendChild(elem);
-                                }
-
-                                //lisää fade elementtiin
-                                $(elem).fadeOut(6000, function () {
-                                    elem.remove();
-
-                                });
-                                return;
-                            }
                         }
-                        }
-                        catch(error){
+                        catch (error) {
                             alert('täytä kaikki pakolliset punaisella tähdellä merkityt kohdat!')
                             return;
                         }
@@ -212,13 +300,13 @@
 
 
 
-                document.getElementById('submit-button').addEventListener('click', function () {
-                    Submittaa(false);
-                });
+            document.getElementById('submit-button').addEventListener('click', function () {
+                Submittaa(false);
+            });
 
-                document.getElementById('submit-kesken-button').addEventListener('click', function () {
-                    Submittaa(true);
-                });
-            })
+            document.getElementById('submit-kesken-button').addEventListener('click', function () {
+                Submittaa(true);
+            });
+        })
     </script>
 }
