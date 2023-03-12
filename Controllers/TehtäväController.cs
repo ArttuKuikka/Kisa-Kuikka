@@ -91,7 +91,7 @@ namespace Kipa_plus.Controllers
 
             var vt = new Tayta() { Nimi = Tehtava.Nimi, PohjaJson = Tehtava.TehtavaJson, TehtavaId = TehtavaId };
 
-            vt.VartioList = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId).ToList();
+            vt.VartioList = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId).Where(x => x.Keskeytetty == false).ToList();
 
             var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId).ToList();
             var VIdList = new List<int>();  
