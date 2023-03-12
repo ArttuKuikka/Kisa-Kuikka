@@ -80,6 +80,92 @@
             var fbeditor = document.getElementById('json-viewer');
             var getdata = document.getElementById('json-input').value;
 
+            Formi.addEventListener("focusout", () => {
+                let elements = Formi.getElementsByTagName('input');
+                for (index = 0; index < elements.length; ++index) {
+                    var input = elements[index];
+
+                    if (input.hasAttribute("max")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var max = input.getAttribute("max");
+
+                        // Check if the value is within the range
+                        if (value > max) {
+                            // Do something if the value is out of range
+
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "maxvaroitus"
+                            span.textContent = "Numero on suurempi kuin suurin sallittu arvo (" + max + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#maxvaroitus') == null) {
+                                input.parentElement.append(span);
+
+                            }
+
+                        } else {
+                            // Do something else if the value is within range
+
+                            var varoitukset = input.parentElement.querySelectorAll('#maxvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+
+                            }
+
+                        }
+                    }
+
+                    if (input.hasAttribute("min")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var min = input.getAttribute("min");
+
+                        // Check if the value is within the range
+                        if (value < min) {
+                            // Do something if the value is out of range
+
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "minvaroitus"
+                            span.textContent = "Numero on pienempi kuin pienin sallittu arvo (" + min + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#minvaroitus') == null) {
+                                input.parentElement.append(span);
+
+
+                            }
+
+
+                        } else {
+                            // Do something else if the value is within range
+
+                            var varoitukset = input.parentElement.querySelectorAll('#minvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            });
+
             
             var firstclickdone = false; 
 
