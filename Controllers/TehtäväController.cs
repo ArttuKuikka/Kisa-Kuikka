@@ -42,17 +42,22 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
 
-            
+            var rasti = _context.Rasti.Where(x => x.Id == RastiId).FirstOrDefault();
+            if(rasti == null)
+            {
+                return BadRequest("Rastia ei löytynyt");
+            }
 
             var ViewModel = new RastinTehtävätViewModel();
             ViewModel.TehtäväPohjat = _context.Tehtava.Where(k => k.RastiId == RastiId).ToList();
             ViewModel.TehtavaVastausKesken = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Kesken == true).ToList();
             ViewModel.TehtavaVastausTarkistus = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == false).Where(x => x.Kesken == false).ToList();
             ViewModel.TehtavaVastausTarkistetut = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == true).Where(x => x.Kesken == false).ToList();
-            ViewModel.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
+            ViewModel.KisaId = rasti.KisaId;
             ViewModel.RastiId = RastiId;
             ViewModel.Sarjat = _context.Sarja.ToList();
             ViewModel.Vartiot = _context.Vartio;
+            ViewModel.RastinNimi = rasti.Nimi;
 
            
 
