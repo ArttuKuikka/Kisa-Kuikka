@@ -276,7 +276,7 @@ namespace Kipa_plus.Services
                                         continue;
 
                                     var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
-                                    var tehtava = await _context.Tehtava.FindAsync(rastiId);
+                                    var tehtava = await _context.Rasti.FindAsync(rastiId);
                                     if(tehtava == null)
                                     {
                                         return false;
@@ -284,7 +284,7 @@ namespace Kipa_plus.Services
 
                                    if(controllers != null && controllers.Any())
                                     {
-                                        var tehtcontroller = controllers.Where(x => x.RastiId == tehtava.RastiId).ToList();
+                                        var tehtcontroller = controllers.Where(x => x.RastiId == tehtava.Id).ToList();
                                         if(tehtcontroller != null && tehtcontroller.Any())
                                         {
                                             var firstsubcontroller = tehtcontroller.First();
