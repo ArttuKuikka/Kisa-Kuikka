@@ -32,6 +32,8 @@
     </header>
     <div class="container">
         <main role="main" style="background-color: #282828; color: white;" class="pb-3">
+            <script src="~/lib/jquery/dist/jquery.min.js"></script>
+            <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
             @RenderBody()
         </main>
     </div>
@@ -42,8 +44,7 @@
         </div>
     </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
   
 
     @await RenderSectionAsync("Scripts", required: false)
