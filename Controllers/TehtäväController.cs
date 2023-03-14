@@ -42,17 +42,22 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
 
-            
+            var rasti = _context.Rasti.Where(x => x.Id == RastiId).FirstOrDefault();
+            if(rasti == null)
+            {
+                return BadRequest("Rastia ei löytynyt");
+            }
 
             var ViewModel = new RastinTehtävätViewModel();
             ViewModel.TehtäväPohjat = _context.Tehtava.Where(k => k.RastiId == RastiId).ToList();
             ViewModel.TehtavaVastausKesken = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Kesken == true).ToList();
             ViewModel.TehtavaVastausTarkistus = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == false).Where(x => x.Kesken == false).ToList();
             ViewModel.TehtavaVastausTarkistetut = _context.TehtavaVastaus.Where(k => k.RastiId == RastiId).Where(x => x.Tarkistettu == true).Where(x => x.Kesken == false).ToList();
-            ViewModel.KisaId = _context.Rasti.Where(x => x.Id== RastiId).First().KisaId;
+            ViewModel.KisaId = rasti.KisaId;
             ViewModel.RastiId = RastiId;
             ViewModel.Sarjat = _context.Sarja.ToList();
             ViewModel.Vartiot = _context.Vartio;
+            ViewModel.RastinNimi = rasti.Nimi;
 
            
 
@@ -86,7 +91,7 @@ namespace Kipa_plus.Controllers
 
             var vt = new Tayta() { Nimi = Tehtava.Nimi, PohjaJson = Tehtava.TehtavaJson, TehtavaId = TehtavaId };
 
-            vt.VartioList = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId).ToList();
+            vt.VartioList = _context.Vartio.Where(x => x.SarjaId == Tehtava.SarjaId).Where(x => x.Keskeytetty == false).ToList();
 
             var vast = _context.TehtavaVastaus.Where(x => x.TehtavaId == TehtavaId).ToList();
             var VIdList = new List<int>();  
@@ -321,11 +326,21 @@ namespace Kipa_plus.Controllers
                 {
                     return BadRequest("Virheellinen KisaId tai RastiId");
                 }
+                if (viewModel.Sarjat != null && !viewModel.Sarjat.Any())
+                {
+                    return BadRequest("Ei sarjoja");
+                }
                 var checklist = viewModel.Sarjat?.Where(x => x.IsChecked == true).ToList();
                 if(checklist != null)
                 {
                     foreach (var sarja in checklist)
                     {
+                        var testisarja = await _context.Sarja.FindAsync(sarja.Id);
+                        if (testisarja == null)
+                        {
+                            return BadRequest("Sarjaa ei ole olemassa");
+                        }
+
                         var teht = new Tehtava() { KisaId = viewModel.KisaId, RastiId = viewModel.RastiId, TehtavaJson = viewModel.TehtavaJson, SarjaId = sarja.Id };
 
                         if (viewModel.Nimi == null || viewModel.Nimi == "")

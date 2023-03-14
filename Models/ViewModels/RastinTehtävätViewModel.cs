@@ -10,5 +10,6 @@
         public int? RastiId { get; set; }
         public List<Sarja>? Sarjat { get; set; }
         public IQueryable<Vartio>? Vartiot { get; set;}
+        public string? RastinNimi { get; set; }
     }
 }

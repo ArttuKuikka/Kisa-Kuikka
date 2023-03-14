@@ -246,10 +246,32 @@ namespace Kipa_plus.Controllers
             if (vartio != null)
             {
                 _context.Vartio.Remove(vartio);
+
+                foreach(var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
+                {
+                    _context.TehtavaVastaus.Remove(vastaus);
+                }
             }
             
             await _context.SaveChangesAsync();
             return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+        }
+
+        public async Task<IActionResult> Keskeyta(int? id)
+        {
+            if(id != null)
+            {
+                var vartio = await _context.Vartio.FindAsync(id);
+                if(vartio != null)
+                {
+                    vartio.Keskeytetty = true;
+                    _context.Vartio.Update(vartio);
+                    _context.SaveChanges();
+
+                    return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+                }
+            }
+            return BadRequest();
         }
 
         private bool VartioExists(int? id)

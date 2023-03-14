@@ -71,30 +71,51 @@
                     if(column.ColumnName != "Vartio")
                     {
                         var rasti = Model.SarjanRastit.Where(x => x.Nimi.ToString() == column.ColumnName); 
-                        
+
                         var ajat = Model.Skannaukset.Where(x => x.RastiId == rasti.FirstOrDefault().Id);
 
                         var tulo = ajat.Where(x => x.isTulo == true).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
                         var lahto = ajat.Where(x => x.isTulo == false).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
 
-                        
+
 
                         if(tulo != null && lahto != null)
                         {
                             sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
-                            
+
                         }
                         else if (tulo != null && lahto == null)
                         {
-                            sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Ei dataa" + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Keskeyttänyt" + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + tulo.TimeStamp.ToString(Model.DateTimeFormat) + " - " + "Ei dataa" + "</td>");
+                            }
                         }
                         else if(tulo == null && lahto != null)
                         {
-                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + "Keskeyttänyt" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + lahto.TimeStamp.ToString(Model.DateTimeFormat) + "</td>");
+                            }
                         }
                         else
                         {
-                            sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+                            if (vartio.Keskeytetty)
+                            {
+                                sb.Append("<td style='color: white;'>" + "Keskeyttänyt" + " - " + "Keskeyttänyt" + "</td>");
+                            }
+                            else
+                            {
+                                sb.Append("<td style='color: white;'>" + "Ei dataa" + " - " + "Ei dataa" + "</td>");
+                            }
                             
                         }
 

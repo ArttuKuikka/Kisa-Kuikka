@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Kipa_plus.Models.Vartio>
+﻿@model Kipa_plus.Models.ViewModels.VartiotViewModel
 @using Kipa_plus.Models;
 
 @{
@@ -8,57 +8,79 @@
 <h1>Vartiot</h1>
 
 <p>
-    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@ViewBag.KisaId';">Luo vartio</button>
+    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@Model.KisaId';">Luo vartio</button>
     <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
 </p>
-<table class="table" style="color: white">
-    <thead>
-        <tr>
-            <th>
-                Nimi, numero ja lippukunta
-            </th>
-            <th>
-                Sarja ja lippukunta
-            </th>
-           
-           
-           
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+
+@if(Model != null)
+{
+    @foreach (var sarja in Model.Sarjat)
+{
+    
+    <table class="table" style="color: white">
+
+        <thead>
+
             <tr>
-                <td>
-                    <h3>@item.Nimi</h3>
-                    <h5>@item.Numero</h5>
-                    
-                </td>
-                <td>
-                    @{
-                        var nimi = "";
-                        List<Sarja> lista = ViewBag.Sarjat;
-                        var items = lista.Where(x => x.Id == item.SarjaId);
-                        if(items != null)
-                        {
-                            var sarja = items.FirstOrDefault();
-                            nimi = sarja.Nimi;
-                        }
-                    }
-                    <h5>@nimi</h5>
-                    <h5>@item.Lippukunta</h5>
-                </td>
-                
-               
-                
-                <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
-                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
-                   
-                </td>
+                <th>
+                        <h2>@sarja.Nimi-sarja</h2>
+                    Nimi ja numero
+                </th>
+                <th>
+                    Sarja ja tilanne
+                </th>
+
+
+
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model.Vartiot.Where(x => x.SarjaId == sarja.Id))
+            {
+                <tr>
+                    <td>
+                        <h3>@item.Nimi</h3>
+                        <h5>@item.Numero</h5>
+
+                    </td>
+                    <td>
+
+                        <h5>@sarja.Nimi</h5>
+                            @if (item.Keskeytetty)
+                            {
+                                <h5 class="text-danger">Keskeyttänyt</h5>
+                            }
+                            else
+                            {
+                                <h5 class="text-success">Kisassa</h5>
+                            }
+
+                    </td>
+
+
+
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
+                            <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
+                    </td>
+                </tr>
+            }
+            <br />
+
+
+        </tbody>
+    </table>
+
+    }
+    <br />
+    <br />
+}
+else
+{
+    <h1>Tässä kisassa ei ole yhtään vartiota</h1>
+}
+

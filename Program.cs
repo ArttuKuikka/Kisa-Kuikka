@@ -37,7 +37,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options => { 
+    //aseta salasana ja kirjautumis säännöt
+    options.SignIn.RequireConfirmedAccount = false;
+    options.Password.RequireNonAlphanumeric = false;
+})
         .AddEntityFrameworkStores<ApplicationDbContext>()
         .AddErrorDescriber<CustomIdentityErrorDescriber>()
         .AddDefaultTokenProviders()
