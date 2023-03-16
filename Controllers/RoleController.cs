@@ -57,9 +57,8 @@ namespace Kipa_plus.Controllers
         {
             var controllers = _mvcControllerDiscovery.GetControllers();
             var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
-            ViewData["Controllers"] = controllers;
-            ViewData["Rastit"] = rastit.GetRastit();
-            return View();
+            
+            return View(new RoleViewModel() { KaikkiControllers = controllers, KaikkiRastit = rastit.GetRastit()});
         }
 
         // POST: Role/Create
@@ -68,9 +67,9 @@ namespace Kipa_plus.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+                viewModel.KaikkiControllers = _mvcControllerDiscovery.GetControllers();
                 var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
-                ViewData["Rastit"] = rastit.GetRastit();
+                viewModel.KaikkiRastit = rastit.GetRastit();
                 return View(viewModel);
             }
 
@@ -85,9 +84,9 @@ namespace Kipa_plus.Controllers
                 foreach (var error in result.Errors)
                     ModelState.AddModelError("", error.Description);
 
-                ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+                viewModel.KaikkiControllers = _mvcControllerDiscovery.GetControllers();
                 var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
-                ViewData["Rastit"] = rastit.GetRastit();
+                viewModel.KaikkiRastit = rastit.GetRastit();
                 return View(viewModel);
             }
 
@@ -115,7 +114,11 @@ namespace Kipa_plus.Controllers
         [DisplayName("Muokkaa")]
         public async Task<ActionResult> Edit(string id)
         {
-            ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+            
+
+            var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+            
+
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
                 return NotFound();
@@ -124,8 +127,11 @@ namespace Kipa_plus.Controllers
             var viewModel = new RoleViewModel
             {
                 Name = role.Name,
-                SelectedControllers = accessList?.Controllers
-            };
+                SelectedControllers = accessList?.Controllers,
+                ValitutRastit = accessList?.RastiAccess,
+                KaikkiControllers = _mvcControllerDiscovery.GetControllers(),
+                KaikkiRastit = rastit.GetRastit(),
+        };
 
             return View(viewModel);
         }
@@ -136,11 +142,15 @@ namespace Kipa_plus.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
+                viewModel.KaikkiControllers = _mvcControllerDiscovery.GetControllers();
+                var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+                viewModel.KaikkiRastit = rastit.GetRastit();
+
                 return View(viewModel);
             }
-
-            // Check role exit
+            else
+            {
+                // Check role exit
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
@@ -159,8 +169,10 @@ namespace Kipa_plus.Controllers
                     foreach (var error in result.Errors)
                         ModelState.AddModelError("", error.Description);
 
-                    ViewData["Controllers"] = _mvcControllerDiscovery.GetControllers();
-                    return View(viewModel);
+                        viewModel.KaikkiControllers = _mvcControllerDiscovery.GetControllers();
+                        var rastit = new RastiDiscovery(_actionDescriptorCollectionProvider, _context);
+                        viewModel.KaikkiRastit = rastit.GetRastit();
+                        return View(viewModel);
                 }
             }
 
@@ -175,9 +187,13 @@ namespace Kipa_plus.Controllers
             var roleAccess = new RoleAccess
             {
                 Controllers = viewModel.SelectedControllers?.ToList(),
-                RoleId = role.Id.ToString()
+                RoleId = role.Id.ToString(),
+                RastiAccess = viewModel.ValitutRastit?.ToList()
             };
             await _roleAccessStore.EditRoleAccessAsync(roleAccess);
+            }
+
+            
 
             return RedirectToAction(nameof(Index));
         }

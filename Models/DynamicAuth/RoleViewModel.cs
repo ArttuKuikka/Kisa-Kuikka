@@ -11,5 +11,8 @@ namespace Kipa_plus.Models.DynamicAuth
 
         public IEnumerable<MvcControllerInfo>? SelectedControllers { get; set; }
         public IEnumerable<MainController>? ValitutRastit { get; set; }
+
+        public IEnumerable<MvcControllerInfo>? KaikkiControllers { get; set; }
+        public IEnumerable<MainController>? KaikkiRastit { get; set; }
     }
 }
