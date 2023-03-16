@@ -3,10 +3,62 @@
 *@
 @{
     ViewData["Title"] = "Rastit Tagit";
+    var skannatutIdt = new List<int>();
+    Model.Skannatut?.ForEach(x => skannatutIdt.Add((int)x.VartioId));
 }
 
+@model Kipa_plus.Models.ViewModels.TagIndexViewModel
 <div class="grid-container">
-    <div class="grid-item" onClick="location.href='Tag/LueTulo?RastiId=@ViewBag.RastiId'"><img class="grid-item-image" alt="Lue tulo" src="/images/nfc.png"><p class="grid-item-text">Lue tulo</p></div>
-    <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@ViewBag.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
+    <div class="grid-item" onClick="location.href='Tag/LueTulo?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue tulo" src="/images/nfc.png"><p class="grid-item-text">Lue tulo</p></div>
+    <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
     
 </div>
+
+<br />
+
+@if(Model.Vartiot != null && Model.Skannatut != null){
+    <h2>Skannatut</h2>
+
+    <table class="table" style="color:white">
+        <thead>
+            <tr>
+                <th>
+                    Vartio, tulo, lähtö
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var vartio in Model.Vartiot.Where(x => skannatutIdt.Contains((int)x.Id)))
+            {
+                <tr>
+                    <td>
+                        <h2>@vartio.NumeroJaNimi</h2>
+                        @{
+                            var vartioskannaukset = Model.Skannatut.Where(x => x.VartioId == vartio.Id);
+                            var tulo = vartioskannaukset.FirstOrDefault(x => x.isTulo == true);
+                            var lahto = vartioskannaukset.FirstOrDefault(x => x.isTulo == false);
+                            if(tulo != null)
+                            {
+                                @Html.Raw("Tulo: " + tulo.TimeStamp.ToString("HH:mm"));
+                            }
+                            else
+                            {
+                                @Html.Raw("Tulo: Ei dataa");
+                            }
+                            <br />
+                            if(lahto != null)
+                            {
+                                @Html.Raw("Lähtö: " + lahto.TimeStamp.ToString("HH:mm"));
+                            }
+                            else
+                            {
+                                @Html.Raw("lähtö: Ei dataa");
+                            }
+                        }
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
