@@ -148,8 +148,9 @@ namespace Kipa_plus.Controllers
 
                 return View(viewModel);
             }
-
-            // Check role exit
+            else
+            {
+                // Check role exit
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
@@ -184,9 +185,13 @@ namespace Kipa_plus.Controllers
             var roleAccess = new RoleAccess
             {
                 Controllers = viewModel.SelectedControllers?.ToList(),
-                RoleId = role.Id.ToString()
+                RoleId = role.Id.ToString(),
+                RastiAccess = viewModel.ValitutRastit?.ToList()
             };
             await _roleAccessStore.EditRoleAccessAsync(roleAccess);
+            }
+
+            
 
             return RedirectToAction(nameof(Index));
         }
