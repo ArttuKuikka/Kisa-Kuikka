@@ -63,8 +63,15 @@
 
                     <td>
                         <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
-                        <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
+                            @if(item.TagSerial == null || item.TagSerial == string.Empty)
+                            {
+                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Vaihda tag</button>
+                            }
+                            <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
                             <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
                     </td>
                 </tr>
