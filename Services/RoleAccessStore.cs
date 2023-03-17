@@ -79,7 +79,7 @@ namespace Kipa_plus.Services
                     int affectedRows;
                     using (var conn = new SqlConnection(_options.ConnectionString))
                     {
-                        const string insertCommand = "UPDATE RoleAccess SET [Access] = @Access WHERE [RoleId] = @RoleId";
+                        const string insertCommand = "UPDATE RoleAccess SET [Access] = @Access, [RastiAccess] = @RastiAccess WHERE [RoleId] = @RoleId";
                         using (var cmd = new SqlCommand(insertCommand, conn))
                         {
                             cmd.CommandType = CommandType.Text;
@@ -92,7 +92,15 @@ namespace Kipa_plus.Services
                             else
                                 cmd.Parameters.AddWithValue("@Access", DBNull.Value);
 
-                            conn.Open();
+                        if (roleAccess.RastiAccess != null)
+                        {
+                            var access = JsonConvert.SerializeObject(roleAccess.RastiAccess);
+                            cmd.Parameters.AddWithValue("@RastiAccess", access);
+                        }
+                        else
+                            cmd.Parameters.AddWithValue("@RastiAccess", DBNull.Value);
+
+                        conn.Open();
                             affectedRows = await cmd.ExecuteNonQueryAsync();
                         }
                     }

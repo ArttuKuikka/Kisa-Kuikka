@@ -5,8 +5,8 @@
 @model RoleViewModel
 @{
     ViewData["Title"] = "Luo rooli";
-    var controllers = (IEnumerable<MvcControllerInfo>)ViewData["Controllers"];
-    var rastit = (IEnumerable<MainController>)ViewData["Rastit"];
+    var controllers = Model.KaikkiControllers;
+    var rastit = Model.KaikkiRastit;
     Layout = "_Layout";
 }
 

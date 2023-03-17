@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kipa_plus.Models.ViewModels;
 
 namespace Kipa_plus.Controllers
 {
@@ -20,8 +21,12 @@ namespace Kipa_plus.Controllers
         [DisplayName("Valintasivu")]
         public IActionResult Index(int? RastiId)
         {
-            ViewBag.RastiId = RastiId;
-            return View();
+            if(RastiId != null)
+            {
+                var skannatut = _context.TagSkannaus.Where(x => x.RastiId== RastiId);
+                return View(new TagIndexViewModel() {RastiId = (int)RastiId, Skannatut = skannatut.ToList(), Vartiot = _context.Vartio });
+            }
+            return BadRequest();
         }
 
         public IActionResult LueLahto(int RastiId)
