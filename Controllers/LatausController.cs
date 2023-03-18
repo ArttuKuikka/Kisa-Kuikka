@@ -110,7 +110,7 @@ namespace Kipa_plus.Controllers
                             var vartiovastausrowindex = 0; 
                             foreach(var vartio in sarjanvartiot)
                             {
-                                var tehtvastaus = _context.TehtavaVastaus.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).Where(x => x.TehtavaId == item.Id).Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                                var tehtvastaus = _context.TehtavaVastaus.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).Where(x => x.TehtavaId == item.Id).Where(x => x.VartioId == vartio.Id).Where(x => x.Tarkistettu == true).FirstOrDefault();
                                if(tehtvastaus!= null)
                                 {
                                     var formitem = JArray.Parse(tehtvastaus.TehtavaJson)[tehtindex];
