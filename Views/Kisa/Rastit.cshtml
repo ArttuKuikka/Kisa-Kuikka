@@ -42,7 +42,8 @@
 
                         <td>
                             
-                            <button type="button" class="btn btn-success" onclick="location.href = '/Kisa/@Model.KisaId/HyvaksyTilanne?RastiId=@item.Id';">Hyväksy</button>
+                            <button type="button" class="btn btn-success" onclick="location.href = '/Kisa/@Model.KisaId/HyvaksyTilanne?RastiId=@item.Id&kielto=0';">Hyväksy</button>
+                                <button type="button" class="btn btn-danger" onclick="location.href = '/Kisa/@Model.KisaId/HyvaksyTilanne?RastiId=@item.Id&kielto=1';">Kiellä</button>
 
                         </td>
                     </tr>

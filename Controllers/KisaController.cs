@@ -33,18 +33,31 @@ namespace Kipa_plus.Controllers
 
         [HttpGet("{kisaId:int}/HyvaksyTilanne")]
         [DisplayName("Hyväksy rastin tilanne muutokset")]
-        public async Task<IActionResult> HyvaksyTilanne(int RastiId)
+        public async Task<IActionResult> HyvaksyTilanne(int RastiId, int kielto)
         {
             var rasti = await _context.Rasti.FindAsync(RastiId);
             if(rasti != null)
             {
-                rasti.OdottaaTilanneHyvaksyntaa = false;
-                _context.Rasti.Update(rasti);
-                await _context.SaveChangesAsync();
-                return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
+               if(kielto == 0)
+                {
+                    rasti.OdottaaTilanneHyvaksyntaa = false;
+                    _context.Rasti.Update(rasti);
+                    await _context.SaveChangesAsync();
+                    return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
+                }
+                else
+                {
+                    rasti.nykyinenTilanneId = (int)rasti.edellinenTilanneId;
+                    rasti.OdottaaTilanneHyvaksyntaa = false;
+                    _context.Rasti.Update(rasti);
+                    await _context.SaveChangesAsync();
+                    return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
+                }
             }
             return View("Error");
         }
+
+        
 
         [HttpGet("{kisaId:int}/LiittymisId")]
         [DisplayName("Näytä liittymisID")]

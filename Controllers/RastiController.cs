@@ -105,18 +105,22 @@ namespace Kipa_plus.Controllers
                 var tilanne = await _context.Tilanne.FindAsync(model.Rasti.nykyinenTilanneId);
                 if(rasti != null && tilanne != null) 
                 {
-                    if (tilanne.TarvitseeHyvaksynnan)
+                    if(model.Rasti.nykyinenTilanneId != rasti.nykyinenTilanneId)
                     {
-                        rasti.nykyinenTilanneId = tilanne.Id;
-                        rasti.OdottaaTilanneHyvaksyntaa = true;
+                        if (tilanne.TarvitseeHyvaksynnan)
+                        {
+                            rasti.edellinenTilanneId = rasti.nykyinenTilanneId;
+                            rasti.nykyinenTilanneId = tilanne.Id;
+                            rasti.OdottaaTilanneHyvaksyntaa = true;
+                        }
+                        else
+                        {
+                            rasti.OdottaaTilanneHyvaksyntaa = false;
+                            rasti.nykyinenTilanneId = tilanne.Id;
+                        }
+                        _context.Rasti.Update(rasti);
+                        _context.SaveChanges();
                     }
-                    else
-                    {
-                        rasti.OdottaaTilanneHyvaksyntaa = false;
-                        rasti.nykyinenTilanneId = tilanne.Id;
-                    }
-                    _context.Rasti.Update(rasti);
-                    _context.SaveChanges();
                     
                     return Redirect($"/Rasti/Tilanne?RastiId={rasti.Id}");
                 }
