@@ -3,8 +3,7 @@
 *@
 @{
     ViewData["Title"] = "Rastit Tagit";
-    var skannatutIdt = new List<int>();
-    Model.Skannatut?.ForEach(x => skannatutIdt.Add((int)x.VartioId));
+    
 }
 
 @model Kipa_plus.Models.ViewModels.TagIndexViewModel
@@ -17,7 +16,7 @@
 
 <br />
 
-@if(Model.Vartiot != null && Model.Skannatut != null){
+@if(Model.Skannatut != null){
     <h2>Skannatut</h2>
 
     <table class="table" style="color:white">
@@ -29,27 +28,27 @@
             </tr>
         </thead>
         <tbody>
-            @foreach(var vartio in Model.Vartiot.Where(x => skannatutIdt.Contains((int)x.Id)))
+            @foreach(var skannaus in Model.Skannatut)
             {
                 <tr>
                     <td>
-                        <h2>@vartio.NumeroJaNimi</h2>
+                        <h2>@skannaus.Vartio.NumeroJaNimi</h2>
                         @{
-                            var vartioskannaukset = Model.Skannatut.Where(x => x.VartioId == vartio.Id);
-                            var tulo = vartioskannaukset.FirstOrDefault(x => x.isTulo == true);
-                            var lahto = vartioskannaukset.FirstOrDefault(x => x.isTulo == false);
-                            if(tulo != null)
+                            
+                            if(skannaus.Tulo != null)
                             {
-                                @Html.Raw("Tulo: " + tulo.TimeStamp.ToString("HH:mm"));
+                                @Html.Raw("Tulo: " + skannaus.Tulo?.ToString("HH:mm"))
+                                ;
                             }
                             else
                             {
                                 @Html.Raw("Tulo: Ei dataa");
                             }
                             <br />
-                            if(lahto != null)
+                            if(skannaus.Lahto != null)
                             {
-                                @Html.Raw("Lähtö: " + lahto.TimeStamp.ToString("HH:mm"));
+                                @Html.Raw("Lähtö: " + skannaus.Lahto?.ToString("HH:mm"))
+                                ;
                             }
                             else
                             {
