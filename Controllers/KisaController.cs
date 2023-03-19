@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Models.ViewModels;
+using Kipaplus.Data.Migrations;
 
 namespace Kipa_plus.Controllers
 {
@@ -29,6 +30,22 @@ namespace Kipa_plus.Controllers
             _roleAccessStore = roleAccessStore;
             _authorizationOptions = authorizationOptions;
         }
+
+        [HttpGet("{kisaId:int}/HyvaksyTilanne")]
+        [DisplayName("Hyväksy rastin tilanne muutokset")]
+        public async Task<IActionResult> HyvaksyTilanne(int RastiId)
+        {
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+            if(rasti != null)
+            {
+                rasti.OdottaaTilanneHyvaksyntaa = false;
+                _context.Rasti.Update(rasti);
+                await _context.SaveChangesAsync();
+                return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
+            }
+            return View("Error");
+        }
+
         [HttpGet("{kisaId:int}/LiittymisId")]
         [DisplayName("Näytä liittymisID")]
         public async Task<IActionResult> LiittymisId(int kisaId)
@@ -87,12 +104,28 @@ namespace Kipa_plus.Controllers
         [DisplayName("Luo Rasti")]
         [HttpGet("{kisaId:int}/LuoRasti")]
         // GET: Rasti/Luo
-        public IActionResult LuoRasti(int kisaId)
+        public async Task<IActionResult> LuoRasti(int kisaId)
         {
+            if (!_context.Tilanne.Any())
+            {
+                var oletustilanteet = new List<Tilanne>
+                {
+                    new Tilanne() { KisaId = kisaId, Nimi = "Rakentamatta", TarvitseeHyvaksynnan = false },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Rakennettu", TarvitseeHyvaksynnan = false },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Valmis", TarvitseeHyvaksynnan = false },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Purettu", TarvitseeHyvaksynnan = true }
+                };
+                foreach (var tilanne in oletustilanteet)
+                {
+                    _context.Tilanne.Add(tilanne);
+                }
+                await _context.SaveChangesAsync();
+            }
 
-            ViewBag.Kisat = _context.Kisa.ToList();
 
-            return View(new Rasti() { KisaId = kisaId });
+            var tilanteet = _context.Tilanne;
+
+            return View(new LuoRastiViewModel() { KisaId = kisaId, Tilanteet = tilanteet });
         }
 
         // POST: Rasti/Luo
@@ -100,23 +133,22 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("LuoRasti")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LuoRasti([Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,NykyinenTilanneId")] LuoRastiViewModel luoRastiViewModel)
         {
-            ViewBag.Sarjat = _context.Sarja.ToList();
-            ViewBag.Kisat = _context.Kisa.ToList();
+            
             if (ModelState.IsValid)
             {
-                if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Where(x => x.KisaId == rasti.KisaId).Any())
+                if (_context.Rasti.Where(x => x.Nimi == luoRastiViewModel.Nimi).Where(x => x.KisaId == luoRastiViewModel.KisaId).Any())
                 {
                     ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
-                    return View(rasti);
+                    return View(luoRastiViewModel);
                 }
-
+                var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId, Nimi = luoRastiViewModel.Nimi, nykyinenTilanneId = luoRastiViewModel.NykyinenTilanneId, OdottaaTilanneHyvaksyntaa = false};
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
+                return Redirect("/Kisa/" + luoRastiViewModel.KisaId + "/Rastit");
             }
-            return View(rasti);
+            return View(luoRastiViewModel);
         }
 
 
@@ -232,6 +264,7 @@ namespace Kipa_plus.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(kisa);
+               
                 await _context.SaveChangesAsync();
                 return Redirect("/");
             }
@@ -402,17 +435,17 @@ namespace Kipa_plus.Controllers
 
             var rastitjoihinoikeudet = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
 
-            IQueryable rastit;
+            List<Rasti> rastit;
 
             if(User.Identity.Name == _authorizationOptions.DefaultAdminUser)
             {
                 rastit = _context.Rasti
-                .Where(m => m.KisaId == kisaId);
+                .Where(m => m.KisaId == kisaId).ToList();
             }
             else
             {
                 rastit = _context.Rasti
-                .Where(m => m.KisaId == kisaId).Where(x => rastitjoihinoikeudet.Contains((int)x.Id));
+                .Where(m => m.KisaId == kisaId).Where(x => rastitjoihinoikeudet.Contains((int)x.Id)).ToList();
             }
 
 
@@ -420,10 +453,10 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            ViewData["Sarjat"] = _context.Sarja.ToList();
+            
 
-            ViewBag.KisaId = kisaId;
-            return View(rastit);
+            var viewModel = new ListaaRastitViewModel() { KisaId= kisaId, Rastit = rastit, Tilanteet = _context.Tilanne };
+            return View(viewModel);
         }
     }
 }

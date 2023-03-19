@@ -9,6 +9,7 @@ using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kipa_plus.Models.ViewModels;
 
 namespace Kipa_plus.Controllers
 {
@@ -79,6 +80,50 @@ namespace Kipa_plus.Controllers
             return View(rasti);
         }
 
+        [HttpGet("Tilanne")]
+        [DisplayName("Muokkaa ja näytä rastin tilanne")]
+        public async Task<IActionResult> Tilanne (int RastiId)
+        {
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+            if(rasti != null)
+            {
+                var tilanne = _context.Tilanne.First(x => x.Id == rasti.nykyinenTilanneId);
+                var ViewModel = new TilanneViewModel() { Rasti = rasti,NykyinenTilanne = tilanne, Tilanteet = _context.Tilanne };
+                return View(ViewModel);
+            }
+            return View("Error");
+        }
+
+
+        [HttpPost("Tilanne")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Tilanne(TilanneViewModel model)
+        {
+            if(model.Rasti?.Id != null && model.Rasti?.nykyinenTilanneId != null)
+            {
+                var rasti = await _context.Rasti.FindAsync(model.Rasti.Id);
+                var tilanne = await _context.Tilanne.FindAsync(model.Rasti.nykyinenTilanneId);
+                if(rasti != null && tilanne != null) 
+                {
+                    if (tilanne.TarvitseeHyvaksynnan)
+                    {
+                        rasti.nykyinenTilanneId = tilanne.Id;
+                        rasti.OdottaaTilanneHyvaksyntaa = true;
+                    }
+                    else
+                    {
+                        rasti.OdottaaTilanneHyvaksyntaa = false;
+                        rasti.nykyinenTilanneId = tilanne.Id;
+                    }
+                    _context.Rasti.Update(rasti);
+                    _context.SaveChanges();
+                    
+                    return Redirect($"/Rasti/Tilanne?RastiId={rasti.Id}");
+                }
+                
+            }
+            return View("Error");
+        }
        
 
         private bool RastiExists(int? id)
