@@ -135,7 +135,16 @@ namespace Kipa_plus.Controllers
                                                 vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
                                                 break;
                                             case "number":
-                                                vastauscell.SetCellValue(double.Parse(data0.ToString().Replace('.', ',')));
+                                                double.TryParse(data0.ToString().Replace('.', ','), out double? parsed);
+                                                if(parsed != null)
+                                                {
+                                                    vastauscell.SetCellValue(parsed);
+                                                }
+                                                else
+                                                {
+                                                    vastauscell.SetCellValue(data0.ToString().Replace('.', ','));
+                                                }
+                                                
                                                 break;
                                             default:
                                                 vastauscell.SetCellValue(data0.ToString());
