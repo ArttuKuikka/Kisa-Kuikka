@@ -125,31 +125,34 @@ namespace Kipa_plus.Controllers
                                         var vastauscell = vastausrow.CreateCell(FormItemRowlastindex);
 
 
-                                        switch (formitem["type"].ToString())
+                                        if(data0 != null && data0.ToString() != "")
                                         {
-                                            case "currentTime":
-                                                var time = DateTime.Parse(data0.ToString());
-                                                vastauscell.SetCellValue(time.ToLocalTime());
-                                                break;
-                                            case "fileUpload":
-                                                vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
-                                                break;
-                                            case "number":
-                                                double.TryParse(data0.ToString().Replace('.', ','), out double? parsed);
-                                                if(parsed != null)
-                                                {
-                                                    vastauscell.SetCellValue(parsed);
-                                                }
-                                                else
-                                                {
-                                                    vastauscell.SetCellValue(data0.ToString().Replace('.', ','));
-                                                }
-                                                
-                                                break;
-                                            default:
-                                                vastauscell.SetCellValue(data0.ToString());
-                                                break;
+                                            switch (formitem["type"].ToString())
+                                            {
+                                                case "currentTime":
+                                                    var time = DateTime.Parse(data0.ToString());
+                                                    vastauscell.SetCellValue(time.ToLocalTime());
+                                                    break;
+                                                case "fileUpload":
+                                                    vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
+                                                    break;
+                                                case "number":
 
+                                                    if (double.TryParse(data0.ToString().Replace('.', ','), out double parsed))
+                                                    {
+                                                        vastauscell.SetCellValue(parsed);
+                                                    }
+                                                    else
+                                                    {
+                                                        vastauscell.SetCellValue(data0.ToString().Replace('.', ','));
+                                                    }
+
+                                                    break;
+                                                default:
+                                                    vastauscell.SetCellValue(data0.ToString());
+                                                    break;
+
+                                            }
                                         }
                                     }
                                 }
