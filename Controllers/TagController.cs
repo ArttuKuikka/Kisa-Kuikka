@@ -19,12 +19,16 @@ namespace Kipa_plus.Controllers
         }
 
         [DisplayName("Valintasivu")]
-        public IActionResult Index(int? RastiId)
+        public async Task<IActionResult> Index(int? RastiId)
         {
             if(RastiId != null)
             {
-                var skannatut = _context.TagSkannaus.Where(x => x.RastiId== RastiId);
-                return View(new TagIndexViewModel() {RastiId = (int)RastiId, Skannatut = skannatut.ToList(), Vartiot = _context.Vartio });
+                var rasti = await _context.Rasti.FindAsync(RastiId);
+                if(rasti != null)
+                {
+                    var skannatut = _context.TagSkannaus.Where(x => x.RastiId == RastiId);
+                    return View(new TagIndexViewModel() { RastiId = (int)RastiId, Skannatut = skannatut.ToList(), Vartiot = _context.Vartio, RastiNimi = rasti.Nimi });
+                }
             }
             return BadRequest();
         }
