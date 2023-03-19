@@ -130,8 +130,14 @@ namespace Kipa_plus.Controllers
                                             switch (formitem["type"].ToString())
                                             {
                                                 case "currentTime":
-                                                    var time = DateTime.Parse(data0.ToString());
-                                                    vastauscell.SetCellValue(time.ToLocalTime());
+                                                    if(DateTime.TryParse(data0.ToString(), out var time))
+                                                    {
+                                                        vastauscell.SetCellValue(time.ToLocalTime());
+                                                    }
+                                                    else
+                                                    {
+                                                        vastauscell.SetCellValue(data0.ToString());
+                                                    }
                                                     break;
                                                 case "fileUpload":
                                                     vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
