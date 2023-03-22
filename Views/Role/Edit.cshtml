@@ -53,7 +53,30 @@
                                                 @foreach (var action in rasti.Actions)
                                                 {
                                                     var name = action.DisplayName ?? action.Name;
-                                                    <li data-value="@action.Name" @if(selectedrasti != null && selectedrasti.Actions.Any(c => c.Name == action.Name)){<text> data-checked='1' </text>}>@name</li>
+                                                    @if(selectedrasti != null)
+                                                    {
+                                                        @if(selectedrasti.Actions != null)
+                                                        {
+                                                            @if (selectedrasti.Actions.Any(c => c.Name == action.Name))
+                                                            {
+                                                                <li data-value="@action.Name" data-checked="1">@name</li>
+                                                            }
+                                                            else
+                                                            {
+                                                                <li data-value="@action.Name">@name</li>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <li data-value="@action.Name">@name</li>
+                                                        }
+
+                                        }
+                                                    else
+                                                    {
+                                                        <li data-value="@action.Name">@name</li>
+                                                    }
+                                                    
                                                 }
                                             </ul>
                                         </li>
