@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Kipa_plus.Models.DynamicAuth
 {
@@ -7,8 +8,9 @@ namespace Kipa_plus.Models.DynamicAuth
         [Required]
         public string UserId { get; set; }
 
+        [DisplayName("Sähköposti")]
         public string UserName { get; set; }
-
+        [DisplayName("Roolit")]
         public IList<string>? Roles { get; set; }
 
         public string? Nimi { get; set; }
