@@ -43,7 +43,7 @@
                                 <input type="hidden" class="area" value="@rasti.RastiId" />
                                 @rasti.Name
                                 <ol>
-                                    @if (rasti.Actions.Any())
+                                    @if (rasti.Actions?.Any() ?? false)
                                     {
                                         <li class="commonactions" data-value="@rasti.Name">
                                             <input type="hidden" class="area" value="@rasti.RastiId" />
