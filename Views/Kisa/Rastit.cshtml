@@ -8,7 +8,9 @@
 <h1>Rastit</h1>
 
 
-<button type="button" class="btn btn-light" onclick="location.href = '/Kisa/@Model.KisaId/LuoRasti?kisaId=@Model.KisaId';">Luo uusi</button>
+<secure-content asp-area="" asp-controller="Kisa" asp-action="LuoRasti">
+    <button type="button" class="btn btn-light" onclick="location.href = '/Kisa/@Model.KisaId/LuoRasti?kisaId=@Model.KisaId';">Luo uusi</button>
+</secure-content>
 @if(Model.Rastit != null && Model.Tilanteet != null)
 {
     <secure-content asp-area="" asp-controller="Kisa" asp-action="HyvaksyTilanne">
