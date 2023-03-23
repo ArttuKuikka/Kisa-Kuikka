@@ -1,5 +1,5 @@
-﻿@model IEnumerable<Kipa_plus.Models.Rasti>
-@using Kipa_plus.Models
+﻿@model Kipa_plus.Models.ViewModels.ListaaRastitViewModel
+
 
 @{
     ViewData["Title"] = "Rastit";
@@ -8,34 +8,88 @@
 <h1>Rastit</h1>
 
 
-<button type="button" class="btn btn-light" onclick="location.href = '/Kisa/@ViewBag.KisaId/LuoRasti?kisaId=@ViewBag.KisaId';">Luo uusi</button>
-<table class="table" style="color: white">
-    <thead><tr></tr></thead>
-    <tbody>
-        @foreach (var item in Model)
+<secure-content asp-area="" asp-controller="Kisa" asp-action="LuoRasti">
+    <button type="button" class="btn btn-light" onclick="location.href = '/Kisa/@Model.KisaId/LuoRasti?kisaId=@Model.KisaId';">Luo uusi</button>
+</secure-content>
+@if(Model.Rastit != null && Model.Tilanteet != null)
+{
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="HyvaksyTilanne">
+        @if(Model.Rastit.Where(x => x.OdottaaTilanneHyvaksyntaa).Any())
         {
-            <tr>
-                <td>
-                    
-                    @{
-                        var Sarjat = ViewData["Sarjat"] as List<Sarja>;
-                       
-                        
 
-                    }
-                    <h4>@item.Nimi</h4>
+        <h3 class="text-warning">Odottaa hyväksyntää</h3>
+        <table class="table" style="color: white">
+            <thead><tr>
                     
-                </td>
-               
-                
-                <td>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
-                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtävät</button>
-                    <button type="button" class="btn btn-danger" onclick="location.href = '/Kisa/@ViewBag.KisaId/PoistaRasti?RastiId=@item.Id';">Poista</button>
-                    
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </tr></thead>
+            <tbody>
+                @foreach (var item in Model.Rastit.Where(x => x.OdottaaTilanneHyvaksyntaa == true))
+                {
+                    <tr>
+                        <td>
+
+
+                            <h4>@item.Nimi</h4>
+                            @if (item.OdottaaTilanneHyvaksyntaa)
+                            {
+                                <h5 class="text-warning">Odottaa hyväksyntää: @Model.Tilanteet.FirstOrDefault(x => x.Id == item.nykyinenTilanneId)?.Nimi</h5>
+                            }
+                            else
+                            {
+                                <h5 class="text-success">@Model.Tilanteet.FirstOrDefault(x => x.Id == item.nykyinenTilanneId)?.Nimi</h5>
+                            }
+
+                        </td>
+
+
+                        <td>
+                            
+                            <button type="button" class="btn btn-success" onclick="location.href = '/Kisa/@Model.KisaId/HyvaksyTilanne?RastiId=@item.Id&kielto=0';">Hyväksy</button>
+                                <button type="button" class="btn btn-danger" onclick="location.href = '/Kisa/@Model.KisaId/HyvaksyTilanne?RastiId=@item.Id&kielto=1';">Kiellä</button>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <hr />
+        <br />
+    }
+   </secure-content>
+
+
+    <table class="table" style="color: white">
+        <thead><tr></tr></thead>
+        <tbody>
+            @foreach (var item in Model.Rastit)
+            {
+                <tr>
+                    <td>
+
+
+                        <h4>@item.Nimi</h4>
+                        @if (item.OdottaaTilanneHyvaksyntaa)
+                        {
+                            <h5 class="text-warning">Odottaa hyväksyntää: @Model.Tilanteet.FirstOrDefault(x => x.Id == item.nykyinenTilanneId)?.Nimi</h5>
+                        }
+                        else
+                        {
+                            <h5 class="text-success">@Model.Tilanteet.FirstOrDefault(x => x.Id == item.nykyinenTilanneId)?.Nimi</h5>
+                        }
+
+                    </td>
+
+
+                    <td>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Tilanne?RastiId=@item.Id';">Tilanne</button>
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtävät</button>
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Kisa/@Model.KisaId/PoistaRasti?RastiId=@item.Id';">Poista</button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

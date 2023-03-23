@@ -4,6 +4,7 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
+using System.Collections.Generic;
 
 namespace Kipa_plus.Controllers
 {
@@ -19,12 +20,35 @@ namespace Kipa_plus.Controllers
         }
 
         [DisplayName("Valintasivu")]
-        public IActionResult Index(int? RastiId)
+        public async Task<IActionResult> Index(int? RastiId)
         {
             if(RastiId != null)
             {
-                var skannatut = _context.TagSkannaus.Where(x => x.RastiId== RastiId);
-                return View(new TagIndexViewModel() {RastiId = (int)RastiId, Skannatut = skannatut.ToList(), Vartiot = _context.Vartio });
+                var rasti = await _context.Rasti.FindAsync(RastiId);
+                if(rasti != null)
+                {
+                    var skannatut = _context.TagSkannaus.Where(x => x.RastiId == RastiId);
+                    var skannaukset = new List<SkannatutViewModel>();
+
+                    var skannatutIdt = new List<int?>();
+                    skannatut.ToList().ForEach(x => skannatutIdt.Add(x.VartioId));
+
+                    foreach (var vartio in _context.Vartio.ToList().Where(x => skannatutIdt.Contains(x.Id)))
+                    {
+                        var tulo = skannatut.Where(x => x.VartioId == vartio.Id).FirstOrDefault(x => x.isTulo == true);
+                        var lähtö = skannatut.Where(x => x.VartioId == vartio.Id).FirstOrDefault(x => x.isTulo == false);
+
+                        var scan = new SkannatutViewModel() { Lahto = lähtö?.TimeStamp, Tulo = tulo?.TimeStamp, Vartio = vartio };
+
+                        skannaukset.Add(scan);
+                    }
+
+                    //järjestä lista niin että ensimmäisenä näkyy kohdat joissa on tulo mutta ei lähtö, sitten kohdat joissa pelkkä lähtö, sitten kohdat jossa kummatkin
+                    skannaukset = skannaukset.OrderBy(x => x.Lahto == null).ThenBy(x => x.Tulo == null).ThenBy(x => x.Lahto).ToList();
+                    skannaukset.Reverse();
+
+                    return View(new TagIndexViewModel() { RastiId = (int)RastiId, Skannatut = skannaukset, RastiNimi = rasti.Nimi });
+                }
             }
             return BadRequest();
         }

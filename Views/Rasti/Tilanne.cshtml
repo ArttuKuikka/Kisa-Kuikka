@@ -1,0 +1,38 @@
+﻿@model Kipa_plus.Models.ViewModels.TilanneViewModel
+@{
+    ViewData["Title"] = "Rastin tilanne";
+}
+
+<h2>Tilanne</h2>
+
+<h4>Rasti</h4>
+<hr />
+<div class="row">
+    @if (Model.Rasti.OdottaaTilanneHyvaksyntaa)
+    {
+        <h3 class="text-warning">Odotetaan hyväksyntää: @Model.NykyinenTilanne.Nimi</h3>
+    }
+    else
+    {
+        <h3 class="text-success">Rastin tilanne: @Model.NykyinenTilanne.Nimi</h3>
+    }
+    <div class="col-md-4">
+        <form action="/Rasti/Tilanne?RastiId=@Model.Rasti.Id" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="Rasti.Id" hidden="hidden" />
+            
+            <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Tilanne</label>
+                @Html.DropDownListFor(model => model.Rasti.nykyinenTilanneId,new SelectList(Model.Tilanteet, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.Rasti.nykyinenTilanneId, "", new { @class = "text-danger" })
+            </div>
+           
+            
+            <div class="form-group">
+                <input type="submit" value="Vaihda tilanne" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>

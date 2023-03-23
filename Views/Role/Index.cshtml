@@ -39,3 +39,40 @@
         </table>
     </div>
 </div>
+
+                 <script>
+    $(function () {
+        $(".delete-item").click(function (e) {
+            confirm("Oletko varma että haluat poistaa tämän roolin ?");
+            e.preventDefault();
+            const anchor = $(this);
+            const url = $(anchor).attr("href");
+            $.ajax({
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                processData: false,
+                type: "DELETE",
+                url: url,
+                success: function () {
+                    $(anchor).parent("td").parent("tr").fadeOut("slow",
+                        function () {
+                            $(this).remove();
+                        });
+                },
+                error: function (xmlHttpRequest, textStatus, errorThrown) {
+                    let message = `${textStatus} ${xmlHttpRequest.status} ${errorThrown}`;
+                    if (xmlHttpRequest.responseText !== null) {
+                        const response = JSON.parse(xmlHttpRequest.responseText);
+                        for (let error of response["Error"]) {
+                            message += `\n${error}`;
+                        }
+                    }
+
+                    alert(message);
+                }
+            });
+        });
+
+       
+    });
+    </script>
