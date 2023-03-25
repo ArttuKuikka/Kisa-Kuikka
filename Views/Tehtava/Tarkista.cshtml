@@ -1,4 +1,5 @@
 ﻿@model Kipa_plus.Models.ViewModels.TarkistaTehtäväViewModel
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Tarkista tehtävä";
@@ -7,6 +8,8 @@
 
 <h4>Tarkista tehtävä</h4>
 <hr />
+
+
 <div class="row">
     <div>
         <form action="/Tehtava/Tarkista?RastiId=@Model.RastiId" method="post" id="Formi">
@@ -15,6 +18,43 @@
                 @Html.DisplayFor(model => model.TehtavaNimi)
         </dd>
         <h2>@Model.VartionNumeroJaNimi</h2>
+
+
+            @{
+                string? tayttaja = "";
+                var id = Model.VertausMalli?.TäyttäjäUserId;
+                if (id != null)
+                {
+                    var user = await UserManager.FindByIdAsync(id);
+                    if (user != null)
+                    {
+                        var claims = await UserManager.GetClaimsAsync(user);
+                        tayttaja = "Täyttäjä: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+                    }
+
+                }
+
+                string? jatkaja = "";
+                var jid = Model.VertausMalli?.JatkajaUserId;
+                if (jid != null)
+                {
+                    var user = await UserManager.FindByIdAsync(jid);
+                    if (user != null)
+                    {
+                        var claims = await UserManager.GetClaimsAsync(user);
+                        jatkaja = "Jatkaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+                    }
+                }
+
+            }
+            <h5>@tayttaja</h5>
+            @if(jatkaja != null || jatkaja != "")
+            {
+                <h5>@jatkaja</h5>
+            }
+            <hr />
+        
+
 
         <div class="form-group" hidden="hidden">
             <label asp-for="TehtavaId" class="control-label"></label>
@@ -28,7 +68,7 @@
             <span asp-validation-for="VartioId" class="text-danger"></span>
         </div>
 
-        
+
 
 
 
@@ -44,7 +84,7 @@
 
         <div class="form-group">
             <input type="button" id="submit-button" value="Lähetä" class="btn btn-primary noPrint" />
-           
+
 
         </div>
 
@@ -165,8 +205,8 @@
                 }
             });
 
-            
-            var firstclickdone = false; 
+
+            var firstclickdone = false;
 
             var VertausJson = @Html.Raw(Model.VertausMalli.TehtavaJson);
 
@@ -285,7 +325,7 @@
 
                 //korjaa kaikkien datetime kohtien formatti, jostai syystä ne sisältää tupla heittomerkit
                 data.forEach((currentValue, index) => {
-                    if (data[index].type == "currentTime"){
+                    if (data[index].type == "currentTime") {
                         data[index].userData[0] = data[index].userData[0].replaceAll('"', '');
                     }
                 });
@@ -302,20 +342,20 @@
                 var teecheck = true;
 
                 if (jsondata != JSON.stringify(VertausJson)) {
-                    if(firstclickdone == true){
-                    var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
+                    if (firstclickdone == true) {
+                        var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
 
-                    if(confirm == true){
-                        teecheck = false;
+                        if (confirm == true) {
+                            teecheck = false;
+                        }
+
                     }
-                   
                 }
-                }
-                
+
 
                 firstclickdone = true;
 
-                if(teecheck == true){
+                if (teecheck == true) {
                     //tarkista että data on samaa kuin aiemmassa vastauksessa
                     if (jsondata != JSON.stringify(VertausJson)) {
 
@@ -334,7 +374,7 @@
                                 return;
                             }
 
-                            
+
 
                             //vertaa jokaista form fieldiä ja jos ongelmia lisää teksti
                             if (data[index].userData.toString() != VertausJson[index].userData.toString()) {
@@ -362,7 +402,7 @@
 
 
                 //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää
-                
+
                 document.getElementById('json-input').value = jsondata;
 
                 if (Kesken) {
@@ -379,7 +419,7 @@
                 Submittaa(false);
             });
 
-            
+
         })
     </script>
 }

@@ -185,7 +185,8 @@ namespace Kipa_plus.Controllers
 
                 aiempitehtva.TehtavaJson = ViewModel.TehtavaJson;
                 aiempitehtva.Tarkistettu = true;
-                aiempitehtva.TarkistajaUser = await _userManager.GetUserAsync(User);
+                var user = await _userManager.GetUserAsync(User);
+                aiempitehtva.TarkistajaUserId = user?.Id;
                 _context.SaveChanges();
 
                 return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
@@ -306,7 +307,8 @@ namespace Kipa_plus.Controllers
 
                 tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
                 tehtvastaus.Kesken = false;
-                tehtvastaus.JatkajaUser = await _userManager.GetUserAsync(User);
+                var user = await _userManager.GetUserAsync(User);
+                tehtvastaus.JatkajaUserId = user?.Id;
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();
@@ -356,7 +358,9 @@ namespace Kipa_plus.Controllers
                 TV.SarjaId = TehtavaPohja.SarjaId;
                 TV.KisaId = TehtavaPohja.KisaId;
                 TV.RastiId= TehtavaPohja.RastiId;
-                TV.TäyttäjäUser = await _userManager.GetUserAsync(User);
+
+                var user = await _userManager.GetUserAsync(User);
+                TV.TäyttäjäUserId = user?.Id;
 
                 _context.TehtavaVastaus.Add(TV);
                 _context.SaveChanges();
