@@ -1,0 +1,336 @@
+﻿@model Kipa_plus.Models.ViewModels.MuokkaaVastaustaViewModel
+
+@{
+    ViewData["Title"] = "Muokkaa vastausta";
+}
+
+
+<h4>Muokkaa vastausta</h4>
+<hr />
+<div class="row">
+    <div>
+        <form action="/Tehtava/Tarkista?RastiId=@Model.RastiId" method="post" id="Formi">
+            @Html.AntiForgeryToken()
+        <dd class="h1">
+                @Html.DisplayFor(model => model.TehtavaNimi)
+        </dd>
+        <h2>@Model.VartionNumeroJaNimi</h2>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaId" class="control-label"></label>
+            <input asp-for="TehtavaId" class="form-control" />
+            <span asp-validation-for="TehtavaId" class="text-danger"></span>
+        </div>
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="VartioId" class="control-label"></label>
+            <input asp-for="VartioId" class="form-control" />
+            <span asp-validation-for="VartioId" class="text-danger"></span>
+        </div>
+
+
+
+
+
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TehtavaJson" class="control-label"></label>
+            <input asp-for="TehtavaJson" id="json-input" class="form-control" />
+            <span asp-validation-for="TehtavaJson" class="text-danger"></span>
+        </div>
+
+        <div class="json-viewer" id="json-viewer"></div>
+
+        <br />
+
+        <div class="form-group">
+            <input type="button" id="submit-button" value="Lähetä" class="btn btn-primary noPrint" />
+
+
+        </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script src="assets/js/form-render.min.js"></script>
+<script src="assets/js/jquery-ui.min.js"></script>
+<script src="assets/js/media.js"></script>
+<script src="assets/js/currentTime.js"></script>
+<script src="assets/js/picker.js"></script>
+<link href="assets/picker.css" rel="stylesheet">
+<script src="assets/js/arviointivali.js"></script>
+<script src="assets/js/fileUpload.js"></script>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        //luo formrender käyttämällä piilokentässä olevaa jsonia joka tehtiin formbuilderilla
+        jQuery(function ($) {
+            var fbeditor = document.getElementById('json-viewer');
+            var getdata = document.getElementById('json-input').value;
+
+            Formi.addEventListener("focusout", () => {
+                let elements = Formi.getElementsByTagName('input');
+                for (index = 0; index < elements.length; ++index) {
+                    var input = elements[index];
+
+                    if (input.hasAttribute("max")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var max = input.getAttribute("max");
+
+                        // Check if the value is within the range
+                        if (value > max) {
+                            // Do something if the value is out of range
+
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "maxvaroitus"
+                            span.textContent = "Numero on suurempi kuin suurin sallittu arvo (" + max + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#maxvaroitus') == null) {
+                                input.parentElement.append(span);
+
+                            }
+
+                        } else {
+                            // Do something else if the value is within range
+
+                            var varoitukset = input.parentElement.querySelectorAll('#maxvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+
+                            }
+
+                        }
+                    }
+
+                    if (input.hasAttribute("min")) {
+                        // Get the input value as a number
+                        var value = Number(input.value);
+
+                        // Define the minimum and maximum values
+
+                        var min = input.getAttribute("min");
+
+                        // Check if the value is within the range
+                        if (value < min) {
+                            // Do something if the value is out of range
+
+
+                            // Create a span element with red warning text
+                            var span = document.createElement("span");
+                            span.classList.add("text-danger");
+                            span.id = "minvaroitus"
+                            span.textContent = "Numero on pienempi kuin pienin sallittu arvo (" + min + ")";
+
+                            // Append the span element to the parent element of the input
+                            if (input.parentElement.querySelector('#minvaroitus') == null) {
+                                input.parentElement.append(span);
+
+
+                            }
+
+
+                        } else {
+                            // Do something else if the value is within range
+
+                            var varoitukset = input.parentElement.querySelectorAll('#minvaroitus')
+                            if (varoitukset != null) {
+                                for (let i = 0; i < varoitukset.length; i++) {
+                                    input.parentElement.removeChild(varoitukset[i]);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            });
+
+
+            var firstclickdone = false;
+
+           
+
+            
+
+            var fb = $(fbeditor).formRender({
+                dataType: 'json',
+                formData: getdata
+            });
+
+            //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata
+            function Submittaa(Kesken) {
+                var data = fb.userData;
+
+                //tarkista että kaikkissa required fieldeissä on userdataa
+                for (let i = 0; i < data.length; i++) {
+
+                    var field = data[i]
+                    console.log(field.userData);
+
+                    if (field.required == true) {
+
+                        try {
+                            if (!field.hasOwnProperty('userData')) {
+                                //luo teksti ja siihen liittyvät asiat
+                                var elem = document.createElement('span');
+                                var parent = document.getElementsByName(field.name)[0].parentElement;
+                                elem.textContent = 'Tämä kenttä on pakollinen';
+                                elem.style.color = 'red';
+                                elem.id = 'elementti';
+
+                                //lisää teksti vain jos sitä ei ole jo
+                                if (parent.querySelector('#elementti') == null) {
+                                    parent.appendChild(elem);
+                                }
+
+                                //lisää fade elementtiin
+                                $(elem).fadeOut(6000, function () {
+                                    elem.remove();
+
+                                });
+                                return;
+                            }
+                            else {
+                                if (field.userData != null) {
+                                    if (Array.isArray(field.userData)) {
+                                        if (field.userData[0].length < 1) {
+                                            //luo teksti ja siihen liittyvät asiat
+                                            var elem = document.createElement('span');
+                                            var parent = document.getElementsByName(field.name)[0].parentElement;
+                                            elem.textContent = 'Tämä kenttä on pakollinen';
+                                            elem.style.color = 'red';
+                                            elem.id = 'elementti';
+
+                                            //lisää teksti vain jos sitä ei ole jo
+                                            if (parent.querySelector('#elementti') == null) {
+                                                parent.appendChild(elem);
+                                            }
+
+                                            //lisää fade elementtiin
+                                            $(elem).fadeOut(6000, function () {
+                                                elem.remove();
+
+                                            });
+                                            return;
+                                        }
+                                    }
+                                    else if (field.userData.length < 1) {
+                                        //luo teksti ja siihen liittyvät asiat
+                                        var elem = document.createElement('span');
+                                        var parent = document.getElementsByName(field.name)[0].parentElement;
+                                        elem.textContent = 'Tämä kenttä on pakollinen';
+                                        elem.style.color = 'red';
+                                        elem.id = 'elementti';
+
+                                        //lisää teksti vain jos sitä ei ole jo
+                                        if (parent.querySelector('#elementti') == null) {
+                                            parent.appendChild(elem);
+                                        }
+
+                                        //lisää fade elementtiin
+                                        $(elem).fadeOut(6000, function () {
+                                            elem.remove();
+
+                                        });
+                                        return;
+                                    }
+                                }
+                                else {
+                                    var elem = document.createElement('span');
+                                    var parent = document.getElementsByName(field.name)[0].parentElement;
+                                    elem.textContent = 'Tämä kenttä on pakollinen';
+                                    elem.style.color = 'red';
+                                    elem.id = 'elementti';
+
+                                    //lisää teksti vain jos sitä ei ole jo
+                                    if (parent.querySelector('#elementti') == null) {
+                                        parent.appendChild(elem);
+                                    }
+
+                                    //lisää fade elementtiin
+                                    $(elem).fadeOut(6000, function () {
+                                        elem.remove();
+
+                                    });
+                                    return;
+                                }
+                            }
+                        }
+                        catch (error) {
+                            alert('täytä kaikki pakolliset punaisella tähdellä merkityt kohdat!')
+                            return;
+                        }
+                    }
+                }
+
+                //korjaa kaikkien datetime kohtien formatti, jostai syystä ne sisältää tupla heittomerkit
+                data.forEach((currentValue, index) => {
+                    if (data[index].type == "currentTime") {
+                        data[index].userData[0] = data[index].userData[0].replaceAll('"', '');
+                    }
+                });
+
+              
+
+
+                var jsondata = JSON.stringify(data);
+
+                var teecheck = true;
+
+                if (firstclickdone == true) {
+                        var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
+
+                        if (confirm == true) {
+                            teecheck = false;
+                        }
+
+                    }
+
+
+                firstclickdone = true;
+
+               
+
+
+                //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää
+
+                document.getElementById('json-input').value = jsondata;
+
+                if (Kesken) {
+                    document.getElementById('Kesken-CheckBox').checked = true;
+                };
+
+                document.getElementById('Formi').submit();
+            }
+
+
+
+
+            document.getElementById('submit-button').addEventListener('click', function () {
+                Submittaa(false);
+            });
+
+
+        })
+    </script>
+}

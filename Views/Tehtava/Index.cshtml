@@ -211,7 +211,9 @@
                             <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.RastiId';">Näytä</button>
                         </secure-content>
 
-                        
+                         <secure-content asp-controller="Tehtava" asp-action="MuokkaaVastausta" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/MuokkaaVastausta?VastausId=@item.Id&RastiId=@Model.RastiId';">Muokkaa vastausta</button>
+                        </secure-content>
                         
                     </td>
                 </tr>
