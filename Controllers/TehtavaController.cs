@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Services;
 
 namespace Kipa_plus.Controllers
 {
@@ -24,10 +26,12 @@ namespace Kipa_plus.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IRoleAccessStore _roleAccessStore;
 
-        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
+        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IRoleAccessStore roleAccessStore)
         {
             _context = context;
+            _roleAccessStore = roleAccessStore;
             _userManager = userManager;
         }
 
@@ -347,7 +351,24 @@ namespace Kipa_plus.Controllers
                     return StatusCode(500);
                 }
 
-                if(TV.TehtavaJson.Length < TehtavaPohja.TehtavaJson.Length)
+                //tarkista onko oikeesti oikeudet
+                var roles = await (
+             from usr in _context.Users
+             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+             join role in _context.Roles on userRole.RoleId equals role.Id
+             where usr.UserName == User.Identity.Name
+             select role.Id.ToString()
+         ).ToArrayAsync();
+
+                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
+                if (!rastit.Contains(TehtavaPohja.RastiId))
+                {
+                   
+                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                }
+                
+
+                if (TV.TehtavaJson.Length < TehtavaPohja.TehtavaJson.Length)
                 {
                     return BadRequest();
                 }
