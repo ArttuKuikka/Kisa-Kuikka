@@ -144,15 +144,14 @@ namespace Kipa_plus.Controllers
                                                     break;
                                                 case "number":
 
-                                                    //if (double.TryParse(data0.ToString().Replace('.', ','), out double parsed))
-                                                    //{
-                                                    //    vastauscell.SetCellValue(parsed);
-                                                    //}
-                                                    //else
-                                                    //{
-                                                    //    vastauscell.SetCellValue(data0.ToString().Replace('.', ','));
-                                                    //}
-                                                    vastauscell.SetCellValue(data0.ToString());
+                                                    if (double.TryParse(data0.ToString(), out double parsed))
+                                                    {
+                                                        vastauscell.SetCellValue(parsed);
+                                                    }
+                                                    else
+                                                    {
+                                                        vastauscell.SetCellValue(data0.ToString());
+                                                    }
 
                                                     break;
                                                 default:
