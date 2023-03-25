@@ -82,7 +82,10 @@
 
                     <td>
                         <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
+                        <secure-content asp-controller="Rasti" asp-action="Edit" asp-rastiid="@item.Id" asp-rastitype="1" asp-rastigroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
+                        </secure-content>
+                        
                         <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Tilanne?RastiId=@item.Id';">Tilanne</button>
                         <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtävät</button>
                         <button type="button" class="btn btn-danger" onclick="location.href = '/Kisa/@Model.KisaId/PoistaRasti?RastiId=@item.Id';">Poista</button>
