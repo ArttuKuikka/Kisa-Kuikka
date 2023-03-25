@@ -41,11 +41,11 @@ namespace Kipa_plus.TagHelpers
         [HtmlAttributeName("asp-rastiid")]
         public string RastiId { get; set; }
 
-        [HtmlAttributeName("asp-rastitype")]
-        public int RastiType { get; set; }
+        [HtmlAttributeName("asp-controllertype")]
+        public int ControllerType { get; set; }
 
-        [HtmlAttributeName("asp-rastigroup")]
-        public string RastiGroup { get; set; }
+        [HtmlAttributeName("asp-controllergroup")]
+        public string ControllerGroup { get; set; }
 
         [ViewContext, HtmlAttributeNotBound]
         public ViewContext ViewContext { get; set; }
@@ -87,7 +87,7 @@ namespace Kipa_plus.TagHelpers
 
                
 
-                if (await _roleAccessStore.HasAccessToCustomActionAsync(parsedRastiId, Controller, Action, RastiType, RastiGroup, roles))
+                if (await _roleAccessStore.HasAccessToCustomActionAsync(parsedRastiId, Controller, Action, ControllerType, ControllerGroup, roles))
                     return;
 
                 output.SuppressOutput();
