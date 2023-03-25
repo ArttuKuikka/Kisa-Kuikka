@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kipa_plus.Models.ViewModels
 {
-    public class TarkistaTehtäväViewModel
+    public class MuokkaaVastaustaViewModel
     {
         public string TehtavaJson { get; set; }
         public string? VartionNumeroJaNimi { get; set; }
-        public TehtavaVastaus? VertausMalli { get; set; }
+        
         public string? TehtavaNimi { get; set; }
         public int VartioId { get; set; }
         public int TehtavaId { get; set; }

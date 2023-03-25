@@ -13,8 +13,8 @@ namespace Kipa_plus.Models
         public bool Kesken { get; set; }
         public string? TehtavaJson { get; set; }
         public bool Tarkistettu { get; set; }
-        public IdentityUser? TäyttäjäUser { get; set; }
-        public IdentityUser? JatkajaUser { get; set; }
-        public IdentityUser? TarkistajaUser { get; set; }
+        public string? TäyttäjäUserId { get; set; }
+        public string? JatkajaUserId { get; set; }
+        public string? TarkistajaUserId { get; set; }
     }
 }

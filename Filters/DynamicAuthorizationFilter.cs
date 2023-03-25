@@ -23,8 +23,9 @@ namespace Kipa_plus.Filters
         public DynamicAuthorizationFilter(
             DynamicAuthorizationOptions authorizationOptions,
             TDbContext dbContext,
-            IRoleAccessStore roleAccessStore
-        ) : base(authorizationOptions, dbContext, roleAccessStore)
+            IRoleAccessStore roleAccessStore,
+            ApplicationDbContext context
+        ) : base(authorizationOptions, dbContext, context, roleAccessStore)
         {
         }
     }
@@ -36,8 +37,9 @@ namespace Kipa_plus.Filters
         public DynamicAuthorizationFilter(
             DynamicAuthorizationOptions authorizationOptions,
             TDbContext dbContext,
+            ApplicationDbContext context,
             IRoleAccessStore roleAccessStore)
-            : base(authorizationOptions, dbContext, roleAccessStore)
+            : base(authorizationOptions, dbContext, context, roleAccessStore)
         {
         }
     }
@@ -52,8 +54,9 @@ namespace Kipa_plus.Filters
         public DynamicAuthorizationFilter(
             DynamicAuthorizationOptions authorizationOptions,
             TDbContext dbContext,
+            ApplicationDbContext context,
             IRoleAccessStore roleAccessStore)
-            : base(authorizationOptions, dbContext, roleAccessStore)
+            : base(authorizationOptions, dbContext, roleAccessStore, context)
         {
         }
     }
@@ -72,22 +75,52 @@ namespace Kipa_plus.Filters
         private readonly DynamicAuthorizationOptions _authorizationOptions;
         private readonly TDbContext _dbContext;
         private readonly IRoleAccessStore _roleAccessStore;
+        private readonly ApplicationDbContext _context;
 
         public DynamicAuthorizationFilter(
             DynamicAuthorizationOptions authorizationOptions,
             TDbContext dbContext,
-            IRoleAccessStore roleAccessStore
+            IRoleAccessStore roleAccessStore,
+            ApplicationDbContext context
         )
         {
             _authorizationOptions = authorizationOptions;
             _roleAccessStore = roleAccessStore;
             _dbContext = dbContext;
+            _context = context;
         }
 
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
+
+
+
             if (!IsProtectedAction(context))
+            {
+                //jos tag tilastot jaetaan niin skippaa auth sille sivulle
+                if (!IsUserAuthenticated(context))
+                {
+                    var ctrname = context.RouteData?.Values?["controller"];
+                    if (ctrname != null)
+                    {
+                        if (ctrname.ToString() == "TagTilastot")
+                        {
+                            var kisa = await _context.Kisa.FindAsync(1); //lisää tähän että hakee kisan oikeasti
+                            if (kisa != null)
+                            {
+                                if (!kisa.JaaTagTilastot)
+                                {
+                                    context.Result = new ForbidResult();
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+               
                 return;
+            }
+                
 
             if (!IsUserAuthenticated(context))
             {

@@ -16,9 +16,18 @@
     {
         var RastiId = Model.OikeusRasteihin.First();
         
-        <div class="grid-item" onClick="location.href='/Tehtava/?RastiId=@RastiId'"><img class="grid-item-image" alt="Rastin tehtävät" src="/images/rasti.png"><p class="grid-item-text">Rastin tehtävät</p></div>
-        <div class="grid-item" onClick="location.href='/Tag?RastiId=@RastiId'"><img class="grid-item-image" alt="Skannaa tag" src="/images/tagtilastot.png"><p class="grid-item-text">Skannaa tag</p></div>
-        <div class="grid-item" onClick="location.href='/Rasti/Tilanne?RastiId=@RastiId'"><img class="grid-item-image" alt="Skannaa tag" src="/images/edit.png"><p class="grid-item-text">Rastin tilanne</p></div>
+        <secure-content asp-controller="Tehtava" asp-action="Index" asp-rastiid="@RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+            <div class="grid-item" onClick="location.href='/Tehtava/?RastiId=@RastiId'"><img class="grid-item-image" alt="Rastin tehtävät" src="/images/rasti.png"><p class="grid-item-text">Rastin tehtävät</p></div>
+        </secure-content>
+
+        <secure-content asp-controller="Tag" asp-action="Index" asp-rastiid="@RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+            <div class="grid-item" onClick="location.href='/Tag?RastiId=@RastiId'"><img class="grid-item-image" alt="Skannaa tag" src="/images/tagtilastot.png"><p class="grid-item-text">Skannaa tag</p></div>
+        </secure-content>
+
+        <secure-content asp-controller="Rasti" asp-action="Tilanne" asp-rastiid="@RastiId" asp-controllertype="1" asp-controllergroup="Rasti">
+            <div class="grid-item" onClick="location.href='/Rasti/Tilanne?RastiId=@RastiId'"><img class="grid-item-image" alt="Skannaa tag" src="/images/edit.png"><p class="grid-item-text">Rastin tilanne</p></div>
+        </secure-content>
+
     }
     else
     {

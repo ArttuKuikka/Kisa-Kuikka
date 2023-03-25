@@ -8,8 +8,12 @@
 <h1>Vartiot</h1>
 
 <p>
-    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@Model.KisaId';">Luo vartio</button>
-    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
+   <secure-content asp-area="" asp-controller="Vartio" asp-action="Luo">
+        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@Model.KisaId';">Luo vartio</button>
+   </secure-content>
+    <secure-content asp-area="" asp-controller="Vartio" asp-action="KenenTag">
+        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
+    </secure-content>
 </p>
 
 @if(Model != null)
@@ -62,8 +66,11 @@
 
 
                     <td>
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
-                            @if(item.TagSerial == null || item.TagSerial == string.Empty)
+                        <secure-content asp-area="" asp-controller="Vartio" asp-action="Edit">
+                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
+                        </secure-content>
+                           <secure-content asp-area="" asp-controller="Vartio" asp-action="LiitaTag">
+                                @if(item.TagSerial == null || item.TagSerial == string.Empty)
                             {
                                 <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
                             }
@@ -71,8 +78,14 @@
                             {
                                 <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Vaihda tag</button>
                             }
-                            <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
-                            <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
+                           </secure-content>
+                           <secure-content asp-area="" asp-controller="Vartio" asp-action="Delete">
+                                <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
+                           </secure-content>
+                           <secure-content asp-area="" asp-controller="Vartio" asp-action="Keskeyta">
+                                <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
+                           </secure-content>
+                            
                     </td>
                 </tr>
             }

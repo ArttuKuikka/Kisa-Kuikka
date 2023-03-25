@@ -1,15 +1,12 @@
-﻿@model Kipa_plus.Models.ViewModels.TarkistaTehtäväViewModel
-@inject UserManager<IdentityUser> UserManager
+﻿@model Kipa_plus.Models.ViewModels.MuokkaaVastaustaViewModel
 
 @{
-    ViewData["Title"] = "Tarkista tehtävä";
+    ViewData["Title"] = "Muokkaa vastausta";
 }
 
 
-<h4>Tarkista tehtävä</h4>
+<h4>Muokkaa vastausta</h4>
 <hr />
-
-
 <div class="row">
     <div>
         <form action="/Tehtava/Tarkista?RastiId=@Model.RastiId" method="post" id="Formi">
@@ -18,43 +15,6 @@
                 @Html.DisplayFor(model => model.TehtavaNimi)
         </dd>
         <h2>@Model.VartionNumeroJaNimi</h2>
-
-
-            @{
-                string? tayttaja = "";
-                var id = Model.VertausMalli?.TäyttäjäUserId;
-                if (id != null)
-                {
-                    var user = await UserManager.FindByIdAsync(id);
-                    if (user != null)
-                    {
-                        var claims = await UserManager.GetClaimsAsync(user);
-                        tayttaja = "Täyttäjä: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
-                    }
-
-                }
-
-                string? jatkaja = "";
-                var jid = Model.VertausMalli?.JatkajaUserId;
-                if (jid != null)
-                {
-                    var user = await UserManager.FindByIdAsync(jid);
-                    if (user != null)
-                    {
-                        var claims = await UserManager.GetClaimsAsync(user);
-                        jatkaja = "Jatkaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
-                    }
-                }
-
-            }
-            <h5>@tayttaja</h5>
-            @if(jatkaja != null || jatkaja != "")
-            {
-                <h5>@jatkaja</h5>
-            }
-            <hr />
-        
-
 
         <div class="form-group" hidden="hidden">
             <label asp-for="TehtavaId" class="control-label"></label>
@@ -208,9 +168,9 @@
 
             var firstclickdone = false;
 
-            var VertausJson = @Html.Raw(Model.VertausMalli.TehtavaJson);
+           
 
-            console.log(VertausJson);
+            
 
             var fb = $(fbeditor).formRender({
                 dataType: 'json',
@@ -330,19 +290,14 @@
                     }
                 });
 
-                VertausJson.forEach((currentValue, index) => {
-                    if (VertausJson[index].type == "currentTime") {
-                        VertausJson[index].userData[0] = VertausJson[index].userData[0].replaceAll('"', '');
-                    }
-                });
+              
 
 
                 var jsondata = JSON.stringify(data);
 
                 var teecheck = true;
 
-                if (jsondata != JSON.stringify(VertausJson)) {
-                    if (firstclickdone == true) {
+                if (firstclickdone == true) {
                         var confirm = window.confirm("Oletko varma että kaikki kentätä ovat oikein? jos painat ok, ylikirjoitat aiemman vastauksen ja lähetät tämän vastauksen tiedot kisatoimistoon. Jos olet vielä epävarma, paina peruuta.");
 
                         if (confirm == true) {
@@ -350,55 +305,11 @@
                         }
 
                     }
-                }
 
 
                 firstclickdone = true;
 
-                if (teecheck == true) {
-                    //tarkista että data on samaa kuin aiemmassa vastauksessa
-                    if (jsondata != JSON.stringify(VertausJson)) {
-
-
-                        data.forEach((currentValue, index) => {
-
-                            if (data[index].type == "fileUpload") { //skippaa fileUpload koska se ei missään tilanteessa ole sama
-                                return;
-                            }
-
-                            if (data[index].userData == null) {
-                                return;
-                            }
-
-                            if (VertausJson[index].userData == null) {
-                                return;
-                            }
-
-
-
-                            //vertaa jokaista form fieldiä ja jos ongelmia lisää teksti
-                            if (data[index].userData.toString() != VertausJson[index].userData.toString()) {
-
-                                console.log(data[index].userData.toString() + " != " + VertausJson[index].userData.toString())
-
-                                if (document.getElementById('json-viewer').firstChild.children[index].querySelector('.checktext') == null) {
-                                    var span = document.createElement('span');
-                                    span.textContent = "Kohta ei täsmää aiemman vastauksen kanssa!";
-                                    span.classList.add('text-danger');
-                                    span.classList.add('checktext');
-
-                                    document.getElementById('json-viewer').firstChild.children[index].appendChild(span);
-
-                                    setTimeout(function () {
-                                        $(span).remove();
-                                    }, 9000);
-                                }
-
-                            }
-                        });
-                        return;
-                    }
-                }
+               
 
 
                 //laita userdata json muodossa piilotettuun fieldiin formissa että se voidaan lähettää

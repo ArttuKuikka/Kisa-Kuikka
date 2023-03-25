@@ -1,7 +1,7 @@
 ﻿@model Kipa_plus.Models.ViewModels.Tayta
 
 @{
-    ViewData["Title"] = "Rastin Tehtava";
+    ViewData["Title"] = "Täytä tehtävä";
 }
 
 
@@ -9,7 +9,7 @@
 
 
 
-<h4>Tehtava</h4>
+<h4>Täytä</h4>
 <hr />
 <div class="row">
     <div>
@@ -27,7 +27,7 @@
 
         <div class="col-md-10" style="max-width:500px">
             <label class="control-label">Vartio</label>
-                @Html.DropDownListFor(model => model.VartioId,new SelectList(Model.VartioList, "Id", "NumeroJaNimi"),  new { @class = "form-control"} )
+                @Html.DropDownListFor(model => model.VartioId,new SelectList(Model.VartioList, "Id", "NumeroJaNimiJaTilanne"),  new { @class = "form-control"} )
                 @Html.ValidationMessageFor(model => model.VartioId, "", new { @class = "text-danger" })
         </div>
 

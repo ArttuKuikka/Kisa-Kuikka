@@ -1,10 +1,60 @@
 ﻿@model Kipa_plus.Models.TehtavaVastaus;
+@inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Nayta tehtävä vastaus";
 }
-<h1>Näytä tehtävän vastaus</h1>
-<br />
+<h4>Näytä tehtävän vastaus</h4>
+<hr />
+
 <h2>@ViewBag.VartioNimi</h2>
+<br />
+
+@{
+    string? tayttaja = "";
+    var id = Model.TäyttäjäUserId;
+    if (id != null)
+    {
+        var user = await UserManager.FindByIdAsync(id);
+        if (user != null)
+        {
+            var claims = await UserManager.GetClaimsAsync(user);
+            tayttaja = "Täyttäjä: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+        }
+
+    }
+
+    string? jatkaja = "";
+    var jid = Model.JatkajaUserId;
+    if (jid != null)
+    {
+        var user = await UserManager.FindByIdAsync(jid);
+        if (user != null)
+        {
+            var claims = await UserManager.GetClaimsAsync(user);
+            jatkaja = "Jatkaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+        }
+    }
+
+    string? tarkistaja = "";
+    var tid = Model.TarkistajaUserId;
+    if (tid != null)
+    {
+        var user = await UserManager.FindByIdAsync(tid);
+        if (user != null)
+        {
+            var claims = await UserManager.GetClaimsAsync(user);
+            tarkistaja = "Tarkistaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+        }
+    }
+
+}
+<h5>@tayttaja</h5>
+@if (jatkaja != null || jatkaja != "")
+{
+    <h5>@jatkaja</h5>
+}
+<h5>@tarkistaja</h5>
+<hr />
 <div class="row">
     <div>
         <form asp-action="Nayta" id="Formi">

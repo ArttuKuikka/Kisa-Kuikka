@@ -9,8 +9,17 @@
 @model Kipa_plus.Models.ViewModels.TagIndexViewModel
 <h2>@Model?.RastiNimi</h2>
 <div class="grid-container">
-    <div class="grid-item" onClick="location.href='Tag/LueTulo?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue tulo" src="/images/nfc.png"><p class="grid-item-text">Lue tulo</p></div>
-    <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
+
+     <secure-content asp-controller="Tag" asp-action="LueTulo" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+        <div class="grid-item" onClick="location.href='Tag/LueTulo?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue tulo" src="/images/nfc.png"><p class="grid-item-text">Lue tulo</p></div>
+     </secure-content>
+
+    <secure-content asp-controller="Tag" asp-action="LueLahto" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+        <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
+    </secure-content>
+
+    
+    
     
 </div>
 
