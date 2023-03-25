@@ -223,8 +223,8 @@ namespace Kipa_plus.Controllers
                 workbook.Write(fs);
             }
 
-
-            return File(System.IO.File.ReadAllBytes("output.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Kisa.Nimi + "-Export.xlsx");
+            var aika = DateTime.Now.ToString("HH.mm");
+            return File(System.IO.File.ReadAllBytes("output.xlsx"), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{Kisa.Nimi}-{aika}-Export.xlsx");
 
 
 
