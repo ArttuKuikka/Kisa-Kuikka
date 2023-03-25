@@ -11,6 +11,7 @@ using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
 using NPOI.XWPF.UserModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 
 namespace Kipa_plus.Controllers
@@ -144,7 +145,7 @@ namespace Kipa_plus.Controllers
                                                     break;
                                                 case "number":
 
-                                                    if (double.TryParse(data0.ToString(), out double parsed))
+                                                    if (double.TryParse(data0.ToString(),System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
                                                     {
                                                         vastauscell.SetCellValue(parsed);
                                                     }
