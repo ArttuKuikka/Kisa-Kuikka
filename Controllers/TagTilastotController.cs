@@ -8,7 +8,7 @@ using System.ComponentModel;
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
-    [Authorize]
+    
     [Static]
     public class TagTilastotController : Controller
     {
