@@ -125,7 +125,6 @@ namespace Kipa_plus.Controllers
                 {
                     new Tilanne() { KisaId = kisaId, Nimi = "Rakentamatta", TarvitseeHyvaksynnan = false },
                     new Tilanne() { KisaId = kisaId, Nimi = "Rakennettu", TarvitseeHyvaksynnan = false },
-                    new Tilanne() { KisaId = kisaId, Nimi = "Valmis", TarvitseeHyvaksynnan = false },
                     new Tilanne() { KisaId = kisaId, Nimi = "Purettu", TarvitseeHyvaksynnan = true }
                 };
                 foreach (var tilanne in oletustilanteet)
@@ -136,9 +135,9 @@ namespace Kipa_plus.Controllers
             }
 
 
-            var tilanteet = _context.Tilanne;
+            var tilanteet = _context.Tilanne.Where(x => x.KisaId == kisaId);
 
-            return View(new LuoRastiViewModel() { KisaId = kisaId, Tilanteet = tilanteet });
+            return View(new LuoRastiViewModel() { KisaId = kisaId, Tilanteet = tilanteet, TarkistusKaytossa = true, VaadiKahdenKayttajanTarkistus = true });
         }
 
         // POST: Rasti/Luo
@@ -146,9 +145,9 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("LuoRasti")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,NykyinenTilanneId")] LuoRastiViewModel luoRastiViewModel)
+        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] LuoRastiViewModel luoRastiViewModel)
         {
-            
+            luoRastiViewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == luoRastiViewModel.KisaId);
             if (ModelState.IsValid)
             {
                 if (_context.Rasti.Where(x => x.Nimi == luoRastiViewModel.Nimi).Where(x => x.KisaId == luoRastiViewModel.KisaId).Any())
@@ -156,7 +155,12 @@ namespace Kipa_plus.Controllers
                     ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
                     return View(luoRastiViewModel);
                 }
-                var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId, Nimi = luoRastiViewModel.Nimi, nykyinenTilanneId = luoRastiViewModel.NykyinenTilanneId, OdottaaTilanneHyvaksyntaa = false};
+                var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId,
+                    Nimi = luoRastiViewModel.Nimi,
+                    nykyinenTilanneId = luoRastiViewModel.NykyinenTilanneId,
+                    OdottaaTilanneHyvaksyntaa = false,
+                    TarkistusKaytossa = luoRastiViewModel.TarkistusKaytossa,
+                    VaadiKahdenKayttajanTarkistus = luoRastiViewModel.VaadiKahdenKayttajanTarkistus};
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
                 return Redirect("/Kisa/" + luoRastiViewModel.KisaId + "/Rastit");

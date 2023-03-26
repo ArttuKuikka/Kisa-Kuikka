@@ -1,17 +1,18 @@
 ﻿@model Kipa_plus.Models.ViewModels.RastinTehtävätViewModel
 @using Kipa_plus.Models;
 @using Kipa_plus.Models.ViewModels;
+@inject UserManager<IdentityUser> UserManager
 
 @{
     ViewData["Title"] = "Rastin Tehtavapohjat";
 }
 
-<h1>@Model.RastinNimi</h1>
+<h1>@Model.Rasti.Nimi</h1>
 <h2>Tehtävät</h2>
 
 <p>
-    <secure-content asp-controller="Tehtava" asp-action="Luo" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Luo?KisaId=@Model.KisaId&RastiId=@Model.RastiId';">Luo Tehtävä</button>
+    <secure-content asp-controller="Tehtava" asp-action="Luo" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Luo?KisaId=@Model.KisaId&RastiId=@Model.Rasti.Id';">Luo Tehtävä</button>
     </secure-content>
     
 </p>
@@ -49,16 +50,16 @@
             </td>
            
             <td>
-                    <secure-content asp-controller="Tehtava" asp-action="Tayta" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id&RastiId=@Model.RastiId';">Täytä</button>
+                    <secure-content asp-controller="Tehtava" asp-action="Tayta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tayta?TehtavaId=@item.Id&RastiId=@Model.Rasti.Id';">Täytä</button>
                     </secure-content>
 
-                     <secure-content asp-controller="Tehtava" asp-action="Edit" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                       <button type="button" class="btn btn-warning" onclick="location.href = '/Tehtava/Edit?id=@item.Id&RastiId=@Model.RastiId';">Muokkaa</button>
+                     <secure-content asp-controller="Tehtava" asp-action="Edit" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                       <button type="button" class="btn btn-warning" onclick="location.href = '/Tehtava/Edit?id=@item.Id&RastiId=@Model.Rasti.Id';">Muokkaa</button>
                     </secure-content>
                     
-                     <secure-content asp-controller="Tehtava" asp-action="Delete" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id&RastiId=@Model.RastiId';">Poista</button>
+                     <secure-content asp-controller="Tehtava" asp-action="Delete" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                        <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/Delete?id=@item.Id&RastiId=@Model.Rasti.Id';">Poista</button>
                     </secure-content>
                     
                     
@@ -105,12 +106,12 @@
                     </td>
 
                     <td>
-                          <secure-content asp-controller="Tehtava" asp-action="Jatka" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id&RastiId=@Model.RastiId';">Jatka</button>
+                          <secure-content asp-controller="Tehtava" asp-action="Jatka" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                        <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Jatka?TehtavaId=@item.Id&RastiId=@Model.Rasti.Id';">Jatka</button>
                     </secure-content>
 
-                        <secure-content asp-controller="Tehtava" asp-action="PoistaVastaus" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id&RastiId=@Model.RastiId';">Poista</button>
+                        <secure-content asp-controller="Tehtava" asp-action="PoistaVastaus" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id&RastiId=@Model.Rasti.Id';">Poista</button>
                         </secure-content>
                        
                        
@@ -156,12 +157,28 @@
                     </td>
 
                     <td>
-                        <secure-content asp-controller="Tehtava" asp-action="Tarkista" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId&RastiId=@Model.RastiId';">Tarkista</button>
+                        <secure-content asp-controller="Tehtava" asp-action="Tarkista" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            @if (Model.Rasti.VaadiKahdenKayttajanTarkistus)
+                            {
+                                var nykyinenUser = await UserManager.GetUserAsync(User);
+                                @if(item.TäyttäjäUserId == nykyinenUser?.Id|| item.JatkajaUserId == nykyinenUser?.Id)
+                                {
+                                    <button type="button" disabled class="btn btn-light">Et voi tarkistaa tehtävää jonka olet itse täyttänyt</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId&RastiId=@Model.Rasti.Id';">Tarkista</button>
+                                }
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId&RastiId=@Model.Rasti.Id';">Tarkista</button>
+                            }
+                           
                         </secure-content>
 
-                        <secure-content asp-controller="Tehtava" asp-action="Nayta" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.RastiId';">Näytä aiempi vastaus</button>
+                        <secure-content asp-controller="Tehtava" asp-action="Nayta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.Rasti.Id';">Näytä aiempi vastaus</button>
                         </secure-content>
 
                         
@@ -207,12 +224,12 @@
                     </td>
 
                     <td>
-                        <secure-content asp-controller="Tehtava" asp-action="Nayta" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.RastiId';">Näytä</button>
+                        <secure-content asp-controller="Tehtava" asp-action="Nayta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.Rasti.Id';">Näytä</button>
                         </secure-content>
 
-                         <secure-content asp-controller="Tehtava" asp-action="MuokkaaVastausta" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/MuokkaaVastausta?VastausId=@item.Id&RastiId=@Model.RastiId';">Muokkaa vastausta</button>
+                         <secure-content asp-controller="Tehtava" asp-action="MuokkaaVastausta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/MuokkaaVastausta?VastausId=@item.Id&RastiId=@Model.Rasti.Id';">Muokkaa vastausta</button>
                         </secure-content>
                         
                     </td>
