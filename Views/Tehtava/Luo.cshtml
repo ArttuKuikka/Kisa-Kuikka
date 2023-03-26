@@ -33,6 +33,7 @@
             
             <div class="col-md-10" style="max-width:500px">
                 <label class="col-md-12 col-form-label">Valitse sarjat joille tämä tehtävä on</label>
+                <br />
 
                 @for (var index = 0; index < @Model.Sarjat?.Count(); index++)
                 {
@@ -45,6 +46,7 @@
                 }
 
             </div>
+            <br />
             
             <div class="form-group" style="max-width:500px">
                 <label asp-for="Nimi" class="control-label"></label>

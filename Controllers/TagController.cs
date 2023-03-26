@@ -6,6 +6,7 @@ using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
 using System.Collections.Generic;
 using Kipa_plus.Models.DynamicAuth;
+using System.Globalization;
 
 namespace Kipa_plus.Controllers
 {
@@ -223,7 +224,7 @@ namespace Kipa_plus.Controllers
                     var tagSkannaus = new TagSkannaus();
 
                     ViewBag.RastiId = viewModel.RastiId;
-                    tagSkannaus.TimeStamp = DateTime.Parse(viewModel.ValittuAika);
+                    tagSkannaus.TimeStamp = DateTime.Parse(viewModel.ValittuAika, CultureInfo.InvariantCulture);
                     tagSkannaus.isTulo = viewModel.OnkoTulo;
                     tagSkannaus.RastiId = viewModel.RastiId;
 
