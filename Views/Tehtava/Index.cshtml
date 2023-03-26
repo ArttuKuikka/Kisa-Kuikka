@@ -37,7 +37,7 @@
                         var nimi = "";
                         if(nimet != null)
                         {
-                            nimi = nimet.FirstOrDefault().Nimi + "-sarja";
+                            nimi = nimet.First().Nimi + "-sarja"+ " (" + nimet.First().Numero + "00)";
                         }
                         else
                         {
