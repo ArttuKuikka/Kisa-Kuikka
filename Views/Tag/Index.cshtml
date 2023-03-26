@@ -18,6 +18,10 @@
         <div class="grid-item" onClick="location.href='Tag/LueLahto?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/nfc.png"><p class="grid-item-text">Lue lähtö</p></div>
     </secure-content>
 
+    <secure-content asp-controller="Tag" asp-action="ManuaalinenLuku" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+        <div class="grid-item" onClick="location.href='Tag/ManuaalinenLuku?RastiId=@Model.RastiId'"><img class="grid-item-image" alt="Lue lähtö" src="/images/edit.png"><p class="grid-item-text-small">Manuaalinen luku</p></div>
+    </secure-content>
+
     
     
     

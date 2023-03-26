@@ -1,0 +1,64 @@
+﻿@model Kipa_plus.Models.ViewModels.ManuaalinenTagSkannausViewModel
+@{
+    ViewData["Title"] = "Manuaalinen luku";
+}
+
+<h2>Manuaalinen tag luku</h2>
+<hr />
+<div class="row">
+
+    <form action="/Tag/ManuaalinenLuku?RastiId=@Model.RastiId" method="post" id="Formi">
+        @Html.AntiForgeryToken()
+         <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Rasti</label>
+                @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })
+            </div>
+
+             <div class="col-md-10" style="max-width:500px">
+                <label class="control-label">Rasti</label>
+                @Html.DropDownListFor(model => model.ValittuVartioId,new SelectList(Model.Vartiot, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.ValittuVartioId, "", new { @class = "text-danger" })
+            </div>
+
+             <div class="form-group">
+                <label asp-for="ValittuAika" class="control-label"></label>
+            <input asp-for="ValittuAika" id="dateTimePicker" placeholder="Valitse aika napauttamalla" class="form-control" />
+                <span asp-validation-for="ValittuAika" class="text-danger"></span>
+            </div>
+            <br />
+             <div class="form-group">
+                <label asp-for="OnkoTulo" class="control-label"></label>
+            <input asp-for="OnkoTulo" type="checkbox" class="form-check-input" />
+                <span asp-validation-for="OnkoTulo" class="text-danger"></span>
+            </div>
+            <br />
+        <div class="form-group">
+            <input type="submit" value="Tallenna" class="btn btn-primary" />
+        </div>
+    </form>
+
+    <script src="/Tehtava/assets/js/picker.js"></script>
+    <link href="/Tehtava/assets/picker.css" rel="stylesheet">
+    
+
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}}
+
+<script async>
+    jQuery(function ($) {
+
+        const dateTimePicker = document.getElementById('dateTimePicker');
+        var picker = new Picker(dateTimePicker, {
+                controls: true,
+                format: 'DD.MM.YYYY HH:mm:ss',
+                headers: true
+                
+            });
+    });
+
+
+</script>
