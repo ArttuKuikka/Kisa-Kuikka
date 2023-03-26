@@ -205,7 +205,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [DisplayName("Lue tulo")]
+        [DisplayName("Manuaalinen luku (ADMIN)")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ManuaalinenLuku([Bind("RastiId, ValittuVartioId, ValittuAika, OnkoTulo")] ManuaalinenTagSkannausViewModel viewModel)
         {
