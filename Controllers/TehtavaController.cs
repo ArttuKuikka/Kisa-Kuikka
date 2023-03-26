@@ -657,10 +657,11 @@ namespace Kipa_plus.Controllers
 
         private async Task<bool> OikeudetRastiIdhen(int RastiId, string? userName)
         {
-            if(userName == null || userName == "")
+            if(userName == null || userName == "" || RastiId == 0)
             {
                 return false;
             }
+            
             
             if (userName.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase))
                 return true;
