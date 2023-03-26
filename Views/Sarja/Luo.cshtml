@@ -24,6 +24,16 @@
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                
+                <label asp-for="Numero" class="control-label"></label>
+                <div style="display:flex; justify-content:start">
+                    <input asp-for="Numero" type="number" min="1" max="9" step="1" class="form-control" style="width:5em" />
+                    <p style="font-size:x-large">00</p>
+                </div>
+                <span asp-validation-for="Numero" class="text-danger"></span>
+            </div>
             
             
             <div class="form-group" hidden="hidden">
@@ -39,6 +49,7 @@
                 <input asp-for="VartionMinimikoko" class="form-control" />
                 <span asp-validation-for="VartionMinimikoko" class="text-danger"></span>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Luo sarja" class="btn btn-primary" />
             </div>

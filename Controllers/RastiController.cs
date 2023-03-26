@@ -50,7 +50,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,OhjeId")] Rasti rasti)
+        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] Rasti rasti)
         {
             if (RastiId != rasti.Id)
             {
@@ -59,23 +59,38 @@ namespace Kipa_plus.Controllers
 
             if (ModelState.IsValid)
             {
-                try
+                var findrasti = await _context.Rasti.FindAsync(RastiId);
+               
+                if(findrasti != null)
                 {
-                    _context.Update(rasti);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!RastiExists(rasti.Id))
+                    if (rasti.Nimi != findrasti.Nimi)
                     {
-                        return NotFound();
+                        if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Any())
+                        {
+                            ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
+                            return View(rasti);
+                        }
                     }
-                    else
+                    try
                     {
-                        throw;
+                        findrasti.Nimi = rasti.Nimi;
+                        findrasti.TarkistusKaytossa = rasti.TarkistusKaytossa;
+                        findrasti.VaadiKahdenKayttajanTarkistus = rasti.VaadiKahdenKayttajanTarkistus;
+                        await _context.SaveChangesAsync();
                     }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!RastiExists(rasti.Id))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
                 }
-                return Redirect("/Kisa/" + rasti.KisaId + "/Rastit");
             }
             return View(rasti);
         }

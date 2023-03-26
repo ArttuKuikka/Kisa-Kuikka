@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
 using System.Collections.Generic;
+using Kipa_plus.Models.DynamicAuth;
 
 namespace Kipa_plus.Controllers
 {
@@ -13,10 +14,12 @@ namespace Kipa_plus.Controllers
     public class TagController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRoleAccessStore _roleAccessStore;
 
-        public TagController(ApplicationDbContext context)
+        public TagController(ApplicationDbContext context, IRoleAccessStore roleAccessStore)
         {
             _context = context;
+            _roleAccessStore = roleAccessStore;
         }
 
         [DisplayName("Valintasivu")]
@@ -53,6 +56,7 @@ namespace Kipa_plus.Controllers
             return BadRequest();
         }
 
+        [DisplayName("Lue lähtö")]
         public IActionResult LueLahto(int RastiId)
         {
             ViewBag.Rastit = _context.Rasti.ToArray();
@@ -61,14 +65,19 @@ namespace Kipa_plus.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [DisplayName("Lue lähtö")]
-        public IActionResult LueLahto([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
+        public async Task<IActionResult> LueLahto([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {
             bool HyvaSkannusTulos = false;
             if(ModelState.IsValid)
             {
                 if (tagSkannaus != null)
                 {
+
+                    if (!await _roleAccessStore.OikeudetRastiIdhen(tagSkannaus.RastiId, User?.Identity?.Name))
+                    {
+                        return BadRequest("Ei oikeusia tähän rastiin");
+                    }
+
                     ViewBag.RastiId = tagSkannaus.RastiId;
                     if (tagSkannaus.TagSerial != null)
                     {
@@ -115,6 +124,7 @@ namespace Kipa_plus.Controllers
             return View("SkannausTulos", HyvaSkannusTulos);
         }
 
+        [DisplayName("Lue tulo")]
         public IActionResult LueTulo(int RastiId)
         {
             ViewBag.Rastit = _context.Rasti.ToArray();
@@ -122,15 +132,19 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [DisplayName("Lue tulo")]
         [ValidateAntiForgeryToken]
-        public IActionResult LueTulo([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
+        public async Task<IActionResult> LueTulo([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {
             bool HyvaSkannusTulos = false;
             if (ModelState.IsValid)
             {
                 if (tagSkannaus != null)
                 {
+                    if (!await _roleAccessStore.OikeudetRastiIdhen(tagSkannaus.RastiId, User?.Identity?.Name))
+                    {
+                        return BadRequest("Ei oikeusia tähän rastiin");
+                    }
+
                     ViewBag.RastiId = tagSkannaus.RastiId;
                     if (tagSkannaus.TagSerial != null)
                     {
@@ -172,6 +186,81 @@ namespace Kipa_plus.Controllers
                         ViewBag.SkannattuVartio = vartio.NumeroJaNimi;
                         return View("SkannausTulos", HyvaSkannusTulos);
                     }
+                }
+            }
+
+            return View("SkannausTulos", HyvaSkannusTulos);
+        }
+
+        [DisplayName("Manuaalinen luku (ADMIN)")]
+        public async Task<IActionResult> ManuaalinenLuku(int RastiId)
+        {
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+           if(rasti != null)
+            {
+                ViewBag.Rastit = _context.Rasti.ToArray();
+                var vartiot = _context.Vartio.Where(x => x.KisaId == rasti.KisaId);
+                return View(new ManuaalinenTagSkannausViewModel() { RastiId = RastiId, Vartiot = vartiot });
+            }
+            return BadRequest("Virheellinen RastiId");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ManuaalinenLuku([Bind("RastiId, ValittuVartioId, ValittuAika, OnkoTulo")] ManuaalinenTagSkannausViewModel viewModel)
+        {
+            bool HyvaSkannusTulos = false;
+            if (ModelState.IsValid)
+            {
+                if (viewModel != null)
+                {
+
+                    if (!await _roleAccessStore.OikeudetRastiIdhen(viewModel.RastiId, User?.Identity?.Name))
+                    {
+                        return BadRequest("Ei oikeusia tähän rastiin");
+                    }
+
+                    var tagSkannaus = new TagSkannaus();
+
+                    ViewBag.RastiId = viewModel.RastiId;
+                    tagSkannaus.TimeStamp = DateTime.Parse(viewModel.ValittuAika);
+                    tagSkannaus.isTulo = viewModel.OnkoTulo;
+                    tagSkannaus.RastiId = viewModel.RastiId;
+
+                    var vartio = await _context.Vartio.FindAsync(viewModel.ValittuVartioId);
+
+                    if (vartio == null)
+                    {
+                        return View("SkannausTulos", HyvaSkannusTulos);
+                    }
+
+                    tagSkannaus.VartioId = vartio.Id;
+
+
+                    var find = _context.TagSkannaus.Where(x => x.RastiId == tagSkannaus.RastiId).Where(x => x.VartioId == tagSkannaus.VartioId).Where(x => x.isTulo == tagSkannaus.isTulo);
+                    if (find.FirstOrDefault() != null)
+                    {
+
+                        var item = find.FirstOrDefault();
+                        if (item == null)
+                        {
+                            return View("SkannausTulos", HyvaSkannusTulos);
+                        }
+                        item.TagSerial = "";
+                        item.TimeStamp = tagSkannaus.TimeStamp;
+
+                    }
+                    else
+                    {
+                        _context.Add(tagSkannaus);
+                    }
+
+
+                    _context.SaveChanges();
+
+                    HyvaSkannusTulos = true;
+                    ViewBag.SkannattuVartio = vartio.NumeroJaNimi;
+                    return View("SkannausTulos", HyvaSkannusTulos);
                 }
             }
 

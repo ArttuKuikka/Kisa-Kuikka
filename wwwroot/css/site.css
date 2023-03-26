@@ -50,6 +50,9 @@ body {
 .grid-item-text{
     font-size: 1em;
 }
+.grid-item-text-small {
+    font-size: 0.8em;
+}
 
 .SkannausTulos{
     text-align: center;

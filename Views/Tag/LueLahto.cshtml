@@ -9,7 +9,7 @@
 
     <form action="/Tag/LueLahto?RastiId=@Model.RastiId" method="post" id="Formi">
         @Html.AntiForgeryToken()
-         <div class="col-md-10" style="max-width:500px">
+         <div class="col-md-10" style="max-width:500px" hidden="hidden">
                 <label class="control-label">Rasti</label>
                 @Html.DropDownListFor(model => model.RastiId,new SelectList(ViewBag.Rastit, "Id", "Nimi"),  new { @class = "form-control"} )
                 @Html.ValidationMessageFor(model => model.RastiId, "", new { @class = "text-danger" })

@@ -27,7 +27,8 @@
         {
             <tr>
                 <td>
-                    <h4>@item.Nimi</h4>
+                    @{var num = item.Numero.ToString() + "00";}
+                    <h4>@item.Nimi (@num)</h4>
                 </td>
                
                 

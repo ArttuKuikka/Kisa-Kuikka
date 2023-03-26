@@ -5,6 +5,7 @@
         public int? Id { get; set; }
         public string Nimi { get; set; }
         public int KisaId { get; set; }
+        public int Numero { get; set; }
         public int? VartionMaksimiko { get; set; }
         public int? VartionMinimikoko { get; set; }
 

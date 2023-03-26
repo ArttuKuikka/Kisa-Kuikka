@@ -7,9 +7,9 @@
         public List<TehtavaVastaus>? TehtavaVastausTarkistus { get; set; }
         public List<TehtavaVastaus>? TehtavaVastausTarkistetut { get; set; }
         public int KisaId { get; set; }
-        public int? RastiId { get; set; }
+        public Rasti? Rasti { get; set; }
         public List<Sarja>? Sarjat { get; set; }
         public IQueryable<Vartio>? Vartiot { get; set;}
-        public string? RastinNimi { get; set; }
+        
     }
 }

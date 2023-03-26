@@ -23,10 +23,24 @@
                 <input asp-for="Nimi" class="form-control" />
                 <span asp-validation-for="Nimi" class="text-danger"></span>
             </div>
-            @if(ViewBag.Error != null)
+            @if (ViewBag.Error != null)
             {
                 <span class="text-danger">@ViewBag.Error</span>
             }
+            <br />
+            <div class="form-group">
+                <label class="control-label">Tarkistus käytössä</label>
+                <input asp-for="TarkistusKaytossa" type="checkbox" class="form-check-input" />
+                <span asp-validation-for="TarkistusKaytossa" class="text-danger"></span>
+            </div>
+            
+             <div class="form-group">
+                <label class="control-label">Vaadi kahden eri käyttäjän tarkistus</label>
+                <input asp-for="VaadiKahdenKayttajanTarkistus" type="checkbox" class="form-check-input" />
+                <span asp-validation-for="VaadiKahdenKayttajanTarkistus" class="text-danger"></span>
+            </div>
+            <br />
+           
             <div class="col-md-10" style="max-width:500px">
                 <label class="control-label">Tilanne</label>
                 @Html.DropDownListFor(model => model.NykyinenTilanneId,new SelectList(Model.Tilanteet, "Id", "Nimi"),  new { @class = "form-control"} )

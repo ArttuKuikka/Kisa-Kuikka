@@ -3,6 +3,7 @@ using Kipa_plus.Models;
 using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Models.DynamicAuth.Custom;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
@@ -13,33 +14,35 @@ using System.Threading.Tasks;
 
 namespace Kipa_plus.Services
 {
-    
-        public class RoleAccessStore : IRoleAccessStore
+
+    public class RoleAccessStore : IRoleAccessStore
+    {
+        private readonly SqlOptions _options;
+        private readonly ILogger<RoleAccessStore> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
+
+        public RoleAccessStore(SqlOptions options, ILogger<RoleAccessStore> logger, ApplicationDbContext context, DynamicAuthorizationOptions authorizationOptions)
         {
-            private readonly SqlOptions _options;
-            private readonly ILogger<RoleAccessStore> _logger;
-            private readonly ApplicationDbContext _context;
-
-        public RoleAccessStore(SqlOptions options, ILogger<RoleAccessStore> logger, ApplicationDbContext context)
-            {
-                _options = options;
-                _logger = logger;
+            _options = options;
+            _logger = logger;
             _context = context;
-            }
+            _authorizationOptions = authorizationOptions;
+        }
 
-            public async Task<bool> AddRoleAccessAsync(RoleAccess roleAccess)
+        public async Task<bool> AddRoleAccessAsync(RoleAccess roleAccess)
+        {
+            try
             {
-                try
+                using (var conn = new SqlConnection(_options.ConnectionString))
                 {
-                    using (var conn = new SqlConnection(_options.ConnectionString))
+                    const string insertCommand = "INSERT INTO RoleAccess VALUES(@RoleId, @Access, @RastiAccess)";
+                    using (var cmd = new SqlCommand(insertCommand, conn))
                     {
-                        const string insertCommand = "INSERT INTO RoleAccess VALUES(@RoleId, @Access, @RastiAccess)";
-                        using (var cmd = new SqlCommand(insertCommand, conn))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@RoleId", roleAccess.RoleId);
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@RoleId", roleAccess.RoleId);
 
-                            if(roleAccess.Controllers != null)
+                        if (roleAccess.Controllers != null)
                         {
                             var access = JsonConvert.SerializeObject(roleAccess.Controllers);
                             cmd.Parameters.AddWithValue("@Access", access);
@@ -49,7 +52,7 @@ namespace Kipa_plus.Services
                             cmd.Parameters.AddWithValue("@Access", DBNull.Value);
                         }
 
-                           if(roleAccess.RastiAccess!= null)
+                        if (roleAccess.RastiAccess != null)
                         {
                             var rastiAccess = JsonConvert.SerializeObject(roleAccess.RastiAccess);
                             cmd.Parameters.AddWithValue("@RastiAccess", rastiAccess);
@@ -59,38 +62,38 @@ namespace Kipa_plus.Services
                             cmd.Parameters.AddWithValue("@RastiAccess", DBNull.Value);
                         }
 
-                            conn.Open();
-                            var affectedRows = await cmd.ExecuteNonQueryAsync();
-                            return affectedRows > 0;
-                        }
+                        conn.Open();
+                        var affectedRows = await cmd.ExecuteNonQueryAsync();
+                        return affectedRows > 0;
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error has occurred while inserting access into RoleAccess table");
-                    return false;
-                }
             }
-
-            public async Task<bool> EditRoleAccessAsync(RoleAccess roleAccess)
+            catch (Exception ex)
             {
-                try
+                _logger.LogError(ex, "An error has occurred while inserting access into RoleAccess table");
+                return false;
+            }
+        }
+
+        public async Task<bool> EditRoleAccessAsync(RoleAccess roleAccess)
+        {
+            try
+            {
+                int affectedRows;
+                using (var conn = new SqlConnection(_options.ConnectionString))
                 {
-                    int affectedRows;
-                    using (var conn = new SqlConnection(_options.ConnectionString))
+                    const string insertCommand = "UPDATE RoleAccess SET [Access] = @Access, [RastiAccess] = @RastiAccess WHERE [RoleId] = @RoleId";
+                    using (var cmd = new SqlCommand(insertCommand, conn))
                     {
-                        const string insertCommand = "UPDATE RoleAccess SET [Access] = @Access, [RastiAccess] = @RastiAccess WHERE [RoleId] = @RoleId";
-                        using (var cmd = new SqlCommand(insertCommand, conn))
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@RoleId", roleAccess.RoleId);
+                        if (roleAccess.Controllers != null)
                         {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@RoleId", roleAccess.RoleId);
-                            if (roleAccess.Controllers != null)
-                            {
-                                var access = JsonConvert.SerializeObject(roleAccess.Controllers);
-                                cmd.Parameters.AddWithValue("@Access", access);
-                            }
-                            else
-                                cmd.Parameters.AddWithValue("@Access", DBNull.Value);
+                            var access = JsonConvert.SerializeObject(roleAccess.Controllers);
+                            cmd.Parameters.AddWithValue("@Access", access);
+                        }
+                        else
+                            cmd.Parameters.AddWithValue("@Access", DBNull.Value);
 
                         if (roleAccess.RastiAccess != null)
                         {
@@ -101,127 +104,127 @@ namespace Kipa_plus.Services
                             cmd.Parameters.AddWithValue("@RastiAccess", DBNull.Value);
 
                         conn.Open();
-                            affectedRows = await cmd.ExecuteNonQueryAsync();
-                        }
+                        affectedRows = await cmd.ExecuteNonQueryAsync();
                     }
-
-                    if (affectedRows > 0)
-                        return true;
-
-                    return await AddRoleAccessAsync(roleAccess);
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error has occurred while editing access into RoleAccess table");
-                    return false;
-                }
+
+                if (affectedRows > 0)
+                    return true;
+
+                return await AddRoleAccessAsync(roleAccess);
             }
-
-            public async Task<bool> RemoveRoleAccessAsync(string roleId)
+            catch (Exception ex)
             {
-                try
-                {
-                    using (var conn = new SqlConnection(_options.ConnectionString))
-                    {
-                        const string insertCommand = "DELETE FROM RoleAccess WHERE [RoleId] = @RoleId";
-                        using (var cmd = new SqlCommand(insertCommand, conn))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@RoleId", roleId);
-
-                            conn.Open();
-                            var affectedRows = await cmd.ExecuteNonQueryAsync();
-
-                            return affectedRows > 0;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error has occurred while deleting access from RoleAccess table");
-                    return false;
-                }
+                _logger.LogError(ex, "An error has occurred while editing access into RoleAccess table");
+                return false;
             }
+        }
 
-            public async Task<RoleAccess> GetRoleAccessAsync(string roleId)
+        public async Task<bool> RemoveRoleAccessAsync(string roleId)
+        {
+            try
             {
-                try
+                using (var conn = new SqlConnection(_options.ConnectionString))
                 {
-                    using (var conn = new SqlConnection(_options.ConnectionString))
+                    const string insertCommand = "DELETE FROM RoleAccess WHERE [RoleId] = @RoleId";
+                    using (var cmd = new SqlCommand(insertCommand, conn))
                     {
-                        const string query = "SELECT [Id], [RoleId], [Access], [RastiAccess] FROM [RoleAccess] WHERE [RoleId] = @RoleId";
-                        using (var cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.CommandType = CommandType.Text;
-                            cmd.Parameters.AddWithValue("@RoleId", roleId);
-                            conn.Open();
-                            var reader = await cmd.ExecuteReaderAsync();
-                            if (!reader.Read())
-                                return null;
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@RoleId", roleId);
 
-                            var roleAccess = new RoleAccess();
-                            roleAccess.Id = int.Parse(reader[0].ToString());
-                            roleAccess.RoleId = reader[1].ToString();
-                            var json = reader[2].ToString();
-                            roleAccess.Controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
-                            var json2 = reader[3].ToString();
-                            roleAccess.RastiAccess = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json2);
+                        conn.Open();
+                        var affectedRows = await cmd.ExecuteNonQueryAsync();
 
-                            return roleAccess;
-                        }
+                        return affectedRows > 0;
                     }
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
-                    return null;
-                }
             }
-
-            public async Task<bool> HasAccessToActionAsync(string actionId, params string[] roles)
+            catch (Exception ex)
             {
-                try
+                _logger.LogError(ex, "An error has occurred while deleting access from RoleAccess table");
+                return false;
+            }
+        }
+
+        public async Task<RoleAccess> GetRoleAccessAsync(string roleId)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_options.ConnectionString))
                 {
-                    using (var conn = new SqlConnection(_options.ConnectionString))
+                    const string query = "SELECT [Id], [RoleId], [Access], [RastiAccess] FROM [RoleAccess] WHERE [RoleId] = @RoleId";
+                    using (var cmd = new SqlCommand(query, conn))
                     {
-                        using (var cmd = new SqlCommand())
-                        {
-                            var parameters = new string[roles.Length];
-                            for (var i = 0; i < roles.Length; i++)
-                            {
-                                parameters[i] = $"@RoleId{i}";
-                                cmd.Parameters.AddWithValue(parameters[i], roles[i]);
-                            }
-                            var query = $"SELECT [Access] FROM [RoleAccess] WHERE [RoleId] IN ({string.Join(", ", parameters)})";
+                        cmd.CommandType = CommandType.Text;
+                        cmd.Parameters.AddWithValue("@RoleId", roleId);
+                        conn.Open();
+                        var reader = await cmd.ExecuteReaderAsync();
+                        if (!reader.Read())
+                            return null;
 
-                            cmd.CommandType = CommandType.Text;
-                            cmd.CommandText = query;
-                            cmd.Connection = conn;
+                        var roleAccess = new RoleAccess();
+                        roleAccess.Id = int.Parse(reader[0].ToString());
+                        roleAccess.RoleId = reader[1].ToString();
+                        var json = reader[2].ToString();
+                        roleAccess.Controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
+                        var json2 = reader[3].ToString();
+                        roleAccess.RastiAccess = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json2);
 
-                            conn.Open();
-                            var reader = await cmd.ExecuteReaderAsync();
-
-                            var list = new List<MvcActionInfo>();
-                            while (reader.Read())
-                            {
-                                var json = reader[0].ToString();
-                                if (string.IsNullOrEmpty(json))
-                                    continue;
-
-                                var controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
-                                list.AddRange(controllers.SelectMany(c => c.Actions));
-                            }
-
-                            return list.Any(a => a.Id == actionId);
-                        }
+                        return roleAccess;
                     }
                 }
-                catch (Exception ex)
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
+                return null;
+            }
+        }
+
+        public async Task<bool> HasAccessToActionAsync(string actionId, params string[] roles)
+        {
+            try
+            {
+                using (var conn = new SqlConnection(_options.ConnectionString))
                 {
-                    _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
-                    return false;
+                    using (var cmd = new SqlCommand())
+                    {
+                        var parameters = new string[roles.Length];
+                        for (var i = 0; i < roles.Length; i++)
+                        {
+                            parameters[i] = $"@RoleId{i}";
+                            cmd.Parameters.AddWithValue(parameters[i], roles[i]);
+                        }
+                        var query = $"SELECT [Access] FROM [RoleAccess] WHERE [RoleId] IN ({string.Join(", ", parameters)})";
+
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = query;
+                        cmd.Connection = conn;
+
+                        conn.Open();
+                        var reader = await cmd.ExecuteReaderAsync();
+
+                        var list = new List<MvcActionInfo>();
+                        while (reader.Read())
+                        {
+                            var json = reader[0].ToString();
+                            if (string.IsNullOrEmpty(json))
+                                continue;
+
+                            var controllers = JsonConvert.DeserializeObject<IEnumerable<MvcControllerInfo>>(json);
+                            list.AddRange(controllers.SelectMany(c => c.Actions));
+                        }
+
+                        return list.Any(a => a.Id == actionId);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error has occurred while getting data from RoleAccess table");
+                return false;
+            }
+        }
 
         public async Task<bool> HasAccessToCustomActionAsync(int rastiId, string controller, string action, int controllerType, string controllerGroup, params string[] roles)
         {
@@ -246,9 +249,9 @@ namespace Kipa_plus.Services
                         conn.Open();
                         var reader = await cmd.ExecuteReaderAsync();
 
-                        if(controllerType== 1) //MainController
+                        if (controllerType == 1) //MainController
                         {
-                            if(rastiId == 0) //toivottavasti ei oo 0 idllä olevia
+                            if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
                             {
                                 return false;
                             }
@@ -267,7 +270,7 @@ namespace Kipa_plus.Services
 
                             return list.Any(a => a.Name == action);
                         }
-                        else if(controllerType== 2)//SubController 
+                        else if (controllerType == 2)//SubController 
                         {
                             if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
                             {
@@ -285,24 +288,24 @@ namespace Kipa_plus.Services
 
                                     var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
                                     var rasti = await _context.Rasti.FindAsync(rastiId);
-                                    if(rasti == null)
+                                    if (rasti == null)
                                     {
                                         return false;
                                     }
 
-                                   if(controllers != null && controllers.Any())
+                                    if (controllers != null && controllers.Any())
                                     {
                                         var tehtcontroller = controllers.Where(x => x.RastiId == rasti.Id).ToList();
-                                        if(tehtcontroller != null && tehtcontroller.Any())
+                                        if (tehtcontroller != null && tehtcontroller.Any())
                                         {
                                             var firstsubcontroller = tehtcontroller.First();
-                                            if(firstsubcontroller != null)
+                                            if (firstsubcontroller != null)
                                             {
                                                 var subcontrollers = firstsubcontroller.SubControllers;
-                                                if(subcontrollers != null && subcontrollers.Any())
+                                                if (subcontrollers != null && subcontrollers.Any())
                                                 {
                                                     var subcontroller = subcontrollers.Where(x => x.Name == controller);
-                                                    if(subcontroller != null && subcontroller.Any())
+                                                    if (subcontroller != null && subcontroller.Any())
                                                     {
                                                         list = subcontroller.First().Actions.ToList();
                                                     }
@@ -314,7 +317,7 @@ namespace Kipa_plus.Services
 
                                 return list.Any(a => a.Name == action);
                             }
-                           else if(controller == "Tag")
+                            else if (controller == "Tag")
                             {
                                 if (rastiId == 0) //toivottavasti ei oo 0 idllä olevia
                                 {
@@ -328,19 +331,19 @@ namespace Kipa_plus.Services
                                         continue;
 
                                     var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
-                                    if(controllers != null && controllers.Any())
+                                    if (controllers != null && controllers.Any())
                                     {
                                         var idControllers = controllers.Where(x => x.RastiId == rastiId);
-                                        if(idControllers != null && idControllers.Any())
+                                        if (idControllers != null && idControllers.Any())
                                         {
                                             var firstIdController = idControllers.First();
-                                           if(firstIdController != null)
+                                            if (firstIdController != null)
                                             {
                                                 var subcontrollers = firstIdController.SubControllers;
-                                                if(subcontrollers != null && subcontrollers.Any())
+                                                if (subcontrollers != null && subcontrollers.Any())
                                                 {
                                                     var subcontroller = subcontrollers.Where(x => x.Name == controller);
-                                                    if(subcontroller != null && subcontroller.Any())
+                                                    if (subcontroller != null && subcontroller.Any())
                                                     {
                                                         list = subcontroller.First().Actions.ToList();
                                                     }
@@ -402,7 +405,7 @@ namespace Kipa_plus.Services
                                 continue;
 
                             var controllers = JsonConvert.DeserializeObject<IEnumerable<MainController>>(json);
-                            foreach(var con in controllers)
+                            foreach (var con in controllers)
                             {
                                 if (!list.Contains((int)con.RastiId))
                                 {
@@ -421,6 +424,39 @@ namespace Kipa_plus.Services
                 return new List<int>();
             }
         }
+
+        public async Task<bool> OikeudetRastiIdhen(int RastiId, string? userName)
+        {
+            if (userName == null || userName == "" || RastiId == 0)
+            {
+                return false;
+            }
+
+
+            if (userName.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase))
+                return true;
+
+
+            //tarkista onko oikeesti oikeudet
+            var roles = await (
+         from usr in _context.Users
+         join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+         join role in _context.Roles on userRole.RoleId equals role.Id
+         where usr.UserName == userName
+         select role.Id.ToString()
+     ).ToArrayAsync();
+
+            var rastit = await HasAccessToRastiIdsAsync(roles);
+            if (rastit.Contains(RastiId))
+            {
+
+                return true;
+            }
+
+            return false;
+
+        }
+
     }
-    
+
 }

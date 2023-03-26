@@ -10,8 +10,10 @@ namespace Kipa_plus.Models
         public int nykyinenTilanneId { get; set; }
         public int? edellinenTilanneId { get; set; }
         public bool OdottaaTilanneHyvaksyntaa { get; set; }
+        public bool VaadiKahdenKayttajanTarkistus { get; set; }
+        public bool TarkistusKaytossa { get; set; }
 
-        public Rasti() { OdottaaTilanneHyvaksyntaa = false; }
+        public Rasti() { OdottaaTilanneHyvaksyntaa = false; VaadiKahdenKayttajanTarkistus = true; TarkistusKaytossa = true; }
         
     }
 }
