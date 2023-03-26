@@ -81,7 +81,7 @@ namespace Kipa_plus.Controllers
 
 
             var tehtava = _context.TehtavaVastaus.Where(x => x.Id == TehtavaVastausId).FirstOrDefault();
-            ViewBag.VartioNimi = _context.Vartio.Where(x => x.Id == tehtava.VartioId).FirstOrDefault().Nimi;
+            ViewBag.VartioNimi = _context.Vartio.Where(x => x.Id == tehtava.VartioId).FirstOrDefault().NumeroJaNimi;
             return View(tehtava);
         }
 
