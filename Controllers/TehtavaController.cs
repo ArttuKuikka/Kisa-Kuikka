@@ -27,12 +27,14 @@ namespace Kipa_plus.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRoleAccessStore _roleAccessStore;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IRoleAccessStore roleAccessStore)
+        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
         {
             _context = context;
             _roleAccessStore = roleAccessStore;
             _userManager = userManager;
+            _authorizationOptions = authorizationOptions;
         }
 
 
@@ -158,21 +160,9 @@ namespace Kipa_plus.Controllers
                 var aiempitehtva = _context.TehtavaVastaus.Where(x => x.TehtavaId == ViewModel.TehtavaId).Where(x => x.VartioId == ViewModel.VartioId).First();
                 var tehtäväpohja = await _context.Tehtava.FindAsync(ViewModel.TehtavaId);
 
-
-                //tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(tehtäväpohja.RastiId))
+                if (!await OikeudetRastiIdhen(aiempitehtva.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
 
 
@@ -259,20 +249,9 @@ namespace Kipa_plus.Controllers
                 var aiempitehtva = _context.TehtavaVastaus.Where(x => x.TehtavaId == ViewModel.TehtavaId).Where(x => x.VartioId == ViewModel.VartioId).First();
                 var tehtäväpohja = await _context.Tehtava.FindAsync(ViewModel.TehtavaId);
 
-                //tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(tehtäväpohja.RastiId))
+                if (!await OikeudetRastiIdhen(aiempitehtva.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
 
 
@@ -344,20 +323,9 @@ namespace Kipa_plus.Controllers
             {
                 var tehtvastaus = _context.TehtavaVastaus.First(x => x.Id == jatkaTehtävääViewModel.TehtäväVastausId);
 
-                // tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(tehtvastaus.RastiId))
+                if (!await OikeudetRastiIdhen(tehtvastaus.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
 
 
@@ -403,22 +371,10 @@ namespace Kipa_plus.Controllers
                     return StatusCode(500);
                 }
 
-                //tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(TehtavaPohja.RastiId))
+                if (!await OikeudetRastiIdhen(TehtavaPohja.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
-
 
                 if (TV.TehtavaJson.Length < TehtavaPohja.TehtavaJson.Length)
                 {
@@ -489,21 +445,11 @@ namespace Kipa_plus.Controllers
                     return BadRequest("Ei sarjoja");
                 }
 
-                //tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(viewModel.RastiId))
+                if (!await OikeudetRastiIdhen(viewModel.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
+
 
                 var checklist = viewModel.Sarjat?.Where(x => x.IsChecked == true).ToList();
                 if (checklist != null)
@@ -573,20 +519,9 @@ namespace Kipa_plus.Controllers
 
             if (ModelState.IsValid)
             {
-                //tarkista onko oikeesti oikeudet
-                var roles = await (
-             from usr in _context.Users
-             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
-             join role in _context.Roles on userRole.RoleId equals role.Id
-             where usr.UserName == User.Identity.Name
-             select role.Id.ToString()
-         ).ToArrayAsync();
-
-                var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
-                if (!rastit.Contains(Tehtava.RastiId))
+                if (!await OikeudetRastiIdhen(Tehtava.RastiId, User?.Identity?.Name))
                 {
-
-                    return BadRequest("Ei oikeuksia tämän rastin tehtävään");
+                    return BadRequest("Ei oikeusia tähän rastiin");
                 }
 
                 try
@@ -651,6 +586,12 @@ namespace Kipa_plus.Controllers
             if (Tehtava != null)
             {
                 var rid = Tehtava.RastiId;
+
+                if (!await OikeudetRastiIdhen(rid, User?.Identity?.Name))
+                {
+                    return BadRequest("Ei oikeusia tähän rastiin");
+                }
+
                 _context.Tehtava.Remove(Tehtava);
 
                 var poistettavatVastaukset = _context.TehtavaVastaus.Where(x => x.TehtavaId == rid).ToList();
@@ -697,6 +638,11 @@ namespace Kipa_plus.Controllers
             var rid = Tehtava.RastiId;
             if (Tehtava != null)
             {
+                if(!await OikeudetRastiIdhen(rid, User?.Identity?.Name))
+                {
+                    return BadRequest("Ei oikeusia tähän rastiin");
+                }
+
                 _context.TehtavaVastaus.Remove(Tehtava);
             }
 
@@ -707,6 +653,37 @@ namespace Kipa_plus.Controllers
         private bool TehtavaExists(int? id)
         {
             return (_context.Tehtava?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private async Task<bool> OikeudetRastiIdhen(int RastiId, string? userName)
+        {
+            if(userName == null || userName == "")
+            {
+                return false;
+            }
+            
+            if (userName.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase))
+                return true;
+
+
+            //tarkista onko oikeesti oikeudet
+            var roles = await (
+         from usr in _context.Users
+         join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+         join role in _context.Roles on userRole.RoleId equals role.Id
+         where usr.UserName == userName
+         select role.Id.ToString()
+     ).ToArrayAsync();
+
+            var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
+            if (rastit.Contains(RastiId))
+            {
+
+                return true;
+            }
+
+            return false;
+
         }
     }
 }
