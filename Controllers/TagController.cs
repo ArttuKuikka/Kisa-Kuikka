@@ -224,7 +224,7 @@ namespace Kipa_plus.Controllers
                     var tagSkannaus = new TagSkannaus();
 
                     ViewBag.RastiId = viewModel.RastiId;
-                    tagSkannaus.TimeStamp = DateTime.Parse(viewModel.ValittuAika, CultureInfo.InvariantCulture);
+                    tagSkannaus.TimeStamp = DateTime.Parse(viewModel.ValittuAika, CultureInfo.GetCultureInfo("fi-FI"));
                     tagSkannaus.isTulo = viewModel.OnkoTulo;
                     tagSkannaus.RastiId = viewModel.RastiId;
 
