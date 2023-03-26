@@ -56,6 +56,7 @@ namespace Kipa_plus.Controllers
             return BadRequest();
         }
 
+        [DisplayName("Lue lähtö")]
         public IActionResult LueLahto(int RastiId)
         {
             ViewBag.Rastit = _context.Rasti.ToArray();
@@ -64,7 +65,6 @@ namespace Kipa_plus.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [DisplayName("Lue lähtö")]
         public async Task<IActionResult> LueLahto([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {
             bool HyvaSkannusTulos = false;
@@ -124,6 +124,7 @@ namespace Kipa_plus.Controllers
             return View("SkannausTulos", HyvaSkannusTulos);
         }
 
+        [DisplayName("Lue tulo")]
         public IActionResult LueTulo(int RastiId)
         {
             ViewBag.Rastit = _context.Rasti.ToArray();
@@ -131,7 +132,6 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [DisplayName("Lue tulo")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> LueTulo([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
         {
@@ -192,6 +192,7 @@ namespace Kipa_plus.Controllers
             return View("SkannausTulos", HyvaSkannusTulos);
         }
 
+        [DisplayName("Manuaalinen luku (ADMIN)")]
         public async Task<IActionResult> ManuaalinenLuku(int RastiId)
         {
             var rasti = await _context.Rasti.FindAsync(RastiId);
@@ -205,7 +206,6 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [DisplayName("Manuaalinen luku (ADMIN)")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ManuaalinenLuku([Bind("RastiId, ValittuVartioId, ValittuAika, OnkoTulo")] ManuaalinenTagSkannausViewModel viewModel)
         {
