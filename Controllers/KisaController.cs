@@ -125,7 +125,7 @@ namespace Kipa_plus.Controllers
                 {
                     new Tilanne() { KisaId = kisaId, Nimi = "Rakentamatta", TarvitseeHyvaksynnan = false },
                     new Tilanne() { KisaId = kisaId, Nimi = "Rakennettu", TarvitseeHyvaksynnan = false },
-                    new Tilanne() { KisaId = kisaId, Nimi = "Purettu", TarvitseeHyvaksynnan = true }
+                    new Tilanne() { KisaId = kisaId, Nimi = "Lupa purkaa", TarvitseeHyvaksynnan = true }
                 };
                 foreach (var tilanne in oletustilanteet)
                 {
