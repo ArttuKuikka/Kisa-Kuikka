@@ -11,8 +11,7 @@ namespace Kipa_plus.Models
 
         public bool JaaTagTilastot { get; set; }
 
-        [NotMapped]
-        public List<int>? OikeusRasteihin { get; set; }
+        
 
 
 
