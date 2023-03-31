@@ -92,12 +92,29 @@
                 formData: getdata
             });
 
+            //lisätään ja poistetaan kaikki elementit joissa on joko yli max tai ali min numero, estä submit jos listassa mitään
+            let varoituslista = [];
 
+          //estä pilkut varmasti kaikilla selaimilla
+            document.querySelectorAll("input[type=number]").forEach(function(input) {
+  input.addEventListener("keypress", function(evt) {
+
+    var char = String.fromCharCode(evt.which);
+                    if (char == "," || input.value.indexOf(".") != -1) {
+      evt.preventDefault();
+    }
+  });
+});
 
             Formi.addEventListener("focusout", () => {
                 let elements = Formi.getElementsByTagName('input');
                 for (index = 0; index < elements.length; ++index) {
                     var input = elements[index];
+
+
+
+                   
+                    
 
                     if (input.hasAttribute("max")) {
                         // Get the input value as a number
@@ -121,6 +138,7 @@
                             // Append the span element to the parent element of the input
                             if (input.parentElement.querySelector('#maxvaroitus') == null) {
                                 input.parentElement.append(span);
+                                varoituslista.push(input);
 
                             }
 
@@ -131,6 +149,10 @@
                             if (varoitukset != null) {
                                 for (let i = 0; i < varoitukset.length; i++) {
                                     input.parentElement.removeChild(varoitukset[i]);
+
+                                    
+                                    var index = varoituslista.indexOf(input);
+                                    varoituslista.splice(index, 1);
                                 }
                                 
                             }
@@ -160,7 +182,7 @@
                             // Append the span element to the parent element of the input
                             if (input.parentElement.querySelector('#minvaroitus') == null) {
                                 input.parentElement.append(span);
-
+                                varoituslista.push(input);
                                 
                             }
 
@@ -172,6 +194,9 @@
                             if (varoitukset != null) {
                                 for (let i = 0; i < varoitukset.length; i++) {
                                     input.parentElement.removeChild(varoitukset[i]);
+
+                                    var index = varoituslista.indexOf(input);
+                                    varoituslista.splice(index, 1);
                                 }
                                 
                             }
@@ -183,6 +208,14 @@
             //tarkista eka clientillä että kaikissa required fieldeissä on userdataa jos ei oo älä anna submitata
             function Submittaa(Kesken) {
                 var data = fb.userData;
+
+
+                //tarkista varoitukset
+                if(varoituslista.length > 0){
+                    alert('korjaa kaikki kentätät jotka ovat yli maksimirajan tai ali minimirajan')
+                    return;
+                }
+
 
                 //tarkista että kaikkissa required fieldeissä on userdataa
                 for (let i = 0; i < data.length; i++) {
@@ -296,8 +329,8 @@
                 document.getElementById('Formi').submit();
             }
 
-
-
+            
+        
 
             document.getElementById('submit-button').addEventListener('click', function () {
                 Submittaa(false);
