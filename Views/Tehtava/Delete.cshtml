@@ -45,7 +45,7 @@
         </dd>
     </dl>
     
-    <form action="/Tehtava/VarmistaPoisto?id=@Model.Id&RastiId=@Model.RastiId" method="post">
+    <form action="/Tehtava/Delete?id=@Model.Id&RastiId=@Model.RastiId" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Poista" class="btn btn-danger" /> |

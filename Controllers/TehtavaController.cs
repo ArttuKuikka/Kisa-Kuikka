@@ -577,7 +577,7 @@ namespace Kipa_plus.Controllers
         }
 
         // GET: Tehtava/Delete/5
-        [DisplayName("Poista")]
+        [DisplayName("Poista tehtävä")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Tehtava == null)
@@ -596,9 +596,9 @@ namespace Kipa_plus.Controllers
         }
 
         // POST: Tehtava/Delete/5
-        [HttpPost, ActionName("VarmistaPoisto")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int? id)
+        public async Task<IActionResult> Delete([Bind("Id")] int id)
         {
             if (_context.Tehtava == null)
             {
@@ -617,7 +617,7 @@ namespace Kipa_plus.Controllers
 
                 _context.Tehtava.Remove(Tehtava);
 
-                var poistettavatVastaukset = _context.TehtavaVastaus.Where(x => x.TehtavaId == rid).ToList();
+                var poistettavatVastaukset = _context.TehtavaVastaus.Where(x => x.TehtavaId == Tehtava.Id).ToList();
                 foreach (var vastaus in poistettavatVastaukset)
                 {
                     _context.TehtavaVastaus.Remove(vastaus);

@@ -231,6 +231,10 @@
                          <secure-content asp-controller="Tehtava" asp-action="MuokkaaVastausta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
                             <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/MuokkaaVastausta?VastausId=@item.Id&RastiId=@Model.Rasti.Id';">Muokkaa vastausta</button>
                         </secure-content>
+
+                         <secure-content asp-controller="Tehtava" asp-action="PoistaVastaus" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id&RastiId=@Model.Rasti.Id';">Poista vastaus</button>
+                        </secure-content>
                         
                     </td>
                 </tr>
