@@ -7,17 +7,39 @@
 
 Kipa-plus on asp.net core pohjainen ohjelmiston partitaitokisojen pisteiden laskuun ja vartioiden paikantamiseen NFC-tagien avulla. Kipa-plus vähentää kisoissa tarvittavien papereiden määrää antamalla rastityöntekijöille mahdollisuuden syöttää rastien arvioinnit suoraan rastilta käsin puhelimen välityksessä.
 
-Kipa-plus tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoida kisojen toimintaa muuten. Kipa-plus tukee täysin digitaalista arviontia rastilla, mutta myös paperista jolloin Kipa-plussaan syötetään vain paperilta yhteenlaskettu tulos sekä muut tulostoimostolle tarpeelliset tiedot.
+Kipa-plus tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoida kisojen toimintaa muuten. Kipa-plus tukee täysin digitaalista sekä paperista arviointia([Mitä eroa on "täysin digitaalisella" ja "paperisella" arvioinnilla](https://github.com/ArttuKuikka/Kipa-plus/wiki/Mit%C3%A4-eroa-on-%22t%C3%A4ysin-digitaalisella%22-ja-%22paperisella%22-arvioinnilla)).
 
 ## Kisat joissa käytössä
-Kipa-plus ensimmäinen testikerta tulee olemaan Vainion Vesojen Kökäs kisan esi kisassa 18.3.2023 ja ensimmäinen varsinainen käyttökerta 21.4.2023 virallisessa kisassa.
+- Kipa-plus ensimmäinen testikerta oli Vainion Vesojen Kökäs kisan esi-kisassa 18.3.2023, jossa järjestelmä todettiin toimivaksi ja erittäin hyväksi lisäksi kisojen järjestämiseen.
+- Ensimmäinen varsinainen käyttökerta 21.4.2023 KöKäs kisassa.
 
+## Ominaisuuksia
+- Tulosten syöttö suoraan rastilta käsin
+- suunniteltu olemaan helppokäyttöinen puhelimilla
+- vartioiden tilanneseuranta NFC-tagien avulla
+- kätevä työkalu jonka avulla voi helposti seurata koko kisan edistymistä ja estää ruuhkia rasteilla (perustuu NFC-tagien dataan)
+- rastien tilanteiden helppo hallinta (purettu, rakennettu yms)
+- käyttäjä hallinta ja käyttäjien itserekisteröinti
+- Täysin muokkattavat roolit jolloin käyttäjillä on oikeus vain määritettyihin asioihin
+- Täysin muokattavat tehtäväpohjat jotka tehdään Google forms tapaisella työkalulla
+- tulosten lataus excel muodossa
+- Helppokäyttöinen käyttöliittymä ja määritys
+- Helppo määritys palvelimelle
 
 
 
 ## Tulevavia ominaisuuksia
-- Käyttäjä ja roolihallinta
-- myöhemmin tarkoitus lisätä suora tuki normaaliin kipaan tulosten laskua varten, nyt Kipa-plus tukee vain tulosten syötettyjen vastausten latausta excel-muodossa, jota tullaan käyttämään Kökäs kisassa.
+- Tuki tuloksien automaattiselli viennille normaaliin kipaan, jossa ne voidaan laskea (tällä hetkellä tulosten lataus excel muodossa on ainut vaihtoehto)
+- Tuki monelle kisalle yhdessä järjestelmässä (tällä hetkellä järjestelmä toimii vain yhdellä kisalla vaikka monta kisaa voikin luoda)
+- vartioiden tuonti csv tiedostosta
+- Automaattisesti generoituvat roolit
+- järjestelmä logi jossa näkyy kaikki tärkeät tapahtumat
+- PALJON pieniä korjailuja ja lisäilyjä
+- Live tulosten jakaminen linkin kautta (saman lailla kuin Tilanneseuranta nyt)
+- Tiedostonjen lataus tuki (tällä hetkellä keskeneräinen)
+- videotykkinäkymä (ehkä)
+
+
 
 
 ## Simppeli asennus (paremmat ohjeet myöhemmin)
