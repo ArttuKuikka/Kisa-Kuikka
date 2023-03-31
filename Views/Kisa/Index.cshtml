@@ -1,21 +1,38 @@
-﻿@model Models.Kisa
+﻿@model Models.ViewModels.KisaIndexViewModel
 
 
 @{
-    ViewData["Title"] = Model.Nimi;
+    ViewData["Title"] = Model.Kisa.Nimi;
 }
 
 
 
-<h1>@Model.Nimi</h1>
-<h3>@Model.Id</h3>
+<h1>@Model.Kisa.Nimi</h1>
+
+@if (Model.OikeusYhteenRastiin && Model.OikeusRasti != null)
+{
+
+    var tilanne = Model.Tilanteet.First(x => x.Id == Model.OikeusRasti.nykyinenTilanneId);
+    var tilannenimi = tilanne.Nimi;
+    var textclass = "text-success";
+    if (Model.OikeusRasti.OdottaaTilanneHyvaksyntaa)
+    {
+        textclass = "text-warning";
+        tilannenimi = "Odottaa hyväksyntää: " + tilannenimi;
+    }
+
+    <hr />
+    <h1>@Model.OikeusRasti.Nimi</h1>
+    <h4 class="@textclass">Tilanne: @tilannenimi</h4>
+    <hr />
+}
 
 <div class="grid-container">
-    
-    @if(Model.OikeusRasteihin?.Count == 1)
+
+    @if (Model.OikeusYhteenRastiin && Model.OikeusRasti != null)
     {
-        var RastiId = Model.OikeusRasteihin.First();
-        
+        var RastiId = Model.OikeusRasti.Id;
+
         <secure-content asp-controller="Tehtava" asp-action="Index" asp-rastiid="@RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
             <div class="grid-item" onClick="location.href='/Tehtava/?RastiId=@RastiId'"><img class="grid-item-image" alt="Rastin tehtävät" src="/images/rasti.png"><p class="grid-item-text">Rastin tehtävät</p></div>
         </secure-content>
@@ -32,26 +49,26 @@
     else
     {
         <secure-content asp-area="" asp-controller="Kisa" asp-action="Rastit">
-            <div class="grid-item" onClick="location.href='@Model.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
+            <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Rastit'"><img class="grid-item-image" alt="Rastit" src="/images/rasti.png"><p class="grid-item-text">Rastit</p></div>
         </secure-content>
     }
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Vartiot">
-        <div class="grid-item" onClick="location.href='@Model.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png"><p class="grid-item-text">Vartiot</p></div>
+        <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Vartiot'"><img class="grid-item-image" alt="Vartiot" src="/images/vartio.png"><p class="grid-item-text">Vartiot</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Sarjat">
-        <div class="grid-item" onClick="location.href='@Model.Id/Sarjat'"><img class="grid-item-image" alt="Sarjat" src="/images/sarja.png"><p class="grid-item-text">Sarjat</p></div>
+        <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Sarjat'"><img class="grid-item-image" alt="Sarjat" src="/images/sarja.png"><p class="grid-item-text">Sarjat</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Edit">
-        <div class="grid-item" onClick="location.href='@Model.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
+        <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="TagTilastot" asp-action="Index">
-        <div class="grid-item" onClick="location.href='/TagTilastot?id=@Model.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tilanne-seuranta</p></div>
+        <div class="grid-item" onClick="location.href='/TagTilastot?id=@Model.Kisa.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tilanne-seuranta</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Lataukset">
-        <div class="grid-item" onClick="location.href='@Model.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>
+        <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="Kisa" asp-action="LiittymisId">
-        <div class="grid-item" onClick="location.href='@Model.Id/LiittymisId'"><img class="grid-item-image" alt="LiittymisId" src="/images/password-field-with-asterisks.png"><p class="grid-item-text">LiittymisId</p></div>
+        <div class="grid-item" onClick="location.href='@Model.Kisa.Id/LiittymisId'"><img class="grid-item-image" alt="LiittymisId" src="/images/password-field-with-asterisks.png"><p class="grid-item-text">LiittymisId</p></div>
     </secure-content>
     <secure-content asp-area="" asp-controller="RoleController`2" asp-action="Index">
         <div class="grid-item" onClick="location.href='/Role'"><img class="grid-item-image" alt="Roolit" src="/images/vartio.png"><p class="grid-item-text">Roolit</p></div>
@@ -59,13 +76,13 @@
     <secure-content asp-area="" asp-controller="UserRoleController`3" asp-action="Index">
         <div class="grid-item" onClick="location.href='/UserRole'"><img class="grid-item-image" alt="Käyttäjät" src="/images/vartio.png"><p class="grid-item-text">Käyttäjät</p></div>
     </secure-content>
-    
-    
-    
-   
-    
-    
 
-   
-    
+
+
+
+
+
+
+
+
 </div>

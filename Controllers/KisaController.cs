@@ -234,17 +234,13 @@ namespace Kipa_plus.Controllers
             {
                 return Redirect("/");
             }
-            Kisa? kisa; 
-            if(User.Identity.Name == _authorizationOptions.DefaultAdminUser)
-            {
-                kisa = await _context.Kisa
-                .FirstOrDefaultAsync(m => m.Id == kisaId);
-            }
-            else
-            {
-                kisa = await _context.Kisa
-                .FirstOrDefaultAsync(m => m.Id == kisaId);
+            var viewModel = new KisaIndexViewModel();
 
+            viewModel.Kisa = _context.Kisa
+               .First(m => m.Id == kisaId);
+
+            if (User.Identity.Name != _authorizationOptions.DefaultAdminUser)
+            {
                 var roles = await (
                from usr in _context.Users
                join userRole in _context.UserRoles on usr.Id equals userRole.UserId
@@ -255,10 +251,19 @@ namespace Kipa_plus.Controllers
 
                 var rastit = await _roleAccessStore.HasAccessToRastiIdsAsync(roles);
 
-                kisa.OikeusRasteihin = rastit;
+                if(rastit.Count == 1)
+                {
+                    viewModel.OikeusYhteenRastiin = true;
+
+                    viewModel.OikeusRasti = _context.Rasti.First(x => x.Id == rastit.First());
+
+                    viewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == kisaId);
+                }
+
 
             }
-            return View(kisa);
+            
+            return View(viewModel);
         }
 
         
