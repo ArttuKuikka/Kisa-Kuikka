@@ -93,11 +93,26 @@
             });
 
 
+          //estä pilkut varmasti kaikilla selaimilla
+            document.querySelectorAll("input[type=number]").forEach(function(input) {
+  input.addEventListener("keypress", function(evt) {
+
+    var char = String.fromCharCode(evt.which);
+                    if (char == "," || input.value.indexOf(".") != -1) {
+      evt.preventDefault();
+    }
+  });
+});
 
             Formi.addEventListener("focusout", () => {
                 let elements = Formi.getElementsByTagName('input');
                 for (index = 0; index < elements.length; ++index) {
                     var input = elements[index];
+
+
+
+                   
+                    
 
                     if (input.hasAttribute("max")) {
                         // Get the input value as a number
@@ -296,8 +311,8 @@
                 document.getElementById('Formi').submit();
             }
 
-
-
+            
+        
 
             document.getElementById('submit-button').addEventListener('click', function () {
                 Submittaa(false);
