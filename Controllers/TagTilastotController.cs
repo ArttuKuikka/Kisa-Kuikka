@@ -146,11 +146,12 @@ namespace Kipa_plus.Controllers
                 {
 
                     //rastien numero ja vapaat paikat
-                    var RastiNumeroArray = new JArray() { sarja.Nimi };
+                    bool sarjaRivi = true;
+                    var RastiNumeroArray = new JArray() { sarja.Nimi, sarjaRivi  };
 
                     foreach (var rasti in rastit)
                     {
-                        RastiNumeroArray.Add(rasti.Id);
+                        RastiNumeroArray.Add(rasti.Id); //vaihda numeroon
                     }
                     MainArray.Add(RastiNumeroArray);
 
