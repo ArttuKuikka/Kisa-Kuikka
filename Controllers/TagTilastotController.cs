@@ -3,6 +3,7 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
@@ -113,5 +114,96 @@ namespace Kipa_plus.Controllers
 
             return View("TagTilastotRaw", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
         }
+
+        [HttpGet("TilanneseurantaTaulukko")]
+        
+        public async Task<IActionResult> TilanneseurantaTaulukko(int kisaId)
+        {
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+            if (kisa != null)
+            {
+                var viewModel = new Models.ViewModels.TilanneseurantaTaulukkoViewModel();
+
+                //pää array
+                var MainArray = new JArray();
+
+                //sarjat ja rastit listat
+                var sarjat = _context.Sarja.Where(x => x.KisaId == kisaId).ToList();
+                var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+
+                //rastien nimet
+                var RastiNimetArray = new JArray() { " " };
+
+                foreach(var rasti in rastit)
+                {
+                    RastiNimetArray.Add(rasti.Nimi);
+                }
+                MainArray.Add(RastiNimetArray);
+
+
+
+                foreach(var sarja in sarjat)
+                {
+
+                    //rastien numero ja vapaat paikat
+                    var RastiNumeroArray = new JArray() { sarja.Nimi };
+
+                    foreach (var rasti in rastit)
+                    {
+                        RastiNumeroArray.Add(rasti.Id);
+                    }
+                    MainArray.Add(RastiNumeroArray);
+
+                    
+
+                    var vartiotSarjassa = _context.Vartio.Where(x => x.KisaId == kisaId).Where(x => x.SarjaId == sarja.Id);
+
+                    foreach(var vartio in vartiotSarjassa)
+                    {
+                        var VartionArray = new JArray() { vartio.NumeroJaNimi }; 
+                        foreach(var rasti in rastit)
+                        {
+                            var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
+                            if(skannaukset != null)
+                            {
+                                var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
+                                var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
+                                if(tulo != null && lähtö != null)
+                                {
+                                    VartionArray.Add(3);
+                                }
+                                else if(tulo != null)
+                                {
+                                    VartionArray.Add(2);
+                                }
+                                else if(lähtö != null)
+                                {
+                                    VartionArray.Add(1);
+                                }
+                                else
+                                {
+                                    VartionArray.Add(0);
+                                }
+                               
+                            }
+                            else
+                            {
+                                VartionArray.Add(0);
+                            }
+
+                        }
+                        MainArray.Add(VartionArray);
+                    }
+                }
+
+                
+
+                viewModel.Json = MainArray.ToString();
+                return View(viewModel);
+            }
+
+            return BadRequest();
+        }
+
     }
 }
