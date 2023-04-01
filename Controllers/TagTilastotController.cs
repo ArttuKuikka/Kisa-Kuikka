@@ -138,7 +138,7 @@ namespace Kipa_plus.Controllers
                 {
                     RastiNimetArray.Add(rasti.Nimi);
                 }
-                MainArray.Add(RastiNimetArray);
+                viewModel.Headers = RastiNimetArray.ToString();
 
 
 
@@ -147,12 +147,13 @@ namespace Kipa_plus.Controllers
 
                     //rastien numero ja vapaat paikat
                     bool sarjaRivi = true;
-                    var RastiNumeroArray = new JArray() { sarja.Nimi, sarjaRivi  };
+                    var RastiNumeroArray = new JArray() { sarja.Nimi };
 
                     foreach (var rasti in rastit)
                     {
                         RastiNumeroArray.Add(rasti.Id); //vaihda numeroon
                     }
+                    RastiNumeroArray.Add(sarjaRivi);
                     MainArray.Add(RastiNumeroArray);
 
                     
@@ -167,6 +168,10 @@ namespace Kipa_plus.Controllers
                             var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
                             if(skannaukset != null)
                             {
+                                //0 - ei mitään
+                                //1 - pelkkä lähtö
+                                //2 - pelkkä tulo
+                                //3 - lähtö ja tulo
                                 var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
                                 var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
                                 if(tulo != null && lähtö != null)
