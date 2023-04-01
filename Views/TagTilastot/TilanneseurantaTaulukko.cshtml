@@ -1,0 +1,75 @@
+﻿@model Kipa_plus.Models.ViewModels.TilanneseurantaTaulukkoViewModel
+@{
+    ViewData["Title"] = "Tilanneseuranta Taulukko";
+}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+<link rel="stylesheet" href="/css/handsontable.css" />
+
+<h1>Tilanneseuranta</h1>
+
+<div id="example"></div>
+
+
+
+
+<script>
+    const container = document.querySelector('#example');
+
+    var yourRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+  Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+        var celldata = instance.getDataAtCell(row, instance.countCols() - 1);
+  if (celldata === true) {
+            td.style.backgroundColor = '#bdbdbd';
+  }
+  else if(value === 3){
+            td.style.backgroundColor = '#00FF00';
+            td.innerHTML = "";
+  }
+  else if(value === 1){
+            td.style.backgroundColor = '#00FF00';
+            td.innerHTML = "";
+  }
+  else if(value === 2){
+            td.style.backgroundColor = '#ffff00';
+            td.innerHTML = "";
+  }
+  else if(value === 0){
+            td.style.backgroundColor = '#FFFFFF';
+            td.innerHTML = "";
+  }
+  else{
+            td.innerHTML = value;
+  }
+  
+    }
+
+    var columndata = [];
+    var json = @Html.Raw(Model.Json);
+    var numero = json[0].length;
+
+    for (let i = 0; i < numero; i++) {
+        columndata.push({ renderer: yourRenderer });
+}
+
+    const hot = new Handsontable(container, {
+        data: @Html.Raw(Model.Json),
+        rowHeaders: false,
+        colHeaders: true,
+        height: 'auto',
+        columns: columndata,
+        colHeaders: @Html.Raw(Model.Headers),
+        columnSorting: false,
+        hiddenColumns: {
+            columns: [numero -1],
+            indicators: false
+        },
+        afterGetColHeader: function(i, TH) {
+      TH.innerHTML = '<div class="head">' + TH.innerHTML + '</div>'
+    },
+        licenseKey: 'non-commercial-and-evaluation' // for non-commercial use only
+    });
+
+
+</script>
