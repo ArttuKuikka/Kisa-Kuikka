@@ -9,7 +9,7 @@ using System.ComponentModel;
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
-    
+    [DisplayName("Tilanneseuranta")]
     [Static]
     public class TagTilastotController : Controller
     {
@@ -19,13 +19,11 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
-        [DisplayName("Näytä tilastot")]
-        public IActionResult Index(int? id)
+        [DisplayName("vanha tilanneseuranta näkymä")]
+        [HttpGet("Vanha")]
+        public IActionResult Vanha(int kisaId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var id = kisaId;
 
             var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
             var skannaukset = _context.TagSkannaus.ToList();
@@ -64,65 +62,19 @@ namespace Kipa_plus.Controllers
                 }
             }
 
-            return View("TagTilastot", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
+            return View("Vanha", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
         }
 
-        [HttpGet("Raw")]
-        [DisplayName("Näytä tilastojen raakaversio")]
-        public IActionResult Raw(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
-            var skannaukset = _context.TagSkannaus.ToList();
-            var vartiot = _context.Vartio.Where(x => x.KisaId == id).ToList();
-            string datetimeformat = "HH.mm";
 
-            var cookie = Request.Cookies["datetimeformat"];
-            if (cookie != null)
-            {
-                switch (cookie)
-                {
-                    case "1":
-                        {
-                            datetimeformat = "HH.mm";
-                            break;
-                        }
-                    case "2":
-                        {
-                            datetimeformat = "dd.MM.yyyy HH.mm";
-                            break;
-                        }
-                    case "3":
-                        {
-                            datetimeformat = "dd.MM HH.mm";
-                            break;
-                        }
-                    case "4":
-                        {
-                            datetimeformat = "dd HH.mm";
-                            break;
-                        }
-                    default:
-                        datetimeformat = "HH.mm";
-                        break;
-                }
-            }
 
-            return View("TagTilastotRaw", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
-        }
-
-        [HttpGet("TilanneseurantaTaulukko")]
-        
-        public async Task<IActionResult> TilanneseurantaTaulukko(int kisaId)
+        [DisplayName("Etusivu (taulukko)")]
+        public async Task<IActionResult> Index(int kisaId)
         {
             var kisa = await _context.Kisa.FindAsync(kisaId);
             if (kisa != null)
             {
-                var viewModel = new Models.ViewModels.TilanneseurantaTaulukkoViewModel();
+                var viewModel = new Models.ViewModels.TilanneseurantaTaulukkoViewModel() { Kisa = kisa};
 
                 //pää array
                 var MainArray = new JArray();
