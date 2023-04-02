@@ -8,13 +8,15 @@
 
 <h1>Tilanneseuranta</h1>
 
-<div id="example"></div>
-
+<div id="taulukko"></div>
+<p>Vinkki: voit nähdä vartion lähtö ja tuloajan painamalla ruutua hiiren oikealla painikkeella</p>
+<br />
+<div id="legend"></div>
 
 
 
 <script>
-    const container = document.querySelector('#example');
+    const container = document.querySelector('#taulukko');
 
     var yourRenderer = function (instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
@@ -142,6 +144,58 @@
             }
         }
     });
+
+
+    const container2 = document.querySelector('#legend');
+
+const hot2 = new Handsontable(container2, {
+  data: [
+    [' ', 'Suoritettu'],
+    [' ', 'Rastilla',],
+    ['K', 'Vartio keskeyttänyt',],
+    [' ', 'Seuraava rasti',]
+  ],
+  rowHeaders: false,
+  colHeaders: false,
+  height: 'auto',
+        readOnly: false,
+        contextMenu: false,
+        disableVisualSelection: true,
+        comments: false,
+  licenseKey: 'non-commercial-and-evaluation', // for non-commercial use only
+        cells: function(row, col, prop) {
+    var cellProperties = {};
+
+    if (row === 0 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#00FF00';
+      };
+    }
+    if (row === 1 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#ffff00';
+      };
+    }
+    if (row === 2 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.textAlign = "center";
+      };
+    }
+
+    if (row === 3 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#0000ff';
+      };
+    }
+
+    return cellProperties;
+  }
+});
+
 
 
 </script>
