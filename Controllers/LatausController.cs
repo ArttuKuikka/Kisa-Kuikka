@@ -194,7 +194,7 @@ namespace Kipa_plus.Controllers
                     {
                         sheet.AddMergedRegion(new CellRangeAddress(0, 0, lastindex, lastindex + rastinpituus - 1));
                         var RastinCell = RastinNimetRow.CreateCell(lastindex);
-                        RastinCell.SetCellValue(rasti.Nimi);
+                        RastinCell.SetCellValue(rasti.NumeroJaNimi);
                         RastinCell.CellStyle = centertext;
 
                         lastindex = lastindex + rastinpituus;
