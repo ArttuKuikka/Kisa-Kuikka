@@ -65,15 +65,25 @@ namespace Kipa_plus.Controllers
                 {
                     if (rasti.Nimi != findrasti.Nimi)
                     {
-                        if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Any())
+                        if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Where(x => x.KisaId == rasti.KisaId).Any())
                         {
                             ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
+                            return View(rasti);
+                        }
+                       
+                    }
+                    if(rasti.Numero != findrasti.Numero)
+                    {
+                        if (_context.Rasti.Where(x => x.Numero == rasti.Numero).Where(x => x.KisaId == rasti.KisaId).Any())
+                        {
+                            ViewBag.NumeroError = "Rasti tällä numerolla on jo olemassa";
                             return View(rasti);
                         }
                     }
                     try
                     {
                         findrasti.Nimi = rasti.Nimi;
+                        findrasti.Numero = rasti.Numero;
                         findrasti.TarkistusKaytossa = rasti.TarkistusKaytossa;
                         findrasti.VaadiKahdenKayttajanTarkistus = rasti.VaadiKahdenKayttajanTarkistus;
                         await _context.SaveChangesAsync();
