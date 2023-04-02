@@ -159,10 +159,15 @@ namespace Kipa_plus.Controllers
                     
 
                     var vartiotSarjassa = _context.Vartio.Where(x => x.KisaId == kisaId).Where(x => x.SarjaId == sarja.Id);
-
+                    //kaiken datan luonti
                     foreach(var vartio in vartiotSarjassa)
                     {
-                        var VartionArray = new JArray() { vartio.NumeroJaNimi }; 
+                        var vartioobject = new JObject
+                        {
+                            { "Nimi", vartio.NumeroJaNimi },
+                            {"Keskeytetty", vartio.Keskeytetty }
+                        };
+                        var VartionArray = new JArray() { vartioobject }; 
                         foreach(var rasti in rastit)
                         {
                             var dataelement = new JObject();

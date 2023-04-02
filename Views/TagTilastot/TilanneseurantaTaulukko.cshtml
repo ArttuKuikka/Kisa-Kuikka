@@ -35,8 +35,15 @@
                 if (value.hasOwnProperty('Lahto')) {
                     cellProperties.Lahto = value.Lahto;
                 }
+
+                if (value.hasOwnProperty('Nimi')) {
+                    td.innerHTML = value.Nimi;
+                    cellProperties.Keskeytetty = value.Keskeytetty;
+                    return;
+                }
             }
 
+            
 
 
             var celldata = instance.getDataAtCell(row, instance.countCols() - 1);
@@ -60,8 +67,11 @@
                 td.style.backgroundColor = '#FFFFFF';
                 td.innerHTML = "";
             }
-            else {
-                td.innerHTML = value;
+
+            var vartiokeskeytetty = instance.getCellMeta(row, 0);
+            if (vartiokeskeytetty.Keskeytetty) {
+                td.innerHTML = "K";
+                td.style.textAlign = "center";
             }
 
         }
