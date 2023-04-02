@@ -7,8 +7,8 @@
     ViewData["Title"] = "Rastin Tehtavapohjat";
 }
 
-<h1>@Model.Rasti.Nimi</h1>
-<h2>Tehtävät</h2>
+<h1>@Model.Rasti?.NumeroJaNimi</h1>
+<hr />
 
 <p>
     <secure-content asp-controller="Tehtava" asp-action="Luo" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
