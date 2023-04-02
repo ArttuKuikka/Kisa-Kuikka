@@ -165,6 +165,7 @@ namespace Kipa_plus.Controllers
                         var VartionArray = new JArray() { vartio.NumeroJaNimi }; 
                         foreach(var rasti in rastit)
                         {
+                            var dataelement = new JObject();
                             var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
                             if(skannaukset != null)
                             {
@@ -176,27 +177,28 @@ namespace Kipa_plus.Controllers
                                 var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
                                 if(tulo != null && lähtö != null)
                                 {
-                                    VartionArray.Add(3);
+                                    dataelement.Add("Numero",3);
                                 }
                                 else if(tulo != null)
                                 {
-                                    VartionArray.Add(2);
+                                    dataelement.Add("Numero", 2);
                                 }
                                 else if(lähtö != null)
                                 {
-                                    VartionArray.Add(1);
+                                    dataelement.Add("Numero", 1);
                                 }
                                 else
                                 {
-                                    VartionArray.Add(0);
+                                    dataelement.Add("Numero", 0);
                                 }
-                               
+                                dataelement.Add("Tulo", tulo?.TimeStamp);
+                                dataelement.Add("Lahto", lähtö?.TimeStamp);
                             }
                             else
                             {
-                                VartionArray.Add(0);
+                                dataelement.Add("Numero", 0);
                             }
-
+                            VartionArray.Add(dataelement);
                         }
                         MainArray.Add(VartionArray);
                     }
