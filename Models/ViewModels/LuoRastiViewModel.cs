@@ -4,6 +4,7 @@
     {
         public int KisaId { get; set; }
         public string Nimi { get; set; }
+        public int Numero { get; set; }
         public int NykyinenTilanneId { get; set; }
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }

@@ -28,6 +28,16 @@
                 <span class="text-danger">@ViewBag.Error</span>
             }
             <br />
+             <div class="form-group">
+                <label asp-for="Numero" class="control-label"></label>
+                <input asp-for="Numero" class="form-control" />
+                <span asp-validation-for="Numero" class="text-danger"></span>
+            </div>
+            @if (ViewBag.NumeroError != null)
+            {
+                <span class="text-danger">@ViewBag.NumeroError</span>
+            }
+            <br />
             <div class="form-group">
                 <label class="control-label">Tarkistus käytössä</label>
                 <input asp-for="TarkistusKaytossa" type="checkbox" class="form-check-input" />

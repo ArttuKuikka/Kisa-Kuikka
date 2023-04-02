@@ -67,7 +67,7 @@
                     <td>
 
 
-                        <h4>@item.Nimi</h4>
+                        <h4>@item.NumeroJaNimi</h4>
                         @if (item.OdottaaTilanneHyvaksyntaa)
                         {
                             <h5 class="text-warning">Odottaa hyväksyntää: @Model.Tilanteet.FirstOrDefault(x => x.Id == item.nykyinenTilanneId)?.Nimi</h5>

@@ -82,6 +82,7 @@ namespace Kipa_plus.Controllers
                 //sarjat ja rastit listat
                 var sarjat = _context.Sarja.Where(x => x.KisaId == kisaId).ToList();
                 var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+                rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
 
                 //rastien nimet
                 var RastiNimetArray = new JArray() { " " };
@@ -103,7 +104,7 @@ namespace Kipa_plus.Controllers
 
                     foreach (var rasti in rastit)
                     {
-                        RastiNumeroArray.Add(rasti.Id); //vaihda numeroon
+                        RastiNumeroArray.Add(rasti.Numero);
                     }
                     RastiNumeroArray.Add(sarjaRivi);
                     MainArray.Add(RastiNumeroArray);
