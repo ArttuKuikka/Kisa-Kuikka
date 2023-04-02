@@ -6,12 +6,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
 <link rel="stylesheet" href="/css/handsontable.css" />
 
-<h1>Tilanneseuranta</h1>
+
+<h1>@Model.Kisa?.Nimi</h1>
+<hr />
+<h2>Tilanneseuranta</h2>
+
 
 <div id="taulukko"></div>
 <p>Vinkki: voit nähdä vartion lähtö ja tuloajan painamalla ruutua hiiren oikealla painikkeella</p>
 <br />
 <div id="legend"></div>
+<br />
+<a href="/TagTilastot/Vanha?kisaId=@Model.Kisa?.Id">Vanha tilanneseuranta</a>
 
 
 
