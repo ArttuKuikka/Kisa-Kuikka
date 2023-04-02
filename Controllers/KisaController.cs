@@ -145,7 +145,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("LuoRasti")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] LuoRastiViewModel luoRastiViewModel)
+        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,Numero,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] LuoRastiViewModel luoRastiViewModel)
         {
             luoRastiViewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == luoRastiViewModel.KisaId);
             if (ModelState.IsValid)
@@ -155,8 +155,14 @@ namespace Kipa_plus.Controllers
                     ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
                     return View(luoRastiViewModel);
                 }
+                if (_context.Rasti.Where(x => x.Numero == luoRastiViewModel.Numero).Where(x => x.KisaId == luoRastiViewModel.KisaId).Any())
+                {
+                    ViewBag.NumeroError = "Rasti tällä numerolla on jo olemassa";
+                    return View(luoRastiViewModel);
+                }
                 var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId,
                     Nimi = luoRastiViewModel.Nimi,
+                    Numero = luoRastiViewModel.Numero,
                     nykyinenTilanneId = luoRastiViewModel.NykyinenTilanneId,
                     OdottaaTilanneHyvaksyntaa = false,
                     TarkistusKaytossa = luoRastiViewModel.TarkistusKaytossa,
@@ -478,6 +484,7 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
+            rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
             
 
             var viewModel = new ListaaRastitViewModel() { KisaId= kisaId, Rastit = rastit, Tilanteet = _context.Tilanne };

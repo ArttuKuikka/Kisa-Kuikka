@@ -3,12 +3,13 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel;
 
 namespace Kipa_plus.Controllers
 {
     [Route("[controller]")]
-    
+    [DisplayName("Tilanneseuranta")]
     [Static]
     public class TagTilastotController : Controller
     {
@@ -18,13 +19,11 @@ namespace Kipa_plus.Controllers
         {
             _context = context;
         }
-        [DisplayName("Näytä tilastot")]
-        public IActionResult Index(int? id)
+        [DisplayName("vanha tilanneseuranta näkymä")]
+        [HttpGet("Vanha")]
+        public IActionResult Vanha(int kisaId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var id = kisaId;
 
             var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
             var skannaukset = _context.TagSkannaus.ToList();
@@ -63,55 +62,114 @@ namespace Kipa_plus.Controllers
                 }
             }
 
-            return View("TagTilastot", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
+            return View("Vanha", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
         }
 
-        [HttpGet("Raw")]
-        [DisplayName("Näytä tilastojen raakaversio")]
-        public IActionResult Raw(int? id)
+
+
+
+        [DisplayName("Etusivu (taulukko)")]
+        public async Task<IActionResult> Index(int kisaId)
         {
-            if (id == null)
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+            if (kisa != null)
             {
-                return NotFound();
-            }
+                var viewModel = new Models.ViewModels.TilanneseurantaTaulukkoViewModel() { Kisa = kisa};
 
-            var rastit = _context.Rasti.Where(r => r.KisaId == id).ToList();
-            var skannaukset = _context.TagSkannaus.ToList();
-            var vartiot = _context.Vartio.Where(x => x.KisaId == id).ToList();
-            string datetimeformat = "HH.mm";
+                //pää array
+                var MainArray = new JArray();
 
-            var cookie = Request.Cookies["datetimeformat"];
-            if (cookie != null)
-            {
-                switch (cookie)
+                //sarjat ja rastit listat
+                var sarjat = _context.Sarja.Where(x => x.KisaId == kisaId).ToList();
+                var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+                rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
+
+                //rastien nimet
+                var RastiNimetArray = new JArray() { " " };
+
+                foreach(var rasti in rastit)
                 {
-                    case "1":
-                        {
-                            datetimeformat = "HH.mm";
-                            break;
-                        }
-                    case "2":
-                        {
-                            datetimeformat = "dd.MM.yyyy HH.mm";
-                            break;
-                        }
-                    case "3":
-                        {
-                            datetimeformat = "dd.MM HH.mm";
-                            break;
-                        }
-                    case "4":
-                        {
-                            datetimeformat = "dd HH.mm";
-                            break;
-                        }
-                    default:
-                        datetimeformat = "HH.mm";
-                        break;
+                    RastiNimetArray.Add(rasti.Nimi);
                 }
+                viewModel.Headers = RastiNimetArray.ToString();
+
+
+
+                foreach(var sarja in sarjat)
+                {
+
+                    //rastien numero ja vapaat paikat
+                    bool sarjaRivi = true;
+                    var RastiNumeroArray = new JArray() { sarja.Nimi };
+
+                    foreach (var rasti in rastit)
+                    {
+                        RastiNumeroArray.Add(rasti.Numero);
+                    }
+                    RastiNumeroArray.Add(sarjaRivi);
+                    MainArray.Add(RastiNumeroArray);
+
+                    
+
+                    var vartiotSarjassa = _context.Vartio.Where(x => x.KisaId == kisaId).Where(x => x.SarjaId == sarja.Id);
+                    //kaiken datan luonti
+                    foreach(var vartio in vartiotSarjassa)
+                    {
+                        var vartioobject = new JObject
+                        {
+                            { "Nimi", vartio.NumeroJaNimi },
+                            {"Keskeytetty", vartio.Keskeytetty }
+                        };
+                        var VartionArray = new JArray() { vartioobject }; 
+                        foreach(var rasti in rastit)
+                        {
+                            var dataelement = new JObject();
+                            var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
+                            if(skannaukset != null)
+                            {
+                                //0 - ei mitään
+                                //1 - pelkkä lähtö
+                                //2 - pelkkä tulo
+                                //3 - lähtö ja tulo
+                                var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
+                                var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
+                                if(tulo != null && lähtö != null)
+                                {
+                                    dataelement.Add("Numero",3);
+                                }
+                                else if(tulo != null)
+                                {
+                                    dataelement.Add("Numero", 2);
+                                }
+                                else if(lähtö != null)
+                                {
+                                    dataelement.Add("Numero", 1);
+                                }
+                                else
+                                {
+                                    dataelement.Add("Numero", 0);
+                                }
+                                dataelement.Add("Tulo", tulo?.TimeStamp);
+                                dataelement.Add("Lahto", lähtö?.TimeStamp);
+                            }
+                            else
+                            {
+                                dataelement.Add("Numero", 0);
+                            }
+                            VartionArray.Add(dataelement);
+                        }
+                        MainArray.Add(VartionArray);
+                    }
+                }
+
+                
+
+                viewModel.Json = MainArray.ToString();
+                return View(viewModel);
             }
 
-            return View("TagTilastotRaw", new TagTilastoModel() { SarjanRastit = rastit, Skannaukset = skannaukset, Vartio = vartiot, id = (int)id, DateTimeFormat = datetimeformat, Sarja = _context.Sarja.ToList() });
+            return BadRequest();
         }
+
     }
 }

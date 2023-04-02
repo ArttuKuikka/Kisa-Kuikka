@@ -50,7 +50,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] Rasti rasti)
+        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,Numero,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] Rasti rasti)
         {
             if (RastiId != rasti.Id)
             {
@@ -65,15 +65,25 @@ namespace Kipa_plus.Controllers
                 {
                     if (rasti.Nimi != findrasti.Nimi)
                     {
-                        if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Any())
+                        if (_context.Rasti.Where(x => x.Nimi == rasti.Nimi).Where(x => x.KisaId == rasti.KisaId).Any())
                         {
                             ViewBag.Error = "Rasti tällä nimellä on jo olemassa";
+                            return View(rasti);
+                        }
+                       
+                    }
+                    if(rasti.Numero != findrasti.Numero)
+                    {
+                        if (_context.Rasti.Where(x => x.Numero == rasti.Numero).Where(x => x.KisaId == rasti.KisaId).Any())
+                        {
+                            ViewBag.NumeroError = "Rasti tällä numerolla on jo olemassa";
                             return View(rasti);
                         }
                     }
                     try
                     {
                         findrasti.Nimi = rasti.Nimi;
+                        findrasti.Numero = rasti.Numero;
                         findrasti.TarkistusKaytossa = rasti.TarkistusKaytossa;
                         findrasti.VaadiKahdenKayttajanTarkistus = rasti.VaadiKahdenKayttajanTarkistus;
                         await _context.SaveChangesAsync();

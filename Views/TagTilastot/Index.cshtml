@@ -1,0 +1,226 @@
+﻿@model Kipa_plus.Models.ViewModels.TilanneseurantaTaulukkoViewModel
+@{
+    ViewData["Title"] = "Tilanneseuranta Taulukko";
+}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/handsontable/dist/handsontable.full.min.css" />
+<link rel="stylesheet" href="/css/handsontable.css" />
+
+
+<h1>@Model.Kisa?.Nimi</h1>
+<hr />
+<h2>Tilanneseuranta</h2>
+
+
+<div id="taulukko"></div>
+<p>Vinkki: voit nähdä vartion lähtö ja tuloajan painamalla ruutua hiiren oikealla painikkeella</p>
+<br />
+<div id="legend"></div>
+<br />
+<a href="/TagTilastot/Vanha?kisaId=@Model.Kisa?.Id">Vanha tilanneseuranta</a>
+
+
+
+<script>
+    const container = document.querySelector('#taulukko');
+
+    var yourRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+
+        td.style.color = 'black';
+
+
+        if (value !== null) {
+
+
+            if (typeof value === 'object') {
+                if (value.hasOwnProperty('Tulo')) {
+                    cellProperties.Tulo = value.Tulo;
+                }
+
+                if (value.hasOwnProperty('Lahto')) {
+                    cellProperties.Lahto = value.Lahto;
+                }
+
+                if (value.hasOwnProperty('Nimi')) {
+                    td.innerHTML = value.Nimi;
+                    cellProperties.Keskeytetty = value.Keskeytetty;
+                    return;
+                }
+            }
+
+            
+
+
+            var celldata = instance.getDataAtCell(row, instance.countCols() - 1);
+            if (celldata === true) {
+                td.style.backgroundColor = '#bdbdbd';
+                td.style.textAlign = "center";
+            }
+            else if (value.Numero === 3) {
+                td.style.backgroundColor = '#00FF00';
+                td.innerHTML = "";
+            }
+            else if (value.Numero === 1) {
+                td.style.backgroundColor = '#00FF00';
+                td.innerHTML = "";
+            }
+            else if (value.Numero === 2) {
+                td.style.backgroundColor = '#ffff00';
+                td.innerHTML = "";
+            }
+            else if (value.Numero === 0) {
+                td.style.backgroundColor = '#FFFFFF';
+                td.innerHTML = "";
+            }
+
+            var vartiokeskeytetty = instance.getCellMeta(row, 0);
+            if (vartiokeskeytetty.Keskeytetty) {
+                td.innerHTML = "K";
+                td.style.textAlign = "center";
+            }
+
+        }
+    }
+
+    var columndata = [];
+    var json = @Html.Raw(Model.Json);
+    var numero = json[0].length;
+
+    for (let i = 0; i < numero; i++) {
+        columndata.push({ renderer: yourRenderer });
+    }
+
+    const hot = new Handsontable(container, {
+        data: json,
+        rowHeaders: false,
+        colHeaders: true,
+        height: 'auto',
+        columns: columndata,
+        colHeaders: @Html.Raw(Model.Headers),
+        columnSorting: false,
+        hiddenColumns: {
+            columns: [numero - 1],
+            indicators: false
+        },
+        afterGetColHeader: function (i, TH) {
+            TH.innerHTML = '<div class="head">' + TH.innerHTML + '</div>'
+        },
+        licenseKey: 'non-commercial-and-evaluation', // for non-commercial use only
+        readOnly: true,
+        contextMenu: true,
+        disableVisualSelection: false,
+        comments: false,
+        contextMenu: {
+            items: {
+                "custom": {
+                    name: function () {
+                        var selected = hot.getSelected();
+                        var y = selected[0][0];
+                        var x = selected[0][1];
+
+                        var htmlitem = hot.getCellMeta(y, x);
+
+                        let aikastring = "-";
+                        if (htmlitem !== null) {
+                            if (htmlitem.hasOwnProperty('Tulo')) {
+                                if (htmlitem.Tulo !== null) {
+                                    var aika = new Date(htmlitem.Tulo);
+                                    var options = { day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                                    aikastring = aika.toLocaleDateString("fi-FI", options);
+                                }
+                            }
+                        }
+
+                        return ('Tulo: ' + aikastring);
+                    }
+                },
+                "custom2": {
+                    name: function () {
+                        var selected = hot.getSelected();
+                        var y = selected[0][0];
+                        var x = selected[0][1];
+
+                        var htmlitem = hot.getCellMeta(y, x);
+
+                        let aikastring = "-";
+                        if (htmlitem !== null) {
+                            if (htmlitem.hasOwnProperty('Lahto')) {
+                                if (htmlitem.Lahto !== null) {
+                                    var aika = new Date(htmlitem.Lahto);
+                                    var options = { day: '2-digit', year: 'numeric', month: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                                    aikastring = aika.toLocaleDateString("fi-FI", options);
+                                }
+                            }
+                        }
+
+                        return ('Lähtö: ' + aikastring);
+                    }
+                }
+            }
+        }
+    });
+
+
+    const container2 = document.querySelector('#legend');
+
+const hot2 = new Handsontable(container2, {
+  data: [
+    [' ', 'Suoritettu'],
+    [' ', 'Rastilla',],
+    ['K', 'Vartio keskeyttänyt',],
+    [' ', 'Seuraava rasti',],
+    ['1', 'Rastin numero',]
+  ],
+  rowHeaders: false,
+  colHeaders: false,
+  height: 'auto',
+        readOnly: false,
+        contextMenu: false,
+        disableVisualSelection: true,
+        comments: false,
+  licenseKey: 'non-commercial-and-evaluation', // for non-commercial use only
+        cells: function(row, col, prop) {
+    var cellProperties = {};
+
+    if (row === 0 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#00FF00';
+      };
+    }
+    if (row === 1 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#ffff00';
+      };
+    }
+    if (row === 2 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.textAlign = "center";
+      };
+    }
+
+    if (row === 3 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+          td.style.backgroundColor = '#0d6efd';
+      };
+    }
+    
+    if (row === 4 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#bdbdbd';
+                    td.style.textAlign = "center";
+      };
+    }
+
+    return cellProperties;
+  }
+});
+
+
+
+</script>

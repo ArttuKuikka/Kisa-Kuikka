@@ -7,12 +7,15 @@ namespace Kipa_plus.Models
         public int? Id { get; set; }
         public int KisaId { get; set; }
         public string Nimi { get; set; }
+        public int Numero { get; set; }
         public int nykyinenTilanneId { get; set; }
         public int? edellinenTilanneId { get; set; }
         public bool OdottaaTilanneHyvaksyntaa { get; set; }
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }
 
+        [NotMapped]
+        public string NumeroJaNimi { get { return $"{Numero}. {Nimi}"; } }
         public Rasti() { OdottaaTilanneHyvaksyntaa = false; VaadiKahdenKayttajanTarkistus = true; TarkistusKaytossa = true; }
         
     }
