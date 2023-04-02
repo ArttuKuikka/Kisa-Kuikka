@@ -22,7 +22,7 @@
     }
 
     <hr />
-    <h1>@Model.OikeusRasti.Nimi</h1>
+    <h2>@Model.OikeusRasti.NumeroJaNimi</h2>
     <h4 class="@textclass">Tilanne: @tilannenimi</h4>
     <hr />
 }
@@ -61,9 +61,9 @@
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Edit">
         <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
     </secure-content>
-    <secure-content asp-area="" asp-controller="TagTilastot" asp-action="Index">
+    
         <div class="grid-item" onClick="location.href='/TagTilastot?kisaId=@Model.Kisa.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tilanne-seuranta</p></div>
-    </secure-content>
+    
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Lataukset">
         <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>
     </secure-content>
