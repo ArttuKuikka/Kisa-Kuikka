@@ -13,6 +13,7 @@ using System.Net;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kipa_plus.Models.ViewModels;
 
 namespace Kipa_plus.Controllers
 {
@@ -56,10 +57,10 @@ namespace Kipa_plus.Controllers
         [HttpGet("Luo")]
         public IActionResult Luo(int kisaId)
         {
-            
-            ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
-            
-            return View(new Sarja() { KisaId = kisaId });
+            var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+            rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
+            var viewModel = new Models.ViewModels.SarjaViewModel { KisaId = kisaId, Rastit = rastit };
+            return View(viewModel);
         }
 
         // POST: Sarja/Luo
@@ -67,16 +68,17 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero")] Sarja sarja)
+        public async Task<IActionResult> Luo([Bind("Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON")] SarjaViewModel viewModel)
         {
             
             if (ModelState.IsValid)
             {
-                _context.Add(sarja);
+                
+                _context.Sarja.Add((Sarja)viewModel);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
+                return Redirect("/Kisa/" + viewModel.KisaId + "/Sarjat");
             }
-            return View(sarja);
+            return View(viewModel);
         }
         [HttpGet("Edit")]
         [DisplayName("Muokkaa")]
