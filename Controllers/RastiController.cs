@@ -10,6 +10,7 @@ using Kipa_plus.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
+using Kipa_plus.Models.DynamicAuth;
 
 namespace Kipa_plus.Controllers
 {
@@ -19,10 +20,14 @@ namespace Kipa_plus.Controllers
     public class RastiController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IRoleAccessStore _roleAccessStore;
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public RastiController(ApplicationDbContext context)
+        public RastiController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
         {
             _context = context;
+            _roleAccessStore = roleAccessStore;
+            _authorizationOptions = authorizationOptions;
         }
 
 
@@ -106,14 +111,32 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpGet("Tilanne")]
-        [DisplayName("Muokkaa ja näytä rastin tilanne")]
+        [DisplayName("Vaihda rastin tilannetta")]
         public async Task<IActionResult> Tilanne (int RastiId)
         {
             var rasti = await _context.Rasti.FindAsync(RastiId);
             if(rasti != null)
             {
-                var tilanne = _context.Tilanne.First(x => x.Id == rasti.nykyinenTilanneId);
-                var ViewModel = new TilanneViewModel() { Rasti = rasti,NykyinenTilanne = tilanne, Tilanteet = _context.Tilanne };
+                var tilanne = _context.Tilanne.First(x => x.Id == rasti.TilanneId);
+                var tilanteet = _context.Tilanne.Where(x => x.KisaId == rasti.KisaId);
+
+
+                //tarkista onko oikeus tilanteisiin jotka tarvitsee valtuudet
+                var roles = await (
+         from usr in _context.Users
+         join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+         join role in _context.Roles on userRole.RoleId equals role.Id
+         where usr.UserName == User.Identity.Name
+         select role.Id.ToString()
+     ).ToArrayAsync();
+
+                if(!(User.Identity.Name.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase) || await _roleAccessStore.HasAccessToActionAsync(":Kisa:TilanneValtuudet", roles)))
+                {
+                    tilanteet = tilanteet.Where(x => x.TarvitseeValtuudet == false);
+                }
+                
+
+                var ViewModel = new TilanneViewModel() { Rasti = rasti,NykyinenTilanne = tilanne, Tilanteet = tilanteet };
                 return View(ViewModel);
             }
             return View("Error");
@@ -124,24 +147,40 @@ namespace Kipa_plus.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Tilanne(TilanneViewModel model)
         {
-            if(model.Rasti?.Id != null && model.Rasti?.nykyinenTilanneId != null)
+            if(model.Rasti?.Id != null && model.Rasti?.TilanneId != null)
             {
                 var rasti = await _context.Rasti.FindAsync(model.Rasti.Id);
-                var tilanne = await _context.Tilanne.FindAsync(model.Rasti.nykyinenTilanneId);
+                var tilanne = await _context.Tilanne.FindAsync(model.Rasti.TilanneId);
                 if(rasti != null && tilanne != null) 
                 {
-                    if(model.Rasti.nykyinenTilanneId != rasti.nykyinenTilanneId)
+                    if(model.Rasti.TilanneId != rasti.TilanneId)
                     {
-                        if (tilanne.TarvitseeHyvaksynnan)
+                        if (tilanne.TarvitseeValtuudet)
                         {
-                            rasti.edellinenTilanneId = rasti.nykyinenTilanneId;
-                            rasti.nykyinenTilanneId = tilanne.Id;
-                            rasti.OdottaaTilanneHyvaksyntaa = true;
+
+                            //tarkista onko oikeus tilanteisiin jotka tarvitsee valtuudet
+                            var roles = await (
+                     from usr in _context.Users
+                     join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+                     join role in _context.Roles on userRole.RoleId equals role.Id
+                     where usr.UserName == User.Identity.Name
+                     select role.Id.ToString()
+                 ).ToArrayAsync();
+
+                            if (User.Identity.Name.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase) || await _roleAccessStore.HasAccessToActionAsync(":Kisa:TilanneValtuudet", roles))
+                            {
+                                rasti.TilanneId = tilanne.Id;
+                            }
+                            else
+                            {
+                                return BadRequest("Ei oikeuksia tähän tilanteeseen");
+                            }
+
                         }
                         else
                         {
-                            rasti.OdottaaTilanneHyvaksyntaa = false;
-                            rasti.nykyinenTilanneId = tilanne.Id;
+                            
+                            rasti.TilanneId = tilanne.Id;
                         }
                         _context.Rasti.Update(rasti);
                         _context.SaveChanges();

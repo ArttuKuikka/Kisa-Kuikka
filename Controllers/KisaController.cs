@@ -31,33 +31,15 @@ namespace Kipa_plus.Controllers
             _authorizationOptions = authorizationOptions;
         }
 
-        [HttpGet("{kisaId:int}/HyvaksyTilanne")]
-        [DisplayName("Hyväksy rastin tilanne muutokset")]
-        public async Task<IActionResult> HyvaksyTilanne(int RastiId, int kielto)
+        [HttpGet("{kisaId:int}/Tilannevaltuudet")]
+        [DisplayName("Oikeus valtuuksia tarviviin rasti-tilanteisiin")]
+        public IActionResult TilanneValtuudet(int RastiId)
         {
-            var rasti = await _context.Rasti.FindAsync(RastiId);
-            if(rasti != null)
-            {
-               if(kielto == 0)
-                {
-                    rasti.OdottaaTilanneHyvaksyntaa = false;
-                    _context.Rasti.Update(rasti);
-                    await _context.SaveChangesAsync();
-                    return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
-                }
-                else
-                {
-                    rasti.nykyinenTilanneId = (int)rasti.edellinenTilanneId;
-                    rasti.OdottaaTilanneHyvaksyntaa = false;
-                    _context.Rasti.Update(rasti);
-                    await _context.SaveChangesAsync();
-                    return Redirect($"/Kisa/{rasti.KisaId}/Rastit");
-                }
-            }
-            return View("Error");
+            return NotFound(); //tässä vain että rooli näkyisi, roolia käytetään RastiController tilan muokkauksessa katsomaan onko oikeudet vaihtaa valtuuksia tarvivaan tilanteeseen
         }
 
-        
+
+
 
         [HttpGet("{kisaId:int}/LiittymisId")]
         [DisplayName("Näytä liittymisID")]
@@ -119,13 +101,14 @@ namespace Kipa_plus.Controllers
         // GET: Rasti/Luo
         public async Task<IActionResult> LuoRasti(int kisaId)
         {
-            if (!_context.Tilanne.Any())
+            if (!_context.Tilanne.Where(x => x.KisaId == kisaId).Any())
             {
                 var oletustilanteet = new List<Tilanne>
                 {
-                    new Tilanne() { KisaId = kisaId, Nimi = "Rakentamatta", TarvitseeHyvaksynnan = false },
-                    new Tilanne() { KisaId = kisaId, Nimi = "Rakennettu", TarvitseeHyvaksynnan = false },
-                    new Tilanne() { KisaId = kisaId, Nimi = "Lupa purkaa", TarvitseeHyvaksynnan = true }
+                    new Tilanne() { KisaId = kisaId, Nimi = "Rakentamatta", TarvitseeValtuudet = false },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Rakennettu", TarvitseeValtuudet = false },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Lupa purkaa", TarvitseeValtuudet = true },
+                    new Tilanne() { KisaId = kisaId, Nimi = "Purettu", TarvitseeValtuudet = false }
                 };
                 foreach (var tilanne in oletustilanteet)
                 {
@@ -163,8 +146,7 @@ namespace Kipa_plus.Controllers
                 var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId,
                     Nimi = luoRastiViewModel.Nimi,
                     Numero = luoRastiViewModel.Numero,
-                    nykyinenTilanneId = luoRastiViewModel.NykyinenTilanneId,
-                    OdottaaTilanneHyvaksyntaa = false,
+                    TilanneId = luoRastiViewModel.NykyinenTilanneId,
                     TarkistusKaytossa = luoRastiViewModel.TarkistusKaytossa,
                     VaadiKahdenKayttajanTarkistus = luoRastiViewModel.VaadiKahdenKayttajanTarkistus};
                 _context.Add(rasti);

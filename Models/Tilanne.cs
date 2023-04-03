@@ -8,7 +8,8 @@ namespace Kipa_plus.Models
         public int Id { get; set; }
         public int KisaId { get; set; }
         public string Nimi { get; set; }
-        public bool TarvitseeHyvaksynnan { get; set; }
-        public Tilanne() { TarvitseeHyvaksynnan = false; }
+        //kertoo onko tilanne sellainen että sen voi laittaa rastilta (false) vai sellainen johon tarvitsee luvan ja jonka vain kisatoimisto voi laittaa(true)
+        public bool TarvitseeValtuudet { get; set; }
+        public Tilanne() { TarvitseeValtuudet = false; }
     }
 }
