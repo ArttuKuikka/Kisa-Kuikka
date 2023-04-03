@@ -12,14 +12,10 @@
 @if (Model.OikeusYhteenRastiin && Model.OikeusRasti != null)
 {
 
-    var tilanne = Model.Tilanteet.First(x => x.Id == Model.OikeusRasti.nykyinenTilanneId);
+    var tilanne = Model.Tilanteet.First(x => x.Id == Model.OikeusRasti.TilanneId);
     var tilannenimi = tilanne.Nimi;
     var textclass = "text-success";
-    if (Model.OikeusRasti.OdottaaTilanneHyvaksyntaa)
-    {
-        textclass = "text-warning";
-        tilannenimi = "Odottaa hyväksyntää: " + tilannenimi;
-    }
+    
 
     <hr />
     <h2>@Model.OikeusRasti.NumeroJaNimi</h2>

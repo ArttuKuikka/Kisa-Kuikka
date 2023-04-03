@@ -264,7 +264,15 @@ namespace Kipa_plus.Controllers
                 var vartio = await _context.Vartio.FindAsync(id);
                 if(vartio != null)
                 {
-                    vartio.Keskeytetty = true;
+                    if (vartio.Keskeytetty)
+                    {
+                        vartio.Keskeytetty = false;
+                    }
+                    else
+                    {
+                        vartio.Keskeytetty = true;
+                    }
+                    
                     _context.Vartio.Update(vartio);
                     _context.SaveChanges();
 

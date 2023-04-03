@@ -83,7 +83,15 @@
                                 <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
                            </secure-content>
                            <secure-content asp-area="" asp-controller="Vartio" asp-action="Keskeyta">
-                                <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
+                                @if (item.Keskeytetty)
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Palauta kisaan</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
+                                }
+                                
                            </secure-content>
                             
                     </td>

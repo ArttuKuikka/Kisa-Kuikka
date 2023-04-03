@@ -9,14 +9,7 @@
 <h3>@Model.Rasti?.Nimi</h3>
 <hr />
 <div class="row">
-    @if (Model.Rasti.OdottaaTilanneHyvaksyntaa)
-    {
-        <h3 class="text-warning">Odotetaan hyväksyntää: @Model.NykyinenTilanne.Nimi</h3>
-    }
-    else
-    {
-        <h3 class="text-success">Rastin tilanne: @Model.NykyinenTilanne.Nimi</h3>
-    }
+    <h3 class="text-success">Rastin tilanne: @Model.NykyinenTilanne.Nimi</h3>
     <div class="col-md-4">
         <form action="/Rasti/Tilanne?RastiId=@Model.Rasti.Id" method="post">
             @Html.AntiForgeryToken()
@@ -26,8 +19,8 @@
             
             <div class="col-md-10" style="max-width:500px">
                 <label class="control-label">Tilanne</label>
-                @Html.DropDownListFor(model => model.Rasti.nykyinenTilanneId,new SelectList(Model.Tilanteet, "Id", "Nimi"),  new { @class = "form-control"} )
-                @Html.ValidationMessageFor(model => model.Rasti.nykyinenTilanneId, "", new { @class = "text-danger" })
+                @Html.DropDownListFor(model => model.Rasti.TilanneId,new SelectList(Model.Tilanteet, "Id", "Nimi"),  new { @class = "form-control"} )
+                @Html.ValidationMessageFor(model => model.Rasti.TilanneId, "", new { @class = "text-danger" })
             </div>
            
             
