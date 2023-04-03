@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
+using Kipaplus.Data.Migrations;
 
 namespace Kipa_plus.Controllers
 {
@@ -95,7 +96,31 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            return View(sarja);
+
+            var viewModel = new SarjaViewModel() { Id= sarja.Id, Nimi = sarja.Nimi, KisaId = sarja.KisaId, Numero = sarja.Numero, VartionMaksimiko = sarja.VartionMaksimiko, VartionMinimikoko = sarja.VartionMinimikoko, KaytaSeuraavanRastinTunnistusta = sarja.KaytaSeuraavanRastinTunnistusta};
+
+            var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
+
+            var uusilista = new List<Rasti>();
+            foreach (var rasti in JArray.Parse(sarja.RastienJarjestysJSON))
+            {
+                int.TryParse(rasti["id"]?.ToString(), out var parsedid);
+                if(parsedid != null)
+                {
+                    var findrasti = await _context.Rasti.FindAsync(parsedid);
+                    if (findrasti != null)
+                    {
+                        uusilista.Add(findrasti);
+                        uudetrastit.Remove(findrasti);
+                    }
+                }
+            }
+            //jos puuttuu uusia rasteja lisää ne loppuun
+            uudetrastit.ForEach(x => uudetrastit.Add(x));
+
+            viewModel.Rastit = uusilista;
+            return View(viewModel);
+            
         }
 
         // POST: Sarja/Edit/5
