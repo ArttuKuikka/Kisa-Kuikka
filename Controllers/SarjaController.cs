@@ -69,7 +69,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON")] SarjaViewModel viewModel)
+        public async Task<IActionResult> Luo([Bind("Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON,Rastit")] SarjaViewModel viewModel)
         {
             
             if (ModelState.IsValid)
@@ -128,23 +128,20 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero")] Sarja sarja)
+        public async Task<IActionResult> Edit([Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON,Rastit")] SarjaViewModel viewModel)
         {
-            if (id != sarja.Id)
-            {
-                return NotFound();
-            }
+           
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(sarja);
+                    _context.Update((Sarja)viewModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SarjaExists(sarja.Id))
+                    if (!SarjaExists(viewModel.Id))
                     {
                         return NotFound();
                     }
@@ -153,9 +150,9 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
+                return Redirect("/Kisa/" + viewModel.KisaId + "/Sarjat");
             }
-            return View(sarja);
+            return View(viewModel);
         }
         [HttpGet("Delete")]
         [DisplayName("Poista")]
