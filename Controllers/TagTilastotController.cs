@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json.Linq;
 using System.ComponentModel;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Kipa_plus.Controllers
 {
@@ -120,37 +121,125 @@ namespace Kipa_plus.Controllers
                             { "Nimi", vartio.NumeroJaNimi },
                             {"Keskeytetty", vartio.Keskeytetty }
                         };
-                        var VartionArray = new JArray() { vartioobject }; 
-                        foreach(var rasti in rastit)
+                        var VartionArray = new JArray() { vartioobject };
+
+
+
+
+                        //seuraavan rastin tunnistus
+                        //luo lista json perusteella rastien järjestyksestä jossa ne kuuluisi mennä
+                        var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
+
+                        var uusilista = new List<Rasti>();
+                        if (sarja.RastienJarjestysJSON != null)
+                        {
+                            foreach (var Jrasti in JArray.Parse(sarja.RastienJarjestysJSON))
+                            {
+                                var success = int.TryParse(Jrasti["id"]?.ToString(), out var parsedid);
+                                if (success)
+                                {
+                                    var findrasti = await _context.Rasti.FindAsync(parsedid);
+                                    if (findrasti != null)
+                                    {
+                                        uusilista.Add(findrasti);
+                                        uudetrastit.Remove(findrasti);
+                                    }
+                                }
+                            }
+                        }
+                        //jos puuttuu uusia rasteja lisää ne loppuun
+                        uudetrastit.ForEach(x => uusilista.Add(x));
+
+                        var TEMPVARuusilista = uusilista.ToList();
+
+
+                        //rastit jotka vartio on suorittanu 
+                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).Where(x => x.isTulo == false).ToList();                   //sortaa jo tässä päivämäärien mukaan että ei tarvi myöhemmin
+                        suoritetutrastitSkannaukset = suoritetutrastitSkannaukset.OrderByDescending(x => x.TimeStamp).ToList();
+                        var suoritetutRastit = new List<Rasti>();
+                        foreach (var suoritus in suoritetutrastitSkannaukset)
+                        {
+                            var findrasti = await _context.Rasti.FindAsync(suoritus.RastiId);
+                            if (findrasti != null)
+                            {
+                                suoritetutRastit.Add(findrasti);
+                            }
+                        }
+
+                        //kaikki rastit
+                        var kaikkirastit = _context.Rasti.Where(x => x.KisaId == kisa.Id).ToList();
+
+                        //tee järjestys ja käydyt listat sellaiset että niissä on vain samat rastit
+                        foreach (var rastiTEMPVAR in suoritetutRastit)
+                        {
+                            kaikkirastit.Remove(rastiTEMPVAR);
+                        }
+                        foreach (var RastiTEMPVAR in kaikkirastit)
+                        {
+                            uusilista.Remove(RastiTEMPVAR);
+                        }
+
+                       
+
+                        //tarkistaa matchaako suoritetutRastit järjestyt siihen mitä sen pitäis olla
+                        var onkoJärjestysOikein = uusilista.SequenceEqual(suoritetutRastit);
+                        Rasti? seuraavaRasti = null;
+                        if (onkoJärjestysOikein)
+                        {
+                            foreach (var itemi in suoritetutRastit)
+                            {
+                                TEMPVARuusilista.Remove(itemi);
+                            }
+                            TEMPVARuusilista.Reverse();
+                            seuraavaRasti = TEMPVARuusilista.FirstOrDefault();
+                        }
+
+
+
+
+
+
+                        foreach (var rasti in rastit)
                         {
                             var dataelement = new JObject();
                             var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
                             if(skannaukset != null)
                             {
-                                //0 - ei mitään
-                                //1 - pelkkä lähtö
-                                //2 - pelkkä tulo
-                                //3 - lähtö ja tulo
-                                var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
-                                var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
-                                if(tulo != null && lähtö != null)
+
+                                if(seuraavaRasti != null && rasti == seuraavaRasti && uusilista.Count != 0)
                                 {
-                                    dataelement.Add("Numero",3);
-                                }
-                                else if(tulo != null)
-                                {
-                                    dataelement.Add("Numero", 2);
-                                }
-                                else if(lähtö != null)
-                                {
-                                    dataelement.Add("Numero", 1);
+                                    dataelement.Add("Numero", 4);
                                 }
                                 else
                                 {
-                                    dataelement.Add("Numero", 0);
+                                    //0 - ei mitään
+                                    //1 - pelkkä lähtö
+                                    //2 - pelkkä tulo
+                                    //3 - lähtö ja tulo
+                                    //4 - seuraava rasti
+                                    var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
+                                    var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
+                                    if (tulo != null && lähtö != null)
+                                    {
+                                        dataelement.Add("Numero", 3);
+                                    }
+                                    else if (tulo != null)
+                                    {
+                                        dataelement.Add("Numero", 2);
+                                    }
+                                    else if (lähtö != null)
+                                    {
+                                        dataelement.Add("Numero", 1);
+                                    }
+                                    else
+                                    {
+                                        dataelement.Add("Numero", 0);
+                                    }
+                                    dataelement.Add("Tulo", tulo?.TimeStamp);
+                                    dataelement.Add("Lahto", lähtö?.TimeStamp);
                                 }
-                                dataelement.Add("Tulo", tulo?.TimeStamp);
-                                dataelement.Add("Lahto", lähtö?.TimeStamp);
+
+                                
                             }
                             else
                             {

@@ -102,21 +102,24 @@ namespace Kipa_plus.Controllers
             var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
 
             var uusilista = new List<Rasti>();
-            foreach (var rasti in JArray.Parse(sarja.RastienJarjestysJSON))
+            if(sarja.RastienJarjestysJSON != null)
             {
-                int.TryParse(rasti["id"]?.ToString(), out var parsedid);
-                if(parsedid != null)
+                foreach (var rasti in JArray.Parse(sarja.RastienJarjestysJSON))
                 {
-                    var findrasti = await _context.Rasti.FindAsync(parsedid);
-                    if (findrasti != null)
+                    var success = int.TryParse(rasti["id"]?.ToString(), out var parsedid);
+                    if (success)
                     {
-                        uusilista.Add(findrasti);
-                        uudetrastit.Remove(findrasti);
+                        var findrasti = await _context.Rasti.FindAsync(parsedid);
+                        if (findrasti != null)
+                        {
+                            uusilista.Add(findrasti);
+                            uudetrastit.Remove(findrasti);
+                        }
                     }
                 }
             }
             //jos puuttuu uusia rasteja lisää ne loppuun
-            uudetrastit.ForEach(x => uudetrastit.Add(x));
+            uudetrastit.ForEach(x => uusilista.Add(x));
 
             viewModel.Rastit = uusilista;
             return View(viewModel);
