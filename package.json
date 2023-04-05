@@ -5,6 +5,7 @@
   "dependencies": {
     "formBuilder": "^3.8.3",
     "jquery": "^3.6.1",
-    "pickerjs": "^1.2.1"
+    "pickerjs": "^1.2.1",
+    "sortablerows": "^1.1.1"
   }
 }

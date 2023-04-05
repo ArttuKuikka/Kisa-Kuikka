@@ -13,6 +13,8 @@ using System.Net;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kipa_plus.Models.ViewModels;
+using Kipaplus.Data.Migrations;
 
 namespace Kipa_plus.Controllers
 {
@@ -56,10 +58,10 @@ namespace Kipa_plus.Controllers
         [HttpGet("Luo")]
         public IActionResult Luo(int kisaId)
         {
-            
-            ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
-            
-            return View(new Sarja() { KisaId = kisaId });
+            var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+            rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
+            var viewModel = new Models.ViewModels.SarjaViewModel { KisaId = kisaId, Rastit = rastit };
+            return View(viewModel);
         }
 
         // POST: Sarja/Luo
@@ -67,16 +69,17 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Luo")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero")] Sarja sarja)
+        public async Task<IActionResult> Luo([Bind("Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON,Rastit")] SarjaViewModel viewModel)
         {
             
             if (ModelState.IsValid)
             {
-                _context.Add(sarja);
+                
+                _context.Sarja.Add((Sarja)viewModel);
                 await _context.SaveChangesAsync();
-                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
+                return Redirect("/Kisa/" + viewModel.KisaId + "/Sarjat");
             }
-            return View(sarja);
+            return View(viewModel);
         }
         [HttpGet("Edit")]
         [DisplayName("Muokkaa")]
@@ -93,7 +96,31 @@ namespace Kipa_plus.Controllers
             {
                 return NotFound();
             }
-            return View(sarja);
+
+            var viewModel = new SarjaViewModel() { Id= sarja.Id, Nimi = sarja.Nimi, KisaId = sarja.KisaId, Numero = sarja.Numero, VartionMaksimiko = sarja.VartionMaksimiko, VartionMinimikoko = sarja.VartionMinimikoko, KaytaSeuraavanRastinTunnistusta = sarja.KaytaSeuraavanRastinTunnistusta};
+
+            var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
+
+            var uusilista = new List<Rasti>();
+            foreach (var rasti in JArray.Parse(sarja.RastienJarjestysJSON))
+            {
+                int.TryParse(rasti["id"]?.ToString(), out var parsedid);
+                if(parsedid != null)
+                {
+                    var findrasti = await _context.Rasti.FindAsync(parsedid);
+                    if (findrasti != null)
+                    {
+                        uusilista.Add(findrasti);
+                        uudetrastit.Remove(findrasti);
+                    }
+                }
+            }
+            //jos puuttuu uusia rasteja lisää ne loppuun
+            uudetrastit.ForEach(x => uudetrastit.Add(x));
+
+            viewModel.Rastit = uusilista;
+            return View(viewModel);
+            
         }
 
         // POST: Sarja/Edit/5
@@ -101,23 +128,20 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero")] Sarja sarja)
+        public async Task<IActionResult> Edit([Bind("Id,Nimi,KisaId,VartionMaksimiko,VartionMinimikoko,Numero,KaytaSeuraavanRastinTunnistusta,RastienJarjestysJSON,Rastit")] SarjaViewModel viewModel)
         {
-            if (id != sarja.Id)
-            {
-                return NotFound();
-            }
+           
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(sarja);
+                    _context.Update((Sarja)viewModel);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SarjaExists(sarja.Id))
+                    if (!SarjaExists(viewModel.Id))
                     {
                         return NotFound();
                     }
@@ -126,9 +150,9 @@ namespace Kipa_plus.Controllers
                         throw;
                     }
                 }
-                return Redirect("/Kisa/" + sarja.KisaId + "/Sarjat");
+                return Redirect("/Kisa/" + viewModel.KisaId + "/Sarjat");
             }
-            return View(sarja);
+            return View(viewModel);
         }
         [HttpGet("Delete")]
         [DisplayName("Poista")]

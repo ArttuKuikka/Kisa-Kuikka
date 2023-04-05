@@ -1,4 +1,4 @@
-﻿@model Kipa_plus.Models.Sarja
+﻿@model Kipa_plus.Models.ViewModels.SarjaViewModel
 
 @{
     ViewData["Title"] = "Luo Sarja";
@@ -35,7 +35,36 @@
                 <span asp-validation-for="Numero" class="text-danger"></span>
             </div>
             
-            
+            <br />
+            <hr />
+
+            <div class="form-group">
+                <input asp-for="KaytaSeuraavanRastinTunnistusta" class="form-check-input" />
+                <label class="control-label">Käytä seuraavan rastin tunnistusta</label>
+                <span asp-validation-for="KaytaSeuraavanRastinTunnistusta" class="text-danger"></span>
+            </div>
+            <br />
+            <input asp-for="RastienJarjestysJSON" class="form-control" id="JarjestysInput" hidden="hidden" />
+                <span asp-validation-for="RastienJarjestysJSON" class="text-danger"></span>
+                <p class="text-warning">Jos et ole vielä luonut kaikki rasteja, voit tehdä tämä myöhemmin sarjan muokkaa valikosta</p>
+                <label class="control-label">Järjestä rastit siihen järjestykseen, jossa sarjan vartiot ne kulkevat, jotta voit nähdä vartiolle seuravaan rastin tilanneseurannassa.</label>
+                <br />
+                
+
+                <br />
+            <table id="myTable" style="color:black" class="table table-bordered">
+                    
+                    <tbody>
+                @foreach(var rasti in Model.Rastit)
+                {
+                    <tr data-id="@rasti.Id">
+                        <td>@rasti.NumeroJaNimi</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            <label class="control-label">Alas ensimmäinen rasti ja ylös viimenen</label>
+            <hr />
             <div class="form-group" hidden="hidden">
                 
                 <label asp-for="VartionMaksimiko" class="control-label"></label>
@@ -51,15 +80,25 @@
             </div>
             <br />
             <div class="form-group">
-                <input type="submit" value="Luo sarja" class="btn btn-primary" />
+                <input type="submit" id="btnSubmit" value="Luo sarja" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
+
+<link rel="stylesheet" href="/css/sortablerows.css">
+<script src="/js/sortablerows.min.js"></script>
+<script>
    
-</div>
+    var myTable = new SortableRows("myTable");
+
+    document.getElementById("btnSubmit").addEventListener("click", () => {
+        let output = myTable.getData();
+        console.log(JSON.stringify(output));
+        document.getElementById('JarjestysInput').value = JSON.stringify(output);
+    });
+</script>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
