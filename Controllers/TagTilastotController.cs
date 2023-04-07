@@ -188,6 +188,7 @@ namespace Kipa_plus.Controllers
                         bool varmastioikein = false;
                         if (onkoJärjestysOikein)
                         {
+                            //tarkista että järjestys on json mukaan oikein 
                             rastitJärjestyksessä.Reverse();
                             var eka = rastitJärjestyksessä.FirstOrDefault();
                             if(eka != null)
