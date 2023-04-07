@@ -149,7 +149,7 @@ namespace Kipa_plus.Controllers
                         }
                         //jos puuttuu uusia rasteja lisää ne loppuun
                         uudetrastit.ForEach(x => rastitJärjestyksessä.Add(x));
-                        rastitJärjestyksessä.Reverse();
+                        
 
 
                         //rastit jotka vartio on suorittanu 
@@ -164,8 +164,10 @@ namespace Kipa_plus.Controllers
                                 suoritetutRastit.Add(findrasti);
                             }
                         }
+                        suoritetutRastit.Reverse();
 
                         Rasti? seuraavaRasti = null;
+                        //poista duplicatet
                         suoritetutRastit = suoritetutRastit.Distinct().ToList();
                         var eka = suoritetutRastit.FirstOrDefault();
                         if(eka != null)
@@ -177,7 +179,7 @@ namespace Kipa_plus.Controllers
                             {
                                 lista.Add(rastitJärjestyksessä[i]);
                             }
-
+                            //tarkista onko järjestys sama
                             if (lista.SequenceEqual(suoritetutRastit))
                             {
                                 seuraavaRasti = rastitJärjestyksessä[ekaindex + suoritetutRastit.Count];
