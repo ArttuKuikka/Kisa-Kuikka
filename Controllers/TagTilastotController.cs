@@ -130,7 +130,7 @@ namespace Kipa_plus.Controllers
                         //luo lista json perusteella rastien järjestyksestä jossa ne kuuluisi mennä
                         var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
 
-                        var uusilista = new List<Rasti>();
+                        var rastitJärjestyksessä = new List<Rasti>();
                         if (sarja.RastienJarjestysJSON != null)
                         {
                             foreach (var Jrasti in JArray.Parse(sarja.RastienJarjestysJSON))
@@ -141,20 +141,20 @@ namespace Kipa_plus.Controllers
                                     var findrasti = await _context.Rasti.FindAsync(parsedid);
                                     if (findrasti != null)
                                     {
-                                        uusilista.Add(findrasti);
+                                        rastitJärjestyksessä.Add(findrasti);
                                         uudetrastit.Remove(findrasti);
                                     }
                                 }
                             }
                         }
                         //jos puuttuu uusia rasteja lisää ne loppuun
-                        uudetrastit.ForEach(x => uusilista.Add(x));
+                        uudetrastit.ForEach(x => rastitJärjestyksessä.Add(x));
 
-                        var TEMPVARuusilista = uusilista.ToList();
+                        var rastitJärjestyksessäKaikki = rastitJärjestyksessä.ToList();
 
 
                         //rastit jotka vartio on suorittanu 
-                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).Where(x => x.isTulo == false).ToList();                   //sortaa jo tässä päivämäärien mukaan että ei tarvi myöhemmin
+                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).Where(x => x.isTulo == false).ToList();
                         suoritetutrastitSkannaukset = suoritetutrastitSkannaukset.OrderByDescending(x => x.TimeStamp).ToList();
                         var suoritetutRastit = new List<Rasti>();
                         foreach (var suoritus in suoritetutrastitSkannaukset)
@@ -176,22 +176,40 @@ namespace Kipa_plus.Controllers
                         }
                         foreach (var RastiTEMPVAR in kaikkirastit)
                         {
-                            uusilista.Remove(RastiTEMPVAR);
+                            rastitJärjestyksessä.Remove(RastiTEMPVAR);
                         }
 
                        
 
                         //tarkistaa matchaako suoritetutRastit järjestyt siihen mitä sen pitäis olla
-                        var onkoJärjestysOikein = uusilista.SequenceEqual(suoritetutRastit);
+                        var onkoJärjestysOikein = rastitJärjestyksessä.SequenceEqual(suoritetutRastit);
+                        rastitJärjestyksessäKaikki.Reverse();
                         Rasti? seuraavaRasti = null;
+                        bool varmastioikein = false;
                         if (onkoJärjestysOikein)
                         {
+                            rastitJärjestyksessä.Reverse();
+                            var eka = rastitJärjestyksessä.FirstOrDefault();
+                            if(eka != null)
+                            {
+                                var ekaindex = rastitJärjestyksessäKaikki.IndexOf(eka);
+                                var listaJossaKaikkiOnOikein = new List<Rasti>();
+                                for (int i = ekaindex; i < rastitJärjestyksessä.Count; i++)
+                                {
+                                    listaJossaKaikkiOnOikein.Add(rastitJärjestyksessäKaikki[i]);
+                                }
+                                suoritetutRastit.Reverse();
+                                if(listaJossaKaikkiOnOikein.SequenceEqual(suoritetutRastit))
+                                {
+                                    varmastioikein = true;
+                                }
+                            }
                             foreach (var itemi in suoritetutRastit)
                             {
-                                TEMPVARuusilista.Remove(itemi);
+                                rastitJärjestyksessäKaikki.Remove(itemi);
                             }
-                            TEMPVARuusilista.Reverse();
-                            seuraavaRasti = TEMPVARuusilista.FirstOrDefault();
+                            
+                            seuraavaRasti = rastitJärjestyksessäKaikki.FirstOrDefault();
                         }
 
 
@@ -206,7 +224,7 @@ namespace Kipa_plus.Controllers
                             if(skannaukset != null)
                             {
 
-                                if(seuraavaRasti != null && rasti == seuraavaRasti && uusilista.Count != 0)
+                                if(seuraavaRasti != null && rasti == seuraavaRasti && rastitJärjestyksessä.Count > 0 && varmastioikein)
                                 {
                                     dataelement.Add("Numero", 4);
                                 }
