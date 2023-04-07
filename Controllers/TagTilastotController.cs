@@ -182,7 +182,11 @@ namespace Kipa_plus.Controllers
                             //tarkista onko järjestys sama
                             if (lista.SequenceEqual(suoritetutRastit))
                             {
-                                seuraavaRasti = rastitJärjestyksessä[ekaindex + suoritetutRastit.Count];
+                                var pos = ekaindex + suoritetutRastit.Count;
+                                if (rastitJärjestyksessä.ElementAtOrDefault(pos) != null)
+                                {
+                                    seuraavaRasti = rastitJärjestyksessä[pos];
+                                }
                             }
 
                         }
