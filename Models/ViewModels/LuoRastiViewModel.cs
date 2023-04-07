@@ -8,6 +8,7 @@
         public int NykyinenTilanneId { get; set; }
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }
+        public int? tehtavaPaikat { get; set; }
         public IQueryable<Tilanne>? Tilanteet { get; set; }
     }
 }

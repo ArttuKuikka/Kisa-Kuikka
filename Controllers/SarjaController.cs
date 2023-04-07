@@ -97,7 +97,7 @@ namespace Kipa_plus.Controllers
                 return NotFound();
             }
 
-            var viewModel = new SarjaViewModel() { Id= sarja.Id, Nimi = sarja.Nimi, KisaId = sarja.KisaId, Numero = sarja.Numero, VartionMaksimiko = sarja.VartionMaksimiko, VartionMinimikoko = sarja.VartionMinimikoko, KaytaSeuraavanRastinTunnistusta = sarja.KaytaSeuraavanRastinTunnistusta};
+            var viewModel = new SarjaViewModel() { Id= sarja.Id, Nimi = sarja.Nimi, KisaId = sarja.KisaId, Numero = sarja.Numero, VartionMaksimiko = sarja.VartionMaksimiko, VartionMinimikoko = sarja.VartionMinimikoko};
 
             var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
 

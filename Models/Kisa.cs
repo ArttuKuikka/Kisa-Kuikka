@@ -11,7 +11,7 @@ namespace Kipa_plus.Models
 
         public bool JaaTagTilastot { get; set; }
 
-        
+        public string? TilanneSeurantaKuvaURL { get; set; }
 
 
 

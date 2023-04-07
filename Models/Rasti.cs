@@ -11,6 +11,7 @@ namespace Kipa_plus.Models
         public int TilanneId { get; set; }
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }
+        public int? tehtavaPaikat { get; set; }
 
         [NotMapped]
         public string NumeroJaNimi { get { return $"{Numero}. {Nimi}"; } }

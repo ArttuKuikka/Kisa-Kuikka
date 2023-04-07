@@ -20,6 +20,12 @@
             </div>
             <br />
             <div class="form-group">
+                <label asp-for="TilanneSeurantaKuvaURL" class="control-label"></label>
+                <input asp-for="TilanneSeurantaKuvaURL" class="form-control" />
+                <span asp-validation-for="TilanneSeurantaKuvaURL" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label class="control-label">Jaa tilanneseuranta</label>
                 <input type="checkbox" asp-for="JaaTagTilastot" class="form-check-input" />
                 <span asp-validation-for="JaaTagTilastot" class="text-danger"></span>

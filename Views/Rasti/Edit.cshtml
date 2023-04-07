@@ -41,6 +41,12 @@
             }
              <br />
             <div class="form-group">
+                <label  class="control-label">Tehtäväpaikkojen määrä</label>
+                <input asp-for="tehtavaPaikat" class="form-control" style="max-width:100px" />
+                <span asp-validation-for="tehtavaPaikat" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
                 <label class="control-label">Tarkistus käytössä</label>
                 <input asp-for="TarkistusKaytossa" type="checkbox" class="form-check-input" />
                 <span asp-validation-for="TarkistusKaytossa" class="text-danger"></span>
