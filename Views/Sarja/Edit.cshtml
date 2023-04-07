@@ -10,9 +10,14 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Luo">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+            <div class="col-md-10">
+
+                <input asp-for="Id" class="form-control" hidden="hidden" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
             <div class="col-md-10">
 
                 <input asp-for="KisaId" class="form-control" hidden="hidden" />
@@ -63,7 +68,7 @@
                     }
                 </tbody>
             </table>
-            <label class="control-label">Alas ensimmäinen rasti ja ylös viimenen</label>
+            <label class="control-label">Ylös ensimmäinen rasti ja alas viimenen</label>
             <hr />
             <div class="form-group" hidden="hidden">
 
