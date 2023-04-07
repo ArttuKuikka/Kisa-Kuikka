@@ -174,7 +174,8 @@ const hot2 = new Handsontable(container2, {
     [' ', 'Rastilla',],
     ['K', 'Vartio keskeyttänyt',],
     [' ', 'Seuraava rasti',],
-    ['1', 'Rastin numero',]
+    ['1', 'Rastin numero',],
+    ['1 (3)', 'Rastin numero ja tehtäväpaikat',]
   ],
   rowHeaders: false,
   colHeaders: false,
@@ -214,6 +215,14 @@ const hot2 = new Handsontable(container2, {
     }
     
     if (row === 4 && col === 0) {
+      cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+                    td.style.backgroundColor = '#bdbdbd';
+                    td.style.textAlign = "center";
+      };
+    }
+
+    if (row === 5 && col === 0) {
       cellProperties.renderer = function(instance, td, row, col, prop, value, cellProperties) {
         Handsontable.renderers.TextRenderer.apply(this, arguments);
                     td.style.backgroundColor = '#bdbdbd';

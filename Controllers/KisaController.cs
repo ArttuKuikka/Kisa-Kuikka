@@ -128,7 +128,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("LuoRasti")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,Numero,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa")] LuoRastiViewModel luoRastiViewModel)
+        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,Numero,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa,tehtavaPaikat")] LuoRastiViewModel luoRastiViewModel)
         {
             luoRastiViewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == luoRastiViewModel.KisaId);
             if (ModelState.IsValid)
@@ -146,6 +146,7 @@ namespace Kipa_plus.Controllers
                 var rasti = new Rasti() { KisaId = luoRastiViewModel.KisaId,
                     Nimi = luoRastiViewModel.Nimi,
                     Numero = luoRastiViewModel.Numero,
+                    tehtavaPaikat = luoRastiViewModel.tehtavaPaikat,
                     TilanneId = luoRastiViewModel.NykyinenTilanneId,
                     TarkistusKaytossa = luoRastiViewModel.TarkistusKaytossa,
                     VaadiKahdenKayttajanTarkistus = luoRastiViewModel.VaadiKahdenKayttajanTarkistus};

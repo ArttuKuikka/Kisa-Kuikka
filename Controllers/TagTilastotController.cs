@@ -105,7 +105,15 @@ namespace Kipa_plus.Controllers
 
                     foreach (var rasti in rastit)
                     {
-                        RastiNumeroArray.Add(rasti.Numero);
+                        if(rasti.tehtavaPaikat != null)
+                        {
+                            RastiNumeroArray.Add($"{rasti.Numero} ({rasti.tehtavaPaikat})");
+                        }
+                        else
+                        {
+                            RastiNumeroArray.Add(rasti.Numero);
+                        }
+                        
                     }
                     RastiNumeroArray.Add(sarjaRivi);
                     MainArray.Add(RastiNumeroArray);
