@@ -107,7 +107,8 @@ namespace Kipa_plus.Controllers
                     {
                         if(rasti.tehtavaPaikat != null)
                         {
-                            RastiNumeroArray.Add($"{rasti.Numero} ({rasti.tehtavaPaikat})");
+                            var rastilla = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id).Where(x => x.isTulo == true)?.Count();
+                            RastiNumeroArray.Add($"{rasti.Numero} ({rastilla}/{rasti.tehtavaPaikat})");
                         }
                         else
                         {
