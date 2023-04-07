@@ -149,12 +149,11 @@ namespace Kipa_plus.Controllers
                         }
                         //jos puuttuu uusia rasteja lisää ne loppuun
                         uudetrastit.ForEach(x => rastitJärjestyksessä.Add(x));
-
-                        var rastitJärjestyksessäKaikki = rastitJärjestyksessä.ToList();
+                        rastitJärjestyksessä.Reverse();
 
 
                         //rastit jotka vartio on suorittanu 
-                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).Where(x => x.isTulo == false).ToList();
+                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).ToList();
                         suoritetutrastitSkannaukset = suoritetutrastitSkannaukset.OrderByDescending(x => x.TimeStamp).ToList();
                         var suoritetutRastit = new List<Rasti>();
                         foreach (var suoritus in suoritetutrastitSkannaukset)
@@ -166,51 +165,24 @@ namespace Kipa_plus.Controllers
                             }
                         }
 
-                        //kaikki rastit
-                        var kaikkirastit = _context.Rasti.Where(x => x.KisaId == kisa.Id).ToList();
-
-                        //tee järjestys ja käydyt listat sellaiset että niissä on vain samat rastit
-                        foreach (var rastiTEMPVAR in suoritetutRastit)
-                        {
-                            kaikkirastit.Remove(rastiTEMPVAR);
-                        }
-                        foreach (var RastiTEMPVAR in kaikkirastit)
-                        {
-                            rastitJärjestyksessä.Remove(RastiTEMPVAR);
-                        }
-
-                       
-
-                        //tarkistaa matchaako suoritetutRastit järjestyt siihen mitä sen pitäis olla
-                        var onkoJärjestysOikein = rastitJärjestyksessä.SequenceEqual(suoritetutRastit);
-                        rastitJärjestyksessäKaikki.Reverse();
                         Rasti? seuraavaRasti = null;
-                        bool varmastioikein = false;
-                        if (onkoJärjestysOikein)
+                        suoritetutRastit = suoritetutRastit.Distinct().ToList();
+                        var eka = suoritetutRastit.FirstOrDefault();
+                        if(eka != null)
                         {
-                            //tarkista että järjestys on json mukaan oikein 
-                            rastitJärjestyksessä.Reverse();
-                            var eka = rastitJärjestyksessä.FirstOrDefault();
-                            if(eka != null)
+                            var ekaindex = rastitJärjestyksessä.IndexOf(eka);
+
+                            var lista = new List<Rasti>();
+                            for (int i = ekaindex; i < suoritetutRastit.Count; i++)
                             {
-                                var ekaindex = rastitJärjestyksessäKaikki.IndexOf(eka);
-                                var listaJossaKaikkiOnOikein = new List<Rasti>();
-                                for (int i = ekaindex; i < rastitJärjestyksessä.Count; i++)
-                                {
-                                    listaJossaKaikkiOnOikein.Add(rastitJärjestyksessäKaikki[i]);
-                                }
-                                suoritetutRastit.Reverse();
-                                if(listaJossaKaikkiOnOikein.SequenceEqual(suoritetutRastit))
-                                {
-                                    varmastioikein = true;
-                                }
+                                lista.Add(rastitJärjestyksessä[i]);
                             }
-                            foreach (var itemi in suoritetutRastit)
+
+                            if (lista.SequenceEqual(suoritetutRastit))
                             {
-                                rastitJärjestyksessäKaikki.Remove(itemi);
+                                seuraavaRasti = rastitJärjestyksessä[ekaindex + suoritetutRastit.Count];
                             }
-                            
-                            seuraavaRasti = rastitJärjestyksessäKaikki.FirstOrDefault();
+
                         }
 
 
@@ -225,7 +197,7 @@ namespace Kipa_plus.Controllers
                             if(skannaukset != null)
                             {
 
-                                if(seuraavaRasti != null && rasti == seuraavaRasti && rastitJärjestyksessä.Count > 0 && varmastioikein)
+                                if(seuraavaRasti != null && seuraavaRasti == rasti)
                                 {
                                     dataelement.Add("Numero", 4);
                                 }
