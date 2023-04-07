@@ -305,7 +305,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
@@ -319,6 +319,7 @@ namespace Kipa_plus.Controllers
                     var olemassaolevakisa = await _context.Kisa.FindAsync(kisa.Id);
                     olemassaolevakisa.Nimi = kisa.Nimi;
                     olemassaolevakisa.JaaTagTilastot= kisa.JaaTagTilastot;
+                    olemassaolevakisa.TilanneSeurantaKuvaURL = kisa.TilanneSeurantaKuvaURL;
 
                     await _context.SaveChangesAsync();
                 }

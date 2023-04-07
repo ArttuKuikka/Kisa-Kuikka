@@ -16,6 +16,11 @@
 <p>Vinkki: voit nähdä vartion lähtö ja tuloajan painamalla ruutua hiiren oikealla painikkeella</p>
 <br />
 <div id="legend"></div>
+@if(Model.Kisa?.TilanneSeurantaKuvaURL != null)
+{
+    <br />
+    <img src="@Model.Kisa.TilanneSeurantaKuvaURL" style="width:100%; object-fit:fill;" onclick="location.href='@Model.Kisa.TilanneSeurantaKuvaURL'" />
+}
 <br />
 <a href="/TagTilastot/Vanha?kisaId=@Model.Kisa?.Id">Vanha tilanneseuranta</a>
 
