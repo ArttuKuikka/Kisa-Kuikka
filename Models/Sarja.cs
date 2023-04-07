@@ -10,7 +10,6 @@ namespace Kipa_plus.Models
         public int Numero { get; set; }
         public int? VartionMaksimiko { get; set; }
         public int? VartionMinimikoko { get; set; }
-        public bool KaytaSeuraavanRastinTunnistusta { get; set; }
         public string? RastienJarjestysJSON { get; set; }
 
         [NotMapped]
