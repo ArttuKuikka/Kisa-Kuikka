@@ -100,12 +100,13 @@ namespace Kipa_plus.Controllers
                     {
                         // Log error
                     }
-                    return Ok("Ilmoitus lähetty " + proo.ToString() + " käyttäjälle");
+                    
                 }
             }
+            return Ok("Ilmoitus lähetty " + proo.ToString() + " käyttäjälle");
 
 
-            return BadRequest();
+            
         }
     }
 }
