@@ -1,0 +1,13 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model Kipa_plus.Models.ViewModels.SendPushViewModel
+<h1>Send</h1>
+
+<form asp-action="Send">
+    <label>Message</label>
+    <input asp-for="message" type="text" />
+    <button type="submit">Push</button>
+</form>

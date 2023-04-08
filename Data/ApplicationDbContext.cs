@@ -36,5 +36,6 @@ namespace Kipa_plus.Data
         public DbSet<Kipa_plus.Models.TehtavaVastaus> TehtavaVastaus { get; set;} = default!;
         public DbSet<Kipa_plus.Models.TagSkannaus> TagSkannaus { get; set;} = default!;
         public DbSet<Kipa_plus.Models.Tilanne> Tilanne { get; set;} = default!;
+        public DbSet<Kipa_plus.Models.VapidDetailsWithId> VapidStore { get; set;} = default!;
     }
 }
