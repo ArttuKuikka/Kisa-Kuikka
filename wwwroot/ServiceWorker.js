@@ -23,7 +23,7 @@ self.addEventListener('push', function (e) {
         ]
     };
     e.waitUntil(
-        self.registration.showNotification("Push Notification", options)
+        self.registration.showNotification("Kipa-plus ilmoitus", options)
     );
 });
 self.addEventListener('notificationclick', function (e) {
