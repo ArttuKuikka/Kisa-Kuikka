@@ -54,6 +54,7 @@ namespace Kipa_plus.Controllers
                 }
                 await _context.SaveChangesAsync();
             }
+            ilmoitukset.Sort((x, y) => y.CreatedAt.CompareTo(x.CreatedAt));
             viewModel.Ilmotukset= ilmoitukset;
             return View(viewModel);
             
