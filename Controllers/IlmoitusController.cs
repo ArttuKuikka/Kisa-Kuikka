@@ -13,7 +13,7 @@ using WebPush;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
-    [AllowAllAuthorized]
+    
     public class IlmoitusController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,6 +23,7 @@ namespace Kipa_plus.Controllers
             _context= applicationDbContext;
             _userManager = userManager;
         }
+        [AllowAllAuthorized]
         public IActionResult Index()
         {
             if(_context.VapidStore?.Count() == 0)
@@ -39,6 +40,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
+        [AllowAllAuthorized]
         public async Task<IActionResult> Index(string endpoint, string p256dh, string auth)
         {
             

@@ -9,7 +9,8 @@ self.addEventListener('push', function (e) {
         title = e.data.json().title;
         refurl = e.data.json().refurl;
     } else {
-        body = "Kipa-plus viesti";
+        title = "Kipa-plus ilmoitus";
+        body = "Virhe ladatessa ilmoitusta";
     }
 
     var options = {
