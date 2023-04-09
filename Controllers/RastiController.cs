@@ -177,7 +177,7 @@ namespace Kipa_plus.Controllers
                                 if (kisa?.LahetaIlmoituksiaRastinTilanvaihdosta ?? false)
                                 {
                                     var rastiIdArray = new int[] {(int)rasti.Id };
-                                    await _IlmoitusService.SendNotifToRastiIdsAsync(rastiIdArray, "Rastisi tilanne vaihdettiin", "Uusi tilanne: " + tilanne.Nimi, "https://" + Request.Host.ToString() + "/Rasti/Tilanne?RastiId=" + rasti.Id.ToString());
+                                    await _IlmoitusService.SendNotifToRastiIdsAsync(rastiIdArray, "Rastisi tilanne vaihdettiin. (" + rasti.NumeroJaNimi + ")", "Uusi tilanne: " + tilanne.Nimi, "https://" + Request.Host.ToString() + "/Rasti/Tilanne?RastiId=" + rasti.Id.ToString());
                                 }
                                 rasti.TilanneId = tilanne.Id;
                             }
