@@ -1,12 +1,14 @@
 ﻿using Kipa_plus.Data;
 using Kipa_plus.Models;
 using Kipa_plus.Models.ViewModels;
+using Kipa_plus.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis.Host;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
+using NPOI.SS.Formula.Functions;
 using System.Security.Cryptography.X509Certificates;
 using WebPush;
 
@@ -18,13 +20,15 @@ namespace Kipa_plus.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
-        public IlmoitusController(ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userManager) 
+        private readonly IilmoitusService _IlmoitusService;
+        public IlmoitusController(ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userManager, IilmoitusService ilmoitusService) 
         {
             _context= applicationDbContext;
             _userManager = userManager;
+            _IlmoitusService = ilmoitusService;
         }
         [AllowAllAuthorized]
-        public IActionResult Index()
+        public async Task <IActionResult> Index()
         {
             if(_context.VapidStore?.Count() == 0)
             {
@@ -34,9 +38,11 @@ namespace Kipa_plus.Controllers
                 _context.SaveChanges();
             }
 
+
             var keys = _context.VapidStore?.FirstOrDefault();
             ViewBag.applicationServerKey = keys?.PublicKey;
             return View();
+            
         }
 
         [HttpPost]
@@ -82,31 +88,9 @@ namespace Kipa_plus.Controllers
 
             foreach(var user in userlist) 
             {
-                var claims = await _userManager.GetClaimsAsync(user);
-                var endpoint = claims.FirstOrDefault(x => x.Type == "WebPush_endpoint");
-                var p256dh = claims.FirstOrDefault(x => x.Type == "WebPush_p256dh");
-                var auth = claims.FirstOrDefault(x => x.Type == "WebPush_auth");
-
-                if(endpoint?.Value != null && p256dh?.Value != null && auth?.Value != null)
+                if (await _IlmoitusService.SendNotifToUser(user, viewModel.title, viewModel.message, viewModel.refUrl))
                 {
-                    var subscription = new PushSubscription(endpoint.Value, p256dh.Value, auth.Value);
-                    var keys = _context.VapidStore?.FirstOrDefault();
-
-                    var payloadobject = new { title = viewModel.title, message = viewModel.message, refurl = viewModel.refUrl };
-                    var payload = JObject.FromObject(payloadobject);
-
-                    var vapidDetails = new VapidDetails(keys?.Subject, keys?.PublicKey, keys?.PrivateKey);
-                    var webPushClient = new WebPushClient();
-                    try
-                    {
-                        webPushClient.SendNotification(subscription, payload.ToString(), vapidDetails);
-                        proo++;
-                    }
-                    catch (Exception exception)
-                    {
-                        // Log error
-                    }
-                    
+                    proo++;
                 }
             }
             return Ok("Ilmoitus lähetty " + proo.ToString() + " käyttäjälle");
