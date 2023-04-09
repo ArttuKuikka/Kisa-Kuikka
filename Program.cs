@@ -54,6 +54,7 @@ builder.Services.AddDynamicAuthorization<ApplicationDbContext>(options => option
 .AddUi(mvcbuilder);
 
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IilmoitusService, IlmoitusService>();
 
 
 
