@@ -17,12 +17,12 @@ namespace Kipa_plus.Controllers
     [Authorize]
     [AllowAllAuthorized]
 
-    public class IlmoitusController : Controller
+    public class IlmoituksetController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IilmoitusService _IlmoitusService;
-        public IlmoitusController(ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userManager, IilmoitusService ilmoitusService) 
+        public IlmoituksetController(ApplicationDbContext applicationDbContext, UserManager<IdentityUser> userManager, IilmoitusService ilmoitusService) 
         {
             _context= applicationDbContext;
             _userManager = userManager;
@@ -31,15 +31,13 @@ namespace Kipa_plus.Controllers
         
         public async Task <IActionResult> Index()
         {
-            if(_context.VapidStore?.Count() == 0)
+            if (_context.VapidStore?.Count() == 0)
             {
                 VapidDetails vapidKeys = VapidHelper.GenerateVapidKeys();
                 var subject = Request.Host.ToString();
-                _context.VapidStore.Add(new Models.VapidDetailsWithId() { Expiration = vapidKeys.Expiration, PrivateKey = vapidKeys.PrivateKey, PublicKey = vapidKeys.PublicKey, Subject = subject});
+                _context.VapidStore.Add(new Models.VapidDetailsWithId() { Expiration = vapidKeys.Expiration, PrivateKey = vapidKeys.PrivateKey, PublicKey = vapidKeys.PublicKey, Subject = subject });
                 _context.SaveChanges();
             }
-
-
             var keys = _context.VapidStore?.FirstOrDefault();
             ViewBag.applicationServerKey = keys?.PublicKey;
             return View();
@@ -47,7 +45,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(string endpoint, string p256dh, string auth)
         {
             
@@ -70,7 +68,7 @@ namespace Kipa_plus.Controllers
 
                 
                 
-                return Redirect("/");
+                return Redirect("/Ilmoitukset");
             }
             
             return BadRequest();
