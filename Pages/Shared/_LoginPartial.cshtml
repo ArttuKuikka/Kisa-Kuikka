@@ -7,9 +7,13 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
+            <a class="nav-link" style="color: white" href="/ilmoitukset" title="Ilmoitukset"><i class="fa-solid fa-bell" id="ilmoitusKello"></i> Ilmoitukset</a>
+    </li>
+    <li class="nav-item">
             @if(User.Claims.Any(x => x.Type == "KokoNimi"))
             {
-                <a class="nav-link" style="color: white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Tervetuloa @User.Claims.FirstOrDefault(x => x.Type == "KokoNimi").Value</a>
+
+                <a class="nav-link" style="color: white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage"><i class="fa-solid fa-user"></i> Tervetuloa @User.Claims.FirstOrDefault(x => x.Type == "KokoNimi").Value</a>
             }
             else
             {
@@ -19,7 +23,7 @@
     </li>
     <li class="nav-item">
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/", new { area = "" })" method="post" >
-                <button type="submit" style="color: white" class="nav-link btn btn-link">Kirjaudu ulos</button>
+                <button type="submit" style="color: white" class="nav-link btn btn-link"><i class="fa-solid fa-right-from-bracket"></i> Kirjaudu ulos</button>
         </form>
     </li>
 }

@@ -279,6 +279,8 @@ namespace Kipa_plus.Controllers
         public async Task<IActionResult> Luo([Bind("Id,Nimi")] Kisa kisa)
         {
             kisa.JaaTagTilastot = false;
+            kisa.NaytaIlmoitusSuositusEtusivulla = true
+            kisa.LahetaIlmoituksiaRastinTilanvaihdosta = true;
             if (ModelState.IsValid)
             {
                 _context.Add(kisa);
@@ -312,7 +314,7 @@ namespace Kipa_plus.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL,NaytaIlmoitusSuositusEtusivulla,LahetaIlmoituksiaRastinTilanvaihdosta")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
@@ -327,6 +329,8 @@ namespace Kipa_plus.Controllers
                     olemassaolevakisa.Nimi = kisa.Nimi;
                     olemassaolevakisa.JaaTagTilastot= kisa.JaaTagTilastot;
                     olemassaolevakisa.TilanneSeurantaKuvaURL = kisa.TilanneSeurantaKuvaURL;
+                    olemassaolevakisa.NaytaIlmoitusSuositusEtusivulla = kisa.NaytaIlmoitusSuositusEtusivulla;
+                    olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdosta = kisa.LahetaIlmoituksiaRastinTilanvaihdosta;
 
                     await _context.SaveChangesAsync();
                 }
@@ -523,7 +527,7 @@ namespace Kipa_plus.Controllers
 
                     var succesRate = await _IlmoitusService.SendNotifToRoleIdsAsync(roleIdList.ToArray(), viewModel.title, viewModel.message, viewModel.refUrl);
 
-                    ViewBag.Message = "Ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle";
+                    ViewBag.Message = "WebPush ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle ja normaali ilmoitus lähetetty kaikille";
                     var roles = _roleManager.Roles.ToList(); //tunnistus sile että on vain kisan roolit sitten kun monen kisan tuki on lisätty
 
                     return View(viewModel);

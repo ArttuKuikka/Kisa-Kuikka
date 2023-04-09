@@ -21,7 +21,44 @@ namespace Kipa_plus.Services
             _roleManager = roleManager; 
         }
 
-       
+        /// <summary>
+        /// Lähetä ilmoitus kaikille käyttäjille joilla on oikeus tietyille rasteille
+        /// </summary>
+        /// <param name="RastiIds">Lista kaikista Rasti idistä joiden käyttäjille haluat lähettää ilmoituksen</param>
+        /// <param name="title">Otsikko</param>
+        /// <param name="message">Viesti</param>
+        /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
+        /// <returns>
+        /// Numeron kuinka monelle käyttäjälle webPush ilmoitus lähetettiin onnistuneesti
+        /// </returns>
+        public async Task<int> SendNotifToRastiIdsAsync(int[]? RastiIds, string? title, string? message, string? refurl)
+        {
+            var roles = new List<string>();
+            var rastiIdLista = RastiIds?.ToList();
+            foreach (var role in _roleManager.Roles) 
+            {
+                var access = await _roleAccessStore.GetRoleAccessAsync(role.Id);
+                if(access.RastiAccess != null)
+                {
+                    foreach (var rooli in access.RastiAccess)
+                    {
+                        if (rooli.RastiId != null)
+                        {
+                            if (rastiIdLista?.Contains((int)rooli.RastiId) ?? false)
+                            {
+                                if (!roles.Contains(role.Id))
+                                {
+                                    roles.Add(role.Id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+           
+            return await SendNotifToRoleIdsAsync(roles.ToArray(), title, message, refurl);
+        }
+
 
         /// <summary>
         /// Lähetä ilmoitus kaikille käyttäjille jotka ovat tietyissä rooleissa
@@ -31,7 +68,7 @@ namespace Kipa_plus.Services
         /// <param name="message">Viesti</param>
         /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
         /// <returns>
-        /// Numeron kuinka monelle käyttäjälle ilmoitus lähetettiin onnistuneesti
+        /// Numeron kuinka monelle käyttäjälle webPush ilmoitus lähetettiin onnistuneesti
         /// </returns>
         public async Task<int> SendNotifToRoleIdsAsync(string[]? RoleIds, string? title, string? message, string? refurl)
         {
@@ -82,13 +119,18 @@ namespace Kipa_plus.Services
         /// <param name="title">Otsikko</param>
         /// <param name="message">Viesti</param>
         /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
-        /// <returns>True jos ilmoituksen lähetys onnistui, false jos ei</returns>
+        /// <returns>True jos webpush ilmoituksen lähetys onnistui, false jos ei</returns>
         public async Task<bool> SendNotifToUser(IdentityUser user, string? title, string? message, string? refurl)
         {
             title = title ?? "Kipa-plus ilmoitus";
             message = message ?? "<Ei sisältöä>";
             refurl = refurl ?? "/";
 
+            //luo ilmoitus omaan ilmoitus järjestelmään
+            _context.Ilmoitukset.Add(new Models.Ilmoitus() {CreatedAt = DateTime.Now, Luettu = false, Message = message, Title = title, RefUrl = refurl, User = user });
+            await _context.SaveChangesAsync();
+
+            //webPush
             var claims = await _userManager.GetClaimsAsync(user);
             var endpoint = claims.FirstOrDefault(x => x.Type == "WebPush_endpoint");
             var p256dh = claims.FirstOrDefault(x => x.Type == "WebPush_p256dh");

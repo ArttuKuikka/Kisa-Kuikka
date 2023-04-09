@@ -13,7 +13,8 @@ namespace Kipa_plus.Models
 
         public string? TilanneSeurantaKuvaURL { get; set; }
 
-
+        public bool LahetaIlmoituksiaRastinTilanvaihdosta { get; set; }
+        public bool NaytaIlmoitusSuositusEtusivulla { get; set; }
 
     }
 }

@@ -1,28 +1,42 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Kipa_plus.Models.ViewModels.IlmoituksetViewModel
 @{
-    
+    ViewData["Title"] = "Ilmoitukset";
 }
 
-<h1>Subscribe to Push Notifications</h1>
+<h1>Ilmoitukset</h1>
+<br />
 <div id="GiveAccess" style="display:none;">
-    Give access to making notifications:
-    <button id="PromptForAccessBtn">Prompt</button>
+    
+    <button id="PromptForAccessBtn" class="btn btn-primary">Anna oikeudet push ilmoitusten lähettämiseen</button>
 </div>
 <div id="NoSupport" style="display:none;">
-    Your browser does not support Push Notifications or you have blocked notifications
+    Selaimesi ei tue WebPush ilmoituksia tai olet estänyt ne selaimen asetuksista
 </div>
-<form asp-action="Index" id="form" style="display:none;">
-    <label for="client">Your name: </label>
-    <input id="client" name="client" /><br />
 
+<form asp-action="Index" id="form" style="display:none;">
+ @Html.AntiForgeryToken()
     <input id="endpoint" name="endpoint" hidden />
     <input id="p256dh" name="p256dh" hidden />
     <input id="auth" name="auth" hidden />
 
-    <button type="submit">Subscribe</button>
+    <button type="submit" class="btn btn-primary">Ota ilmoitukset käyttöön tällä laitteella</button>
 </form>
+<span  id="deviceWarning" class="text-warning">Huom! Push ilmoituksia voi käyttää vain yhdellä laitteella kerrallaan</span>
+
+<hr />
+<table class="table" style="color:white;">
+    @foreach(var ilmoitus in Model.Ilmotukset)
+    {
+        <tr>
+            <td>
+                <h3><a href="@ilmoitus.RefUrl">@ilmoitus.Title</a></h3>
+                <p>@ilmoitus.Message</p>
+                <span>@ilmoitus.CreatedAt.ToString("HH.mm dd.MM.yyyy")</span>
+            </td>
+        </tr>
+    }
+</table>
+
 
 @section Scripts {
     <script>
@@ -32,6 +46,7 @@
                     .then((reg) => {
                         if (Notification.permission === "granted") {
                             $("#form").show();
+                            $("deviceWarning").show();
                             getSubscription(reg);
                         } else if (Notification.permission === "blocked") {
                             $("#NoSupport").show();
