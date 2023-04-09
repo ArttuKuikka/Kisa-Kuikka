@@ -28,7 +28,8 @@ namespace Kipa_plus.Controllers
             if(_context.VapidStore?.Count() == 0)
             {
                 VapidDetails vapidKeys = VapidHelper.GenerateVapidKeys();
-                _context.VapidStore.Add(new Models.VapidDetailsWithId() { Expiration = vapidKeys.Expiration, PrivateKey = vapidKeys.PrivateKey, PublicKey = vapidKeys.PublicKey, Subject = vapidKeys.Subject});
+                var subject = Request.Host.ToString();
+                _context.VapidStore.Add(new Models.VapidDetailsWithId() { Expiration = vapidKeys.Expiration, PrivateKey = vapidKeys.PrivateKey, PublicKey = vapidKeys.PublicKey, Subject = subject});
                 _context.SaveChanges();
             }
 
@@ -72,7 +73,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Send([Bind("message")] SendPushViewModel viewModel)
+        public async Task<IActionResult> Send([Bind("message,title,refUrl")] SendPushViewModel viewModel)
         {
             var userlist = _userManager.Users.ToList();
             int proo = 0;
@@ -89,11 +90,14 @@ namespace Kipa_plus.Controllers
                     var subscription = new PushSubscription(endpoint.Value, p256dh.Value, auth.Value);
                     var keys = _context.VapidStore?.FirstOrDefault();
 
+                    var payloadobject = new { title = viewModel.title, message = viewModel.message, refurl = viewModel.refUrl };
+                    var payload = JObject.FromObject(payloadobject);
+
                     var vapidDetails = new VapidDetails(keys?.Subject, keys?.PublicKey, keys?.PrivateKey);
                     var webPushClient = new WebPushClient();
                     try
                     {
-                        webPushClient.SendNotification(subscription, viewModel.message ?? "NULL", vapidDetails);
+                        webPushClient.SendNotification(subscription, payload.ToString(), vapidDetails);
                         proo++;
                     }
                     catch (Exception exception)
