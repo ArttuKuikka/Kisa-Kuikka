@@ -36,15 +36,19 @@
         <label class="col-md-12 col-form-label">Valitse roolit joille haluat lähettää tämän ilmoituksen</label>
         <br />
 
-        @for (var index = 0; index < @Model.Roles?.Count(); index++)
+       <div>
+            @for (var index = 0; index < @Model.Roles?.Count(); index++)
         {
-            <input type="checkbox" asp-for="@Model.Roles[index].IsChecked" class="form-check-input" />
-            <label class="form-check-label" asp-for="@Model.Roles[index].IsChecked">
-                @Model.Roles[index].DisplayName
-            </label>
-            <input type="hidden" asp-for="@Model.Roles[index].Id" />
-            <input type="hidden" asp-for="@Model.Roles[index].DisplayName" />
+            <div style="display:block;">
+                    <input type="checkbox" asp-for="@Model.Roles[index].IsChecked" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.Roles[index].IsChecked">
+                        @Model.Roles[index].DisplayName
+                    </label>
+                    <input type="hidden" asp-for="@Model.Roles[index].Id" />
+                    <input type="hidden" asp-for="@Model.Roles[index].DisplayName" />
+            </div>
         }
+</div>
 
     </div>
 

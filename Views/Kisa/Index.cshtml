@@ -72,6 +72,9 @@
     <secure-content asp-area="" asp-controller="UserRoleController`3" asp-action="Index">
         <div class="grid-item" onClick="location.href='/UserRole'"><img class="grid-item-image" alt="Käyttäjät" src="/images/vartio.png"><p class="grid-item-text">Käyttäjät</p></div>
     </secure-content>
+    <secure-content asp-area="" asp-controller="Kisa" asp-action="LahetaIlmoitus">
+        <div class="grid-item" onClick="location.href='/Kisa/@Model.Kisa.Id/LahetaIlmoitus'"><img class="grid-item-image" alt="Ilmoituskello" src="/images/bell.png"><p class="grid-item-text">Lähetä ilmoitus</p></div>
+    </secure-content>
 
 
 

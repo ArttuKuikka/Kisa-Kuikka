@@ -54,7 +54,7 @@
                 <div class="col-md-10">
                     @foreach (var role in roles)
                     {
-                        <label>
+                        <label style="display:block;">
                             <input type="checkbox" name="Roles[]" value="@role.Name"
                                    @if (Model?.Roles != null && Model.Roles.Contains(role.Name.ToString())) { <text> checked="checked" </text> } />
                             &nbsp;@role.Name&nbsp;&nbsp;

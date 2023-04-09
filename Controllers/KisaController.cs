@@ -526,13 +526,7 @@ namespace Kipa_plus.Controllers
                     ViewBag.Message = "Ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle";
                     var roles = _roleManager.Roles.ToList(); //tunnistus sile että on vain kisan roolit sitten kun monen kisan tuki on lisätty
 
-                    var checkboxlista = new List<CheckboxViewModel>();
-                    foreach (var role in roles)
-                    {
-                        checkboxlista.Add(new CheckboxViewModel() { Id = role.Id, DisplayName = role.Name ?? role.Id, IsChecked = false });
-                    }
-                    var returnViewModel = new SendPushViewModel() { Roles = checkboxlista };
-                    return View(returnViewModel);
+                    return View(viewModel);
                 }
             }
 
