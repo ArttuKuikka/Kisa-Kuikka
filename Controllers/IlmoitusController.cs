@@ -15,7 +15,8 @@ using WebPush;
 namespace Kipa_plus.Controllers
 {
     [Authorize]
-    
+    [AllowAllAuthorized]
+
     public class IlmoitusController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -27,7 +28,7 @@ namespace Kipa_plus.Controllers
             _userManager = userManager;
             _IlmoitusService = ilmoitusService;
         }
-        [AllowAllAuthorized]
+        
         public async Task <IActionResult> Index()
         {
             if(_context.VapidStore?.Count() == 0)
@@ -46,7 +47,7 @@ namespace Kipa_plus.Controllers
         }
 
         [HttpPost]
-        [AllowAllAuthorized]
+        
         public async Task<IActionResult> Index(string endpoint, string p256dh, string auth)
         {
             
@@ -69,34 +70,11 @@ namespace Kipa_plus.Controllers
 
                 
                 
-                return Ok(JArray.FromObject(await _userManager.GetClaimsAsync(user)));
+                return Redirect("/");
             }
             
             return BadRequest();
         }
 
-        public IActionResult Send()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Send([Bind("message,title,refUrl")] SendPushViewModel viewModel)
-        {
-            var userlist = _userManager.Users.ToList();
-            int proo = 0;
-
-            foreach(var user in userlist) 
-            {
-                if (await _IlmoitusService.SendNotifToUser(user, viewModel.title, viewModel.message, viewModel.refUrl))
-                {
-                    proo++;
-                }
-            }
-            return Ok("Ilmoitus lähetty " + proo.ToString() + " käyttäjälle");
-
-
-            
-        }
     }
 }

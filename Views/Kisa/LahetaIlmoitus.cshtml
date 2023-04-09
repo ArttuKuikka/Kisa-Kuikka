@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Lähetä ilmoitus";
+}
+@model Kipa_plus.Models.ViewModels.SendPushViewModel
+
+<h1>Lähetä ilmoitus</h1>
+@if(ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @ViewBag.Message
+    </div>
+}
+<form asp-action="LahetaIlmoitus">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group" style="max-width:500px">
+        <label class="control-label">Otsikko</label>
+        <input asp-for="title" class="form-control" />
+        <span asp-validation-for="title" class="text-danger"></span>
+    </div>
+    <br />
+    <div class="form-group" style="max-width:500px">
+        <label class="control-label">Viesti</label>
+        <input asp-for="message" class="form-control" />
+        <span asp-validation-for="message" class="text-danger"></span>
+    </div>
+    <br>
+    <div class="form-group" style="max-width:500px">
+        <label class="control-label">URL johon ilmoitus vie klikatessa</label>
+        <input asp-for="refUrl" class="form-control" />
+        <span asp-validation-for="refUrl" class="text-danger"></span>
+    </div>
+    <br />
+
+    <div class="col-md-10" style="max-width:500px">
+        <label class="col-md-12 col-form-label">Valitse roolit joille haluat lähettää tämän ilmoituksen</label>
+        <br />
+
+        @for (var index = 0; index < @Model.Roles?.Count(); index++)
+        {
+            <input type="checkbox" asp-for="@Model.Roles[index].IsChecked" class="form-check-input" />
+            <label class="form-check-label" asp-for="@Model.Roles[index].IsChecked">
+                @Model.Roles[index].DisplayName
+            </label>
+            <input type="hidden" asp-for="@Model.Roles[index].Id" />
+            <input type="hidden" asp-for="@Model.Roles[index].DisplayName" />
+        }
+
+    </div>
+
+    <button type="submit" class="btn btn-primary">Lähetä</button>
+</form>

@@ -12,6 +12,9 @@ using System.ComponentModel;
 using Kipa_plus.Models.DynamicAuth;
 using Kipa_plus.Models.ViewModels;
 using Kipaplus.Data.Migrations;
+using Microsoft.AspNetCore.Identity;
+using Kipa_plus.Services;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Kipa_plus.Controllers
 {
@@ -23,12 +26,16 @@ namespace Kipa_plus.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IRoleAccessStore _roleAccessStore;
         private readonly DynamicAuthorizationOptions _authorizationOptions;
+        private readonly IilmoitusService _IlmoitusService;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
-        public KisaController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
+        public KisaController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions, IilmoitusService ilmoitusService, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _roleAccessStore = roleAccessStore;
             _authorizationOptions = authorizationOptions;
+            _IlmoitusService = ilmoitusService;
+            _roleManager = roleManager;
         }
 
         [HttpGet("{kisaId:int}/Tilannevaltuudet")]
@@ -473,6 +480,64 @@ namespace Kipa_plus.Controllers
 
             var viewModel = new ListaaRastitViewModel() { KisaId= kisaId, Rastit = rastit, Tilanteet = _context.Tilanne };
             return View(viewModel);
+        }
+
+        [HttpGet("{kisaId:int}/LahetaIlmoitus")]
+        [DisplayName("Lähetä ilmoituksia")]
+        public async Task <IActionResult> LahetaIlmoitus(int kisaId)
+        {
+            var kisa = await _context.Kisa.FindAsync(kisaId);
+            if(kisa != null)
+            {
+                var roles = _roleManager.Roles.ToList(); //tunnistus sile että on vain kisan roolit sitten kun monen kisan tuki on lisätty
+
+                var checkboxlista = new List<CheckboxViewModel>();
+                foreach (var role in roles)
+                {
+                    checkboxlista.Add(new CheckboxViewModel() { Id = role.Id, DisplayName = role.Name ?? role.Id, IsChecked = false});
+                }
+                var viewModel = new SendPushViewModel() { Roles = checkboxlista };
+                return View(viewModel);
+            }
+            return BadRequest();
+           
+        }
+
+        [HttpPost("{kisaId:int}/LahetaIlmoitus")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LahetaIlmoitus([Bind("message,title,refUrl,Roles")] SendPushViewModel viewModel)
+        {
+            //TODO: varmistus että ei voi lähettää ilmoituksia toisen kisan rooleihin
+            if (ModelState.IsValid)
+            {
+                var checklist = viewModel.Roles?.Where(x => x.IsChecked == true).ToList();
+
+                if(checklist != null)
+                {
+                    var roleIdList = new List<string>();
+
+                    foreach (var role in checklist)
+                    {
+                        roleIdList.Add(role.Id.ToString());
+                    }
+
+                    var succesRate = await _IlmoitusService.SendNotifToRoleIdsAsync(roleIdList.ToArray(), viewModel.title, viewModel.message, viewModel.refUrl);
+
+                    ViewBag.Message = "Ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle";
+                    var roles = _roleManager.Roles.ToList(); //tunnistus sile että on vain kisan roolit sitten kun monen kisan tuki on lisätty
+
+                    var checkboxlista = new List<CheckboxViewModel>();
+                    foreach (var role in roles)
+                    {
+                        checkboxlista.Add(new CheckboxViewModel() { Id = role.Id, DisplayName = role.Name ?? role.Id, IsChecked = false });
+                    }
+                    var returnViewModel = new SendPushViewModel() { Roles = checkboxlista };
+                    return View(returnViewModel);
+                }
+            }
+
+
+            return BadRequest();
         }
     }
 }

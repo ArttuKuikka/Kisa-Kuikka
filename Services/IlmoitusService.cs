@@ -47,7 +47,11 @@ namespace Kipa_plus.Services
                         var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
                         foreach(var user in usersInRole)
                         {
-                            users.Add(user);
+                            if (!users.Contains(user))
+                            {
+                                users.Add(user);
+                            }
+                            
                         }
                     }
                 }
@@ -83,7 +87,7 @@ namespace Kipa_plus.Services
         {
             title = title ?? "Kipa-plus ilmoitus";
             message = message ?? "<Ei sisältöä>";
-            refurl = refurl ?? "";
+            refurl = refurl ?? "/";
 
             var claims = await _userManager.GetClaimsAsync(user);
             var endpoint = claims.FirstOrDefault(x => x.Type == "WebPush_endpoint");
