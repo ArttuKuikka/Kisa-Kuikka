@@ -39,8 +39,23 @@ namespace Kipa_plus.Controllers
                 _context.SaveChanges();
             }
             var keys = _context.VapidStore?.FirstOrDefault();
-            ViewBag.applicationServerKey = keys?.PublicKey;
-            return View();
+
+            var viewModel = new IlmoituksetViewModel() { PublicKey = keys?.PublicKey };
+            var ilmoitukset = new List<Ilmoitus>();
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+                var notifs = _context.Ilmoitukset.Where(x => x.User == user);
+                foreach(var notif in notifs)
+                {
+                    notif.Luettu = true;
+                    ilmoitukset.Add(notif);
+                }
+                await _context.SaveChangesAsync();
+            }
+            viewModel.Ilmotukset= ilmoitukset;
+            return View(viewModel);
             
         }
 

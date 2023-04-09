@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+@inject ApplicationDbContext _context
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,6 +18,7 @@
                 <a class="navbar-brand" style="color: white" href="/">Kipa-Plus</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
+                    <i hidden id="mobileIlmoitusKello" class="fa-solid fa-bell" style="color: #ff0000;"></i>
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
@@ -52,6 +54,15 @@
     });
 }
     </script>
+
+    @if (_context.Ilmoitukset.Where(x => x.User.UserName == User.Identity.Name).Where(x => x.Luettu == false).Any())
+    {
+        
+        <script>
+            document.getElementById("ilmoitusKello").style.color = "red";
+            document.getElementById("mobileIlmoitusKello").removeAttribute("hidden");
+        </script>
+    }
 
   
 

@@ -7,7 +7,7 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-            <a class="nav-link" style="color: white" href="/ilmoitukset" title="Ilmoitukset"><i class="fa-regular fa-bell"></i> Ilmoitukset</a>
+            <a class="nav-link" style="color: white" href="/ilmoitukset" title="Ilmoitukset"><i class="fa-solid fa-bell" id="ilmoitusKello"></i> Ilmoitukset</a>
     </li>
     <li class="nav-item">
             @if(User.Claims.Any(x => x.Type == "KokoNimi"))

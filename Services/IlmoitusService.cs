@@ -31,7 +31,7 @@ namespace Kipa_plus.Services
         /// <param name="message">Viesti</param>
         /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
         /// <returns>
-        /// Numeron kuinka monelle käyttäjälle ilmoitus lähetettiin onnistuneesti
+        /// Numeron kuinka monelle käyttäjälle webPush ilmoitus lähetettiin onnistuneesti
         /// </returns>
         public async Task<int> SendNotifToRoleIdsAsync(string[]? RoleIds, string? title, string? message, string? refurl)
         {
@@ -82,13 +82,18 @@ namespace Kipa_plus.Services
         /// <param name="title">Otsikko</param>
         /// <param name="message">Viesti</param>
         /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
-        /// <returns>True jos ilmoituksen lähetys onnistui, false jos ei</returns>
+        /// <returns>True jos webpush ilmoituksen lähetys onnistui, false jos ei</returns>
         public async Task<bool> SendNotifToUser(IdentityUser user, string? title, string? message, string? refurl)
         {
             title = title ?? "Kipa-plus ilmoitus";
             message = message ?? "<Ei sisältöä>";
             refurl = refurl ?? "/";
 
+            //luo ilmoitus omaan ilmoitus järjestelmään
+            _context.Ilmoitukset.Add(new Models.Ilmoitus() {CreatedAt = DateTime.Now, Luettu = false, Message = message, Title = title, RefUrl = refurl, User = user });
+            await _context.SaveChangesAsync();
+
+            //webPush
             var claims = await _userManager.GetClaimsAsync(user);
             var endpoint = claims.FirstOrDefault(x => x.Type == "WebPush_endpoint");
             var p256dh = claims.FirstOrDefault(x => x.Type == "WebPush_p256dh");

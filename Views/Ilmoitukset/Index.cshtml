@@ -1,8 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model Kipa_plus.Models.ViewModels.IlmoituksetViewModel
 @{
-    
+    ViewData["Title"] = "Ilmoitukset";
 }
 
 <h1>Ilmoitukset</h1>
@@ -26,7 +24,18 @@
 <span  id="deviceWarning" class="text-warning">Huom! Push ilmoituksia voi käyttää vain yhdellä laitteella kerrallaan</span>
 
 <hr />
-
+<table class="table" style="color:white;">
+    @foreach(var ilmoitus in Model.Ilmotukset)
+    {
+        <tr>
+            <td>
+                <h3><a href="@ilmoitus.RefUrl">@ilmoitus.Title</a></h3>
+                <p>@ilmoitus.Message</p>
+                <span>@ilmoitus.CreatedAt.ToString("HH.mm dd.MM.yyyy")</span>
+            </td>
+        </tr>
+    }
+</table>
 
 
 @section Scripts {
