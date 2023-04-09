@@ -50,7 +50,7 @@ namespace Kipa_plus.Services
                 }
             }
            
-            return await SendNotifToRoleIdsAsync(roles, title, message, refurl);
+            return await SendNotifToRoleIdsAsync(roles.ToArray(), title, message, refurl);
         }
 
 
