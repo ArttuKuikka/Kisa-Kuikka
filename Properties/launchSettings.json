@@ -19,7 +19,8 @@
         "DB_NAME": "KipaPlus",
         "DB_USER": "sa",
         "DB_USER_PASSWORD": "S3cur3P@ssW0rd!",
-        "DEFAULTADMINUSER": "admin@arttukuikka.fi"
+        "DEFAULTADMINUSER": "admin@arttukuikka.fi",
+        "FONTAWESOME_KIT_URL": "https://kit.fontawesome.com/b0da54152e.js"
       },
       "dotnetRunMessages": true,
       "applicationUrl": "https://localhost:7034;http://localhost:5043"
