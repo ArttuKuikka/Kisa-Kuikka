@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kipa_plus.Models.ViewModels;
 using Kipa_plus.Models.DynamicAuth;
+using Kipa_plus.Services;
 
 namespace Kipa_plus.Controllers
 {
@@ -22,12 +23,14 @@ namespace Kipa_plus.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IRoleAccessStore _roleAccessStore;
         private readonly DynamicAuthorizationOptions _authorizationOptions;
+        private readonly IilmoitusService _IlmoitusService;
 
-        public RastiController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
+        public RastiController(ApplicationDbContext context, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions, IilmoitusService ilmoitusService)
         {
             _context = context;
             _roleAccessStore = roleAccessStore;
             _authorizationOptions = authorizationOptions;
+            _IlmoitusService = ilmoitusService;
         }
 
 
@@ -170,6 +173,12 @@ namespace Kipa_plus.Controllers
 
                             if (User.Identity.Name.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase) || await _roleAccessStore.HasAccessToActionAsync(":Kisa:TilanneValtuudet", roles))
                             {
+                                var kisa = await _context.Kisa.FindAsync(rasti.KisaId);
+                                if (kisa?.LahetaIlmoituksiaRastinTilanvaihdosta ?? false)
+                                {
+                                    var rastiIdArray = new int[] {(int)rasti.Id };
+                                    await _IlmoitusService.SendNotifToRastiIdsAsync(rastiIdArray, "Rastisi tilanne vaihdettiin", "Uusi tilanne: " + tilanne.Nimi, "https://" + Request.Host.ToString() + "/Rasti/Tilanne?RastiId=" + rasti.Id.ToString());
+                                }
                                 rasti.TilanneId = tilanne.Id;
                             }
                             else

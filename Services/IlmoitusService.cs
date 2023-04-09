@@ -38,13 +38,19 @@ namespace Kipa_plus.Services
             foreach (var role in _roleManager.Roles) 
             {
                 var access = await _roleAccessStore.GetRoleAccessAsync(role.Id);
-                foreach(var rooli in access.RastiAccess)
+                if(access.RastiAccess != null)
                 {
-                   if(rooli.RastiId != null)
+                    foreach (var rooli in access.RastiAccess)
                     {
-                        if (rastiIdLista?.Contains((int)rooli.RastiId) ?? false)
+                        if (rooli.RastiId != null)
                         {
-                            roles.Add(role.Id);
+                            if (rastiIdLista?.Contains((int)rooli.RastiId) ?? false)
+                            {
+                                if (!roles.Contains(role.Id))
+                                {
+                                    roles.Add(role.Id);
+                                }
+                            }
                         }
                     }
                 }
