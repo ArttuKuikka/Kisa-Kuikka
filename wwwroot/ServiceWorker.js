@@ -1,40 +1,33 @@
 ﻿self.addEventListener('fetch', function (event) { });
 self.addEventListener('push', function (e) {
     var body;
+    var title;
+    var refurl;
 
     if (e.data) {
-        body = e.data.text();
+        body = e.data.json().message;
+        title = e.data.json().title;
+        refurl = e.data.json().refurl;
     } else {
-        body = "Standard Message";
+        body = "Kipa-plus viesti";
     }
 
     var options = {
         body: body,
-        icon: "images/icon-512x512.png",
+        
         vibrate: [100, 50, 100],
         data: {
-            dateOfArrival: Date.now()
-        },
-        actions: [
-            {
-                action: "explore", title: "Go interact with this!",
-                icon: "images/checkmark.png"
-            }
-        ]
+            dateOfArrival: Date.now(),
+            refurl: refurl
+        }
     };
     e.waitUntil(
-        self.registration.showNotification("Kipa-plus ilmoitus", options)
+        self.registration.showNotification(title, options)
     );
 });
 self.addEventListener('notificationclick', function (e) {
     var notification = e.notification;
-    var action = e.action;
 
-    if (action === 'close') {
-        notification.close();
-    } else {
-        // Some actions
-        clients.openWindow('http://www.example.com');
-        notification.close();
-    }
+    clients.openWindow(notification.data.refurl);
+    notification.close();
 });
