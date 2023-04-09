@@ -21,7 +21,38 @@ namespace Kipa_plus.Services
             _roleManager = roleManager; 
         }
 
-       
+        /// <summary>
+        /// Lähetä ilmoitus kaikille käyttäjille joilla on oikeus tietyille rasteille
+        /// </summary>
+        /// <param name="RastiIds">Lista kaikista Rasti idistä joiden käyttäjille haluat lähettää ilmoituksen</param>
+        /// <param name="title">Otsikko</param>
+        /// <param name="message">Viesti</param>
+        /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
+        /// <returns>
+        /// Numeron kuinka monelle käyttäjälle webPush ilmoitus lähetettiin onnistuneesti
+        /// </returns>
+        public async Task<int> SendNotifToRastiIdsAsync(int[]? RastiIds, string? title, string? message, string? refurl)
+        {
+            var roles = new List<string>();
+            var rastiIdLista = RastiIds?.ToList();
+            foreach (var role in _roleManager.Roles) 
+            {
+                var access = await _roleAccessStore.GetRoleAccessAsync(role.Id);
+                foreach(var rooli in access.RastiAccess)
+                {
+                   if(rooli.RastiId != null)
+                    {
+                        if (rastiIdLista?.Contains((int)rooli.RastiId) ?? false)
+                        {
+                            roles.Add(role.Id);
+                        }
+                    }
+                }
+            }
+           
+            return await SendNotifToRoleIdsAsync(roles, title, message, refurl);
+        }
+
 
         /// <summary>
         /// Lähetä ilmoitus kaikille käyttäjille jotka ovat tietyissä rooleissa
