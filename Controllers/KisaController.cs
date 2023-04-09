@@ -279,7 +279,7 @@ namespace Kipa_plus.Controllers
         public async Task<IActionResult> Luo([Bind("Id,Nimi")] Kisa kisa)
         {
             kisa.JaaTagTilastot = false;
-            kisa.NaytaIlmoitusSuositusEtusivulla = true
+            kisa.NaytaIlmoitusSuositusEtusivulla = true;
             kisa.LahetaIlmoituksiaRastinTilanvaihdosta = true;
             if (ModelState.IsValid)
             {
