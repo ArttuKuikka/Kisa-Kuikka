@@ -51,6 +51,26 @@
 </div>
 
     </div>
+    <br />
+    <div class="col-md-10" style="max-width:500px">
+        <label class="col-md-12 col-form-label">Valitse rastit joille haluat lähettää tämän ilmoituksen</label>
+        <br />
+
+        <div>
+            @for (var index = 0; index < @Model.Rastit?.Count(); index++)
+            {
+                <div style="display:block;">
+                    <input type="checkbox" asp-for="@Model.Rastit[index].IsChecked" class="form-check-input" />
+                    <label class="form-check-label" asp-for="@Model.Rastit[index].IsChecked">
+                        @Model.Rastit[index].DisplayName
+                    </label>
+                    <input type="hidden" asp-for="@Model.Rastit[index].Id" />
+                    <input type="hidden" asp-for="@Model.Rastit[index].DisplayName" />
+                </div>
+            }
+        </div>
+
+    </div>
 
     <button type="submit" class="btn btn-primary">Lähetä</button>
 </form>
