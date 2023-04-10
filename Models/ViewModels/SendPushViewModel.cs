@@ -8,5 +8,6 @@ namespace Kipa_plus.Models.ViewModels
         public string title { get; set; }
         public string? refUrl { get; set; }
         public List<CheckboxViewModel>? Roles { get; set; }
+        public List<CheckboxViewModel>? Rastit { get; set; }
     }
 }

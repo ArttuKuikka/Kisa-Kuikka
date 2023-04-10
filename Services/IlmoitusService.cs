@@ -22,6 +22,44 @@ namespace Kipa_plus.Services
         }
 
         /// <summary>
+        /// Hanki kaikki roolien id joilla on oikeus rasteihin
+        /// </summary>
+        /// <param name="RastiIds">Lista kaikista Rasti idistä joiden käyttäjille haluat lähettää ilmoituksen</param>
+        /// <param name="title">Otsikko</param>
+        /// <param name="message">Viesti</param>
+        /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
+        /// <returns>
+        /// listan rooleista joilla on oikeus rasteihin
+        /// </returns>
+        public async Task<List<string>> GetRoleIdsFromRastiIds(int[]? RastiIds)
+        {
+            var roles = new List<string>();
+            var rastiIdLista = RastiIds?.ToList();
+            foreach (var role in _roleManager.Roles)
+            {
+                var access = await _roleAccessStore.GetRoleAccessAsync(role.Id);
+                if (access.RastiAccess != null)
+                {
+                    foreach (var rooli in access.RastiAccess)
+                    {
+                        if (rooli.RastiId != null)
+                        {
+                            if (rastiIdLista?.Contains((int)rooli.RastiId) ?? false)
+                            {
+                                if (!roles.Contains(role.Id))
+                                {
+                                    roles.Add(role.Id);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return roles;
+        }
+
+        /// <summary>
         /// Lähetä ilmoitus kaikille käyttäjille joilla on oikeus tietyille rasteille
         /// </summary>
         /// <param name="RastiIds">Lista kaikista Rasti idistä joiden käyttäjille haluat lähettää ilmoituksen</param>

@@ -498,9 +498,16 @@ namespace Kipa_plus.Controllers
                 var checkboxlista = new List<CheckboxViewModel>();
                 foreach (var role in roles)
                 {
-                    checkboxlista.Add(new CheckboxViewModel() { Id = role.Id, DisplayName = role.Name ?? role.Id, IsChecked = false});
+                    checkboxlista.Add(new CheckboxViewModel() { Id = role.Id, DisplayName = role.Name ?? role.Id, IsChecked = false });
                 }
-                var viewModel = new SendPushViewModel() { Roles = checkboxlista };
+
+                var checkboxlista2 = new List<CheckboxViewModel>();
+                foreach (var rasti in _context.Rasti.Where(x => x.KisaId == kisaId))
+                {
+                    checkboxlista2.Add(new CheckboxViewModel() { Id = rasti.Id.ToString(), DisplayName = rasti.NumeroJaNimi, IsChecked = false });
+                }
+                checkboxlista2.Sort((p1, p2) => p1.DisplayName.CompareTo(p2.DisplayName));
+                var viewModel = new SendPushViewModel() { Roles = checkboxlista, Rastit = checkboxlista2 };
                 return View(viewModel);
             }
             return BadRequest();
@@ -509,22 +516,38 @@ namespace Kipa_plus.Controllers
 
         [HttpPost("{kisaId:int}/LahetaIlmoitus")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LahetaIlmoitus([Bind("message,title,refUrl,Roles")] SendPushViewModel viewModel)
+        public async Task<IActionResult> LahetaIlmoitus([Bind("message,title,refUrl,Roles,Rastit")] SendPushViewModel viewModel)
         {
             //TODO: varmistus että ei voi lähettää ilmoituksia toisen kisan rooleihin
             if (ModelState.IsValid)
             {
+                var roleIdList = new List<string>();
                 var checklist = viewModel.Roles?.Where(x => x.IsChecked == true).ToList();
+                var checklis2 = viewModel.Rastit?.Where(x => x.IsChecked == true).ToList();
 
-                if(checklist != null)
+                if (checklis2 != null)
                 {
-                    var roleIdList = new List<string>();
+                    var rastidilist = new List<int>();
+                    foreach(var rasti in checklis2)
+                    {
+                        rastidilist.Add(int.Parse(rasti.Id));
+                    }
+                    roleIdList.AddRange(await _IlmoitusService.GetRoleIdsFromRastiIds(rastidilist.ToArray()));
+                }
+
+                if (checklist != null)
+                {
+                    
 
                     foreach (var role in checklist)
                     {
                         roleIdList.Add(role.Id.ToString());
                     }
 
+                    
+                }
+                if(roleIdList != null)
+                {
                     var succesRate = await _IlmoitusService.SendNotifToRoleIdsAsync(roleIdList.ToArray(), viewModel.title, viewModel.message, viewModel.refUrl);
 
                     ViewBag.Message = "WebPush ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle ja normaali ilmoitus lähetetty kaikille";
