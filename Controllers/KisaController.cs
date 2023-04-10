@@ -502,11 +502,13 @@ namespace Kipa_plus.Controllers
                 }
 
                 var checkboxlista2 = new List<CheckboxViewModel>();
-                foreach (var rasti in _context.Rasti.Where(x => x.KisaId == kisaId))
+                var rastilista = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+                rastilista.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
+                foreach (var rasti in rastilista)
                 {
                     checkboxlista2.Add(new CheckboxViewModel() { Id = rasti.Id.ToString(), DisplayName = rasti.NumeroJaNimi, IsChecked = false });
                 }
-                checkboxlista2.Sort((p1, p2) => p1.DisplayName.CompareTo(p2.DisplayName));
+               
                 var viewModel = new SendPushViewModel() { Roles = checkboxlista, Rastit = checkboxlista2 };
                 return View(viewModel);
             }
