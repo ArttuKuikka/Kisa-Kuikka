@@ -479,7 +479,7 @@ namespace Kipa_plus.Controllers
                 {
                     foreach (var sarja in checklist)
                     {
-                        var testisarja = await _context.Sarja.FindAsync(sarja.Id);
+                        var testisarja = await _context.Sarja.FindAsync(int.Parse(sarja.Id));
                         if (testisarja == null)
                         {
                             return BadRequest("Sarjaa ei ole olemassa");
