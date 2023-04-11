@@ -16,8 +16,8 @@
         </div>
 
              <div class="col-md-10" style="max-width:500px">
-                <label class="control-label">Rasti</label>
-                @Html.DropDownListFor(model => model.ValittuVartioId,new SelectList(Model.Vartiot, "Id", "Nimi"),  new { @class = "form-control"} )
+                <label class="control-label">Vartio</label>
+                @Html.DropDownListFor(model => model.ValittuVartioId,new SelectList(Model.Vartiot, "Id", "NumeroJaNimiJaTilanne"),  new { @class = "form-control"} )
                 @Html.ValidationMessageFor(model => model.ValittuVartioId, "", new { @class = "text-danger" })
             </div>
 
