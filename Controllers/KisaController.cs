@@ -279,7 +279,6 @@ namespace Kipa_plus.Controllers
         public async Task<IActionResult> Luo([Bind("Id,Nimi")] Kisa kisa)
         {
             kisa.JaaTagTilastot = false;
-            kisa.NaytaIlmoitusSuositusEtusivulla = true;
             kisa.LahetaIlmoituksiaRastinTilanvaihdosta = true;
             if (ModelState.IsValid)
             {
@@ -329,7 +328,6 @@ namespace Kipa_plus.Controllers
                     olemassaolevakisa.Nimi = kisa.Nimi;
                     olemassaolevakisa.JaaTagTilastot= kisa.JaaTagTilastot;
                     olemassaolevakisa.TilanneSeurantaKuvaURL = kisa.TilanneSeurantaKuvaURL;
-                    olemassaolevakisa.NaytaIlmoitusSuositusEtusivulla = kisa.NaytaIlmoitusSuositusEtusivulla;
                     olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdosta = kisa.LahetaIlmoituksiaRastinTilanvaihdosta;
 
                     await _context.SaveChangesAsync();
