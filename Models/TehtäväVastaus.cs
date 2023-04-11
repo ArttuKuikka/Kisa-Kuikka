@@ -16,5 +16,8 @@ namespace Kipa_plus.Models
         public string? TäyttäjäUserId { get; set; }
         public string? JatkajaUserId { get; set; }
         public string? TarkistajaUserId { get; set; }
+        public DateTime TäyttämisAika { get; set; }
+        public DateTime? JatkamisAika { get; set; }
+        public DateTime? TarkistusAika { get; set; }
     }
 }

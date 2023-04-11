@@ -48,11 +48,20 @@
     }
 
 }
+<h5>Täytetty: @Model.TäyttämisAika.ToString("dd.MM.yyyy HH.mm")</h5>
 <h5>@tayttaja</h5>
 @if (jatkaja != null || jatkaja != "")
 {
+    @if(Model?.JatkamisAika != null)
+    {
+        <h5>Jatkettu: @Model?.JatkamisAika?.ToString("dd.MM.yyyy HH.mm")</h5>
+    }
     <h5>@jatkaja</h5>
 }
+@if(Model?.TarkistusAika != null)
+    {
+        <h5>Tarkistettu: @Model?.TarkistusAika?.ToString("dd.MM.yyyy HH.mm")</h5>
+    }
 <h5>@tarkistaja</h5>
 <hr />
 <div class="row">

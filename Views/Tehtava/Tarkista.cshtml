@@ -47,9 +47,14 @@
                 }
 
             }
+            <h5>Täytetty: @Model.VertausMalli?.TäyttämisAika.ToString("dd.MM.yyyy HH.mm")</h5>
             <h5>@tayttaja</h5>
             @if(jatkaja != null || jatkaja != "")
             {
+                @if(Model?.VertausMalli?.JatkamisAika != null)
+                {
+                <h5>Jatkettu: @Model.VertausMalli?.JatkamisAika?.ToString("dd.MM.yyyy HH.mm")</h5>
+                }
                 <h5>@jatkaja</h5>
             }
             <hr />
