@@ -252,6 +252,10 @@ namespace Kipa_plus.Controllers
                     viewModel.OikeusYhteenRastiin = true;
 
                     viewModel.OikeusRasti = _context.Rasti.First(x => x.Id == rastit.First());
+                    if(viewModel.OikeusRasti == null)
+                    {
+                        viewModel.OikeusYhteenRastiin = false;
+                    }
 
                     viewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == kisaId);
                 }
