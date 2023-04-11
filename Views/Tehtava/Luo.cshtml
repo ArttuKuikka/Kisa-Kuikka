@@ -39,14 +39,13 @@
                 {
                     <input type="checkbox" asp-for="@Model.Sarjat[index].IsChecked" class="form-check-input" />
                     <label class="form-check-label" asp-for="@Model.Sarjat[index].IsChecked">
-                    @Model.Sarjat[index].DisplayName
+                        @Model.Sarjat[index].DisplayName
                     </label>
                     <input type="hidden" asp-for="@Model.Sarjat[index].Id" />
                     <input type="hidden" asp-for="@Model.Sarjat[index].DisplayName" />
                 }
 
             </div>
-            <br />
             
             <div class="form-group" style="max-width:500px">
                 <label asp-for="Nimi" class="control-label"></label>

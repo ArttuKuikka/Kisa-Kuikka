@@ -20,6 +20,7 @@ Kipa-plus tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoida 
 - kätevä työkalu jonka avulla voi helposti seurata koko kisan edistymistä ja estää ruuhkia rasteilla (perustuu NFC-tagien dataan)
 - rastien tilanteiden helppo hallinta (purettu, rakennettu yms)
 - käyttäjä hallinta ja käyttäjien itserekisteröinti
+- Ilmoitusten lähetys käyttäjille rooli tai rastikohdittain (Tukee myös WebPush ilmoitusten lähetystä)
 - Täysin muokkattavat roolit jolloin käyttäjillä on oikeus vain määritettyihin asioihin
 - Täysin muokattavat tehtäväpohjat jotka tehdään Google forms tapaisella työkalulla
 - tulosten lataus excel muodossa

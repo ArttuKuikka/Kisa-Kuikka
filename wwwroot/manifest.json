@@ -1,0 +1,8 @@
+﻿{
+  "name": "Kipa-plus WebPush",
+  "short_name": "KipaPush",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#959595",
+  "theme_color": "#FFFFFF"
+}

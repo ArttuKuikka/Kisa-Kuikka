@@ -43,6 +43,7 @@ services:
       DB_USER: "sa"
       DB_USER_PASSWORD: "S3cur3P@ssW0rd!"
       DefaultAdminUser: "admin@arttukuikka.fi"
+      FONTAWESOME_KIT_URL: "https://kit.fontawesome.com/b0da54152e.js"
     volumes:
         - type: volume
           source: UploadFiles

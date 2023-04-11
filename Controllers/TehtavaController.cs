@@ -437,7 +437,7 @@ namespace Kipa_plus.Controllers
                 {
                     if (sarja.Id != null)
                     {
-                        sarjaList.Add(new CheckboxViewModel() { Id = (int)sarja.Id, DisplayName = sarja.Nimi, IsChecked = false });
+                        sarjaList.Add(new CheckboxViewModel() { Id = sarja.Id?.ToString(), DisplayName = sarja.Nimi, IsChecked = false });
                     }
                 }
                 viewModel.Sarjat = sarjaList;
@@ -479,17 +479,17 @@ namespace Kipa_plus.Controllers
                 {
                     foreach (var sarja in checklist)
                     {
-                        var testisarja = await _context.Sarja.FindAsync(sarja.Id);
+                        var testisarja = await _context.Sarja.FindAsync(int.Parse(sarja.Id));
                         if (testisarja == null)
                         {
                             return BadRequest("Sarjaa ei ole olemassa");
                         }
 
-                        var teht = new Tehtava() { KisaId = viewModel.KisaId, RastiId = viewModel.RastiId, TehtavaJson = viewModel.TehtavaJson, SarjaId = sarja.Id };
+                        var teht = new Tehtava() { KisaId = viewModel.KisaId, RastiId = viewModel.RastiId, TehtavaJson = viewModel.TehtavaJson, SarjaId = int.Parse(sarja.Id) };
 
                         if (viewModel.Nimi == null || viewModel.Nimi == "")
                         {
-                            teht.Nimi = _context.Sarja.First(x => x.Id == sarja.Id).Nimi + "-sarjan tehtävä";
+                            teht.Nimi = _context.Sarja.First(x => x.Id == int.Parse(sarja.Id)).Nimi + "-sarjan tehtävä";
                         }
                         else
                         {
