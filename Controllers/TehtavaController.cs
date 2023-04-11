@@ -169,6 +169,7 @@ namespace Kipa_plus.Controllers
 
                 var user = await _userManager.GetUserAsync(User);
                 TV.TäyttäjäUserId = user?.Id;
+                TV.TäyttämisAika = DateTime.Now;
 
                 _context.TehtavaVastaus.Add(TV);
                 _context.SaveChanges();
@@ -278,6 +279,7 @@ namespace Kipa_plus.Controllers
                 aiempitehtva.Tarkistettu = true;
                 
                 aiempitehtva.TarkistajaUserId = user?.Id;
+                aiempitehtva.TarkistusAika = DateTime.Now;
                 _context.SaveChanges();
 
                 return Redirect("/Tehtava/?RastiId=" + aiempitehtva.RastiId);
@@ -412,6 +414,7 @@ namespace Kipa_plus.Controllers
                 tehtvastaus.Kesken = false;
                 var user = await _userManager.GetUserAsync(User);
                 tehtvastaus.JatkajaUserId = user?.Id;
+                tehtvastaus.JatkamisAika = DateTime.Now;
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();
