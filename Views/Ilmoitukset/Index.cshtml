@@ -46,7 +46,7 @@
                     .then((reg) => {
                         if (Notification.permission === "granted") {
                             $("#form").show();
-                            $("deviceWarning").show();
+                            
                             getSubscription(reg);
                         } else if (Notification.permission === "blocked") {
                             $("#NoSupport").show();
@@ -77,7 +77,7 @@
                 if (sub === null) {
                     reg.pushManager.subscribe({
                         userVisibleOnly: true,
-                        applicationServerKey: "@ViewBag.applicationServerKey"
+                        applicationServerKey: "@Model.PublicKey"
                     }).then(function (sub) {
                         fillSubscribeFields(sub);
                     }).catch(function (e) {

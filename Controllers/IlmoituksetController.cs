@@ -65,26 +65,33 @@ namespace Kipa_plus.Controllers
         public async Task<IActionResult> Index(string endpoint, string p256dh, string auth)
         {
             
-            var user = await _userManager.GetUserAsync(User);
-            if(user != null) 
+            if(endpoint != null && p256dh != null && auth != null) 
             {
-                var claims = await _userManager.GetClaimsAsync(user);
-                if(claims.FirstOrDefault(x => x.Type == "WebPush_endpoint") != null)
+                var user = await _userManager.GetUserAsync(User);
+                if (user != null)
                 {
-                    await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_endpoint"), new System.Security.Claims.Claim("WebPush_endpoint", endpoint));
-                    await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_p256dh"), new System.Security.Claims.Claim("WebPush_p256dh", p256dh));
-                    await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_auth"), new System.Security.Claims.Claim("WebPush_auth", auth));
-                }
-                else
-                {
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_endpoint", endpoint));
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_p256dh", p256dh));
-                    await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_auth", auth));
-                }
+                    var claims = await _userManager.GetClaimsAsync(user);
+                    if (claims.FirstOrDefault(x => x.Type == "WebPush_endpoint") != null)
+                    {
+                        await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_endpoint"), new System.Security.Claims.Claim("WebPush_endpoint", endpoint));
+                        await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_p256dh"), new System.Security.Claims.Claim("WebPush_p256dh", p256dh));
+                        await _userManager.ReplaceClaimAsync(user, claims.First(x => x.Type == "WebPush_auth"), new System.Security.Claims.Claim("WebPush_auth", auth));
+                    }
+                    else
+                    {
+                        await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_endpoint", endpoint));
+                        await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_p256dh", p256dh));
+                        await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_auth", auth));
+                    }
 
-                
-                
-                return Redirect("/Ilmoitukset");
+
+
+                    return Redirect("/Ilmoitukset");
+                }
+            }
+            else
+            {
+                return BadRequest("endpoint,p256dh tai auth oli NULL");
             }
             
             return BadRequest();
