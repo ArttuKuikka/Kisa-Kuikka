@@ -84,9 +84,27 @@ namespace Kipa_plus.Controllers
                         await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("WebPush_auth", auth));
                     }
 
+                    //kaikki oikein return
+                    ViewBag.Message = "Push ilmoitukset ovat nyt käytössä tällä laitteella";
+                    var keys = _context.VapidStore?.FirstOrDefault();
 
+                    var viewModel = new IlmoituksetViewModel() { PublicKey = keys?.PublicKey };
+                    var ilmoitukset = new List<Ilmoitus>();
 
-                    return Redirect("/Ilmoitukset");
+                    
+                    if (user != null)
+                    {
+                        var notifs = _context.Ilmoitukset.Where(x => x.User == user);
+                        foreach (var notif in notifs)
+                        {
+                            notif.Luettu = true;
+                            ilmoitukset.Add(notif);
+                        }
+                        await _context.SaveChangesAsync();
+                    }
+                    ilmoitukset.Sort((x, y) => y.CreatedAt.CompareTo(x.CreatedAt));
+                    viewModel.Ilmotukset = ilmoitukset;
+                    return View(viewModel);
                 }
             }
             else
