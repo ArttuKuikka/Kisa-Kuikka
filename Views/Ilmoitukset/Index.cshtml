@@ -5,6 +5,13 @@
 
 <h1>Ilmoitukset</h1>
 <br />
+@if(ViewBag.Message != null)
+{
+    <div class="alert alert-success alert-dismissible" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        @ViewBag.Message
+    </div>
+}
 <div id="GiveAccess" style="display:none;">
     
     <button id="PromptForAccessBtn" class="btn btn-primary">Anna oikeudet push ilmoitusten lähettämiseen</button>
@@ -66,7 +73,7 @@
                 if (status == "granted") {
                     $("#form").show();
                     getSubscription(reg);
-                    //tähän ehkä form auto submit
+                    
                 } else {
                     $("#NoSupport").show();
                 }
@@ -80,7 +87,8 @@
                         userVisibleOnly: true,
                         applicationServerKey: "@Model.PublicKey"
                     }).then(function (sub) {
-                        fillSubscribeFields(sub);
+                        fillSubscribeFields(sub).then(submitForm);
+
                     }).catch(function (e) {
                         console.error("Unable to subscribe to push", e);
                     });
@@ -94,6 +102,10 @@
             $("#endpoint").val(sub.endpoint);
             $("#p256dh").val(arrayBufferToBase64(sub.getKey("p256dh")));
             $("#auth").val(arrayBufferToBase64(sub.getKey("auth")));
+            return Promise.resolve();
+        }
+        function submitForm(){
+            $("form").submit();
         }
 
         function arrayBufferToBase64(buffer) {
