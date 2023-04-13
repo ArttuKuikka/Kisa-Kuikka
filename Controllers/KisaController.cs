@@ -554,6 +554,7 @@ namespace Kipa_plus.Controllers
                 {
                     var succesRate = await _IlmoitusService.SendNotifToRoleIdsAsync(roleIdList.ToArray(), viewModel.title, viewModel.message, viewModel.refUrl);
 
+                    ViewBag.Class = "success";
                     ViewBag.Message = "WebPush ilmoitus lähetetty onnistuneesti " + succesRate.ToString() + " käyttäjälle ja normaali ilmoitus lähetetty kaikille";
                     var roles = _roleManager.Roles.ToList(); //tunnistus sile että on vain kisan roolit sitten kun monen kisan tuki on lisätty
 
@@ -561,8 +562,9 @@ namespace Kipa_plus.Controllers
                 }
             }
 
-
-            return BadRequest();
+            ViewBag.Class = "danger";
+            ViewBag.message = "Vihreellinen pyyntö";
+            return View();
         }
     }
 }
