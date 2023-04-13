@@ -564,7 +564,7 @@ namespace Kipa_plus.Controllers
 
             ViewBag.Class = "danger";
             ViewBag.message = "Vihreellinen pyyntö";
-            return View();
+            return View(viewModel);
         }
     }
 }
