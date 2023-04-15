@@ -1,7 +1,7 @@
 version: '3.4'
 
 networks:
-  KipaNet:
+  KisaKuikkaNetwork:
 
 volumes:
   UploadFiles:
@@ -9,14 +9,14 @@ volumes:
 
 services:
   db:
-    container_name: Kipa-DB
+    container_name: KisaKuikka-DB
     image: mcr.microsoft.com/mssql/server:2022-latest
     restart: unless-stopped
     environment:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=S3cur3P@ssW0rd!
     networks:
-        - KipaNet
+        - KisaKuikkaNetwork
     volumes:
         - type: volume
           source: DataBaseFiles
@@ -34,7 +34,7 @@ services:
     ports:
         - 8001:80
     networks:
-        - KipaNet
+        - KisaKuikkaNetwork
     environment:
       TZ: "Europe/Helsinki"
       DB_HOST: "db"
