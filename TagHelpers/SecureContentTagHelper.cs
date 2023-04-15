@@ -1,6 +1,6 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
-using Kipa_plus.Models.DynamicAuth;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
+using Kisa_Kuikka.Models.DynamicAuth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-using Kipa_plus.Filters;
+using Kisa_Kuikka.Filters;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Reflection;
 
-namespace Kipa_plus.TagHelpers
+namespace Kisa_Kuikka.TagHelpers
 {
     [HtmlTargetElement("secure-content")]
     public class SecureContentTagHelper : TagHelper

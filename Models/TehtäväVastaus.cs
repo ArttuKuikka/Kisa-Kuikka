@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Kipa_plus.Models
+namespace Kisa_Kuikka.Models
 {
     public class TehtavaVastaus
     {

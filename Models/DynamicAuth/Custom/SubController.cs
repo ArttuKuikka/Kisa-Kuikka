@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Kipa_plus.Models.DynamicAuth.Custom
+namespace Kisa_Kuikka.Models.DynamicAuth.Custom
 {
     public class SubController
     {

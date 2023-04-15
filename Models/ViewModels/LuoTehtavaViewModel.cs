@@ -1,4 +1,4 @@
-﻿namespace Kipa_plus.Models.ViewModels
+﻿namespace Kisa_Kuikka.Models.ViewModels
 {
     public class LuoTehtavaViewModel
     {

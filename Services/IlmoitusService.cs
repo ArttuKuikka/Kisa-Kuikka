@@ -1,11 +1,11 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models.DynamicAuth;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models.DynamicAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Newtonsoft.Json.Linq;
 using WebPush;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
     public class IlmoitusService: IilmoitusService
     {
@@ -160,7 +160,7 @@ namespace Kipa_plus.Services
         /// <returns>True jos webpush ilmoituksen lähetys onnistui, false jos ei</returns>
         public async Task<bool> SendNotifToUser(IdentityUser user, string? title, string? message, string? refurl)
         {
-            title = title ?? "Kipa-plus ilmoitus";
+            title = title ?? "Kisa-Kuikka ilmoitus";
             message = message ?? "<Ei sisältöä>";
             refurl = refurl ?? "/";
 

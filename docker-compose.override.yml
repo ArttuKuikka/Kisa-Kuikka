@@ -4,7 +4,7 @@ services:
   db:
     ports:
       - 8002:1433
-  kipa-plus:
+  Kisa-Kuikka:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80

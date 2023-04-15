@@ -1,6 +1,6 @@
-﻿using Kipa_plus.Controllers;
-using Kipa_plus.Data;
-using Kipa_plus.Models.DynamicAuth.Custom;
+﻿using Kisa_Kuikka.Controllers;
+using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models.DynamicAuth.Custom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
     public class RastiDiscovery //TODO: vaihda käyttämään subcontroller attributeja
     {

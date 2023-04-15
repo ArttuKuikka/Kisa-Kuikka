@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Kipa_plus.Models.ViewModels
+namespace Kisa_Kuikka.Models.ViewModels
 {
     public class SendPushViewModel
     {

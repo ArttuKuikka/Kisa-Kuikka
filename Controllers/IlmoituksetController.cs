@@ -1,7 +1,7 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
-using Kipa_plus.Models.ViewModels;
-using Kipa_plus.Services;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
+using Kisa_Kuikka.Models.ViewModels;
+using Kisa_Kuikka.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +12,7 @@ using NPOI.SS.Formula.Functions;
 using System.Security.Cryptography.X509Certificates;
 using WebPush;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [AllowAllAuthorized]

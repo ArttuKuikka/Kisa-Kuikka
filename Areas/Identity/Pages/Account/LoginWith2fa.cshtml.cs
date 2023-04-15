@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace Kipa_plus.Areas.Identity.Pages.Account
+namespace Kisa_Kuikka.Areas.Identity.Pages.Account
 {
     public class LoginWith2faModel : PageModel
     {

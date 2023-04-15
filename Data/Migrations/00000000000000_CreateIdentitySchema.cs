@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace Kipa_plus.Data.Migrations
+namespace Kisa_Kuikka.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

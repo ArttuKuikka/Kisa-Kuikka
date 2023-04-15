@@ -1,5 +1,5 @@
-﻿using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Filters;
+﻿using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Filters;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -7,13 +7,13 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Kipa_plus.Models;
-using Kipa_plus.Services;
-using Kipa_plus.Data;
+using Kisa_Kuikka.Models;
+using Kisa_Kuikka.Services;
+using Kisa_Kuikka.Data;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Kipa_plus.Models.DynamicAuth.Custom;
+using Kisa_Kuikka.Models.DynamicAuth.Custom;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [Static]

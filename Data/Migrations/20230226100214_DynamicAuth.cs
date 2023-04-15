@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Kipaplus.Data.Migrations
+namespace KisaKuikka.Data.Migrations
 {
     /// <inheritdoc />
     public partial class DynamicAuth : Migration

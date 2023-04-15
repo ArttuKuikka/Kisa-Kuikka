@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kipa_plus.Models
+namespace Kisa_Kuikka.Models
 {
     public class Tilanne
     {

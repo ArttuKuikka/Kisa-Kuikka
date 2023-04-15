@@ -1,7 +1,7 @@
 version: '3.4'
 
 networks:
-  KipaNet:
+  KisaKuikkaNetwork:
 
 volumes:
   UploadFiles:
@@ -9,22 +9,22 @@ volumes:
 
 services:
   db:
-    container_name: Kipa-DB
+    container_name: KisaKuikka-DB
     image: mcr.microsoft.com/mssql/server:2022-latest
     restart: unless-stopped
     environment:
         - ACCEPT_EULA=Y
         - SA_PASSWORD=S3cur3P@ssW0rd!
     networks:
-        - KipaNet
+        - KisaKuikkaNetwork
     volumes:
         - type: volume
           source: DataBaseFiles
           target: /var/opt/mssql
 
-  kipa-plus:
-    container_name: Kipa-Plus
-    image: arttukuikka/kipaplus:latest
+  Kisa-Kuikka:
+    container_name: Kisa-Kuikka
+    image: arttukuikka/kisakuikka:latest
     restart: unless-stopped
     build:
       context: .
@@ -34,12 +34,12 @@ services:
     ports:
         - 8001:80
     networks:
-        - KipaNet
+        - KisaKuikkaNetwork
     environment:
       TZ: "Europe/Helsinki"
       DB_HOST: "db"
       DB_PORT: "1433"
-      DB_NAME: "KipaPlus"
+      DB_NAME: "KisaKuikka"
       DB_USER: "sa"
       DB_USER_PASSWORD: "S3cur3P@ssW0rd!"
       DefaultAdminUser: "admin@arttukuikka.fi"

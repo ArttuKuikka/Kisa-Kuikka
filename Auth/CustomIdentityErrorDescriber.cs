@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Kipa_plus.Auth
+namespace Kisa_Kuikka.Auth
 {
     public class CustomIdentityErrorDescriber : IdentityErrorDescriber
     {
