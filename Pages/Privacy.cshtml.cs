@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace Kipa_plus.Pages
+namespace Kisa_Kuikka.Pages
 {
     public class PrivacyModel : PageModel
     {

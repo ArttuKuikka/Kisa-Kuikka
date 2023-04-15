@@ -1,5 +1,5 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -14,7 +14,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [Static]
@@ -217,7 +217,7 @@ namespace Kipa_plus.Controllers
             var xssfworkbook = workbook as NPOI.XSSF.UserModel.XSSFWorkbook;
             var properties = xssfworkbook.GetProperties();
             var coreProperties = properties.CoreProperties;
-            coreProperties.Creator = "Kipa-Plus";
+            coreProperties.Creator = "Kisa-Kuikka";
             
             using (var fs = new FileStream("output.xlsx", FileMode.Create, FileAccess.Write))
             {

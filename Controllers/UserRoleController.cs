@@ -6,12 +6,12 @@ using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Filters;
-using Kipa_plus.Models;
+using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Filters;
+using Kisa_Kuikka.Models;
 using System.Security.Claims;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     
     [Authorize]

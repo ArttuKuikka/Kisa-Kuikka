@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Filters;
-using Kipa_plus.Services;
+using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Filters;
+using Kisa_Kuikka.Services;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 
-namespace Kipa_plus.Extensions
+namespace Kisa_Kuikka.Extensions
 {
     public static class ServiceCollectionExtensions
     {
@@ -106,7 +106,7 @@ namespace Kipa_plus.Extensions
             if (mvcBuilder == null)
                 throw new ArgumentNullException(nameof(mvcBuilder));
             //var asslist = AppDomain.CurrentDomain.GetAssemblies();
-            //var assemblies = asslist.Where(a => a.FullName.StartsWith("Kipa-plus")).ToList();
+            //var assemblies = asslist.Where(a => a.FullName.StartsWith("Kisa-Kuikka")).ToList();
             //foreach (var assembly in assemblies)
             //{
             //    if (assembly.FullName.Contains("Views"))

@@ -1,7 +1,7 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
-using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Models.DynamicAuth.Custom;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
+using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Models.DynamicAuth.Custom;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +12,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
 
     public class RoleAccessStore : IRoleAccessStore

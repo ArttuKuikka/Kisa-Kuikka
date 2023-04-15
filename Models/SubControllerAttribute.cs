@@ -1,6 +1,6 @@
-﻿using Kipa_plus.Data;
+﻿using Kisa_Kuikka.Data;
 
-namespace Kipa_plus.Models
+namespace Kisa_Kuikka.Models
 {
     public class SubControllerAttribute : Attribute
     {

@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kipa_plus.Models.ViewModels
+namespace Kisa_Kuikka.Models.ViewModels
 {
     public class ManuaalinenTagSkannausViewModel
     {

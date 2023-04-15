@@ -1,4 +1,4 @@
-using Kipa_plus.Data;
+using Kisa_Kuikka.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,13 +8,13 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.StaticFiles;
 
-using Kipa_plus.Auth;
-using Kipa_plus.Services;
-using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Filters;
-using Kipa_plus.Extensions;
+using Kisa_Kuikka.Auth;
+using Kisa_Kuikka.Services;
+using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Filters;
+using Kisa_Kuikka.Extensions;
 using Microsoft.Extensions.DependencyInjection;
-using Kipa_plus.Controllers;
+using Kisa_Kuikka.Controllers;
 using System.Reflection;
 //using static NPOI.XSSF.UserModel.Charts.XSSFLineChartData<Tx, Ty>;
 

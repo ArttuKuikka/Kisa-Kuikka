@@ -4,11 +4,11 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "composeLaunchAction": "LaunchBrowser",
-      "composeLaunchServiceName": "kipa-plus",
+      "composeLaunchServiceName": "Kisa-Kuikka",
       "composeLaunchUrl": "{Scheme}://localhost:{ServicePort}",
       "serviceActions": {
         "db": "StartWithoutDebugging",
-        "kipa-plus": "StartDebugging"
+        "Kisa-Kuikka": "StartDebugging"
       }
     }
   }

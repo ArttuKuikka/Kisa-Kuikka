@@ -1,9 +1,9 @@
-﻿using Kipa_plus.Controllers;
+﻿using Kisa_Kuikka.Controllers;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using System.Reflection;
 
-namespace Kipa_plus.Models.DynamicAuth
+namespace Kisa_Kuikka.Models.DynamicAuth
 {
     public class GenericRestControllerFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {

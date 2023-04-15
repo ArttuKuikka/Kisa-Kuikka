@@ -1,8 +1,8 @@
-﻿using Kipa_plus.Models.DynamicAuth;
+﻿using Kisa_Kuikka.Models.DynamicAuth;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
     internal class SqlTableCreator
     {

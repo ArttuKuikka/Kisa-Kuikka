@@ -1,14 +1,14 @@
-﻿using Kipa_plus.Data;
+﻿using Kisa_Kuikka.Data;
 using Microsoft.AspNetCore.Mvc;
-using Kipa_plus.Models;
+using Kisa_Kuikka.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
-using Kipa_plus.Models.ViewModels;
+using Kisa_Kuikka.Models.ViewModels;
 using System.Collections.Generic;
-using Kipa_plus.Models.DynamicAuth;
+using Kisa_Kuikka.Models.DynamicAuth;
 using System.Globalization;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [SubController(Group = "Rasti")]

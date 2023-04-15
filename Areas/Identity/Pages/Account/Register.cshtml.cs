@@ -10,8 +10,8 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
-using Kipa_plus.Data;
-using Kipa_plus.Models.DynamicAuth;
+using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models.DynamicAuth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +22,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace Kipa_plus.Areas.Identity.Pages.Account
+namespace Kisa_Kuikka.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {

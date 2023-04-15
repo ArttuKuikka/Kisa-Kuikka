@@ -1,4 +1,4 @@
-﻿namespace Kipa_plus.Models.DynamicAuth.Custom
+﻿namespace Kisa_Kuikka.Models.DynamicAuth.Custom
 {
     public class MainController
     {

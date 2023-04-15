@@ -22,9 +22,9 @@ services:
           source: DataBaseFiles
           target: /var/opt/mssql
 
-  kipa-plus:
-    container_name: Kipa-Plus
-    image: arttukuikka/kipaplus:latest
+  Kisa-Kuikka:
+    container_name: Kisa-Kuikka
+    image: arttukuikka/kipa-plus:latest
     restart: unless-stopped
     build:
       context: .
@@ -39,7 +39,7 @@ services:
       TZ: "Europe/Helsinki"
       DB_HOST: "db"
       DB_PORT: "1433"
-      DB_NAME: "KipaPlus"
+      DB_NAME: "KisaKuikka"
       DB_USER: "sa"
       DB_USER_PASSWORD: "S3cur3P@ssW0rd!"
       DefaultAdminUser: "admin@arttukuikka.fi"
