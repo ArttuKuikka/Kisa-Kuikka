@@ -14,20 +14,20 @@ jobs:
     steps:
       - name: Pysäytä container
         continue-on-error: true
-        run: docker kill Kipa-Plus
+        run: docker kill Kisa-Kuikka
 
       - name: Poista container
         continue-on-error: true
-        run: docker container rm Kipa-Plus
+        run: docker container rm Kisa-Kuikka
 
       - name: Poista vanha image
         continue-on-error: true
-        run: docker image rm arttukuikka/kipaplus  
+        run: docker image rm arttukuikka/kisakuikka
         
       - name: lataa uusi
-        run: docker pull arttukuikka/kipaplus:latest
+        run: docker pull arttukuikka/kisakuikka:latest
         
         
       - name: suorita compose
-        working-directory: /home/administrator/KipaPlus
+        working-directory: /home/administrator/KisaKuikka
         run: docker compose up -d
