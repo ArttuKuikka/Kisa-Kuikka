@@ -24,7 +24,7 @@ services:
 
   Kisa-Kuikka:
     container_name: Kisa-Kuikka
-    image: arttukuikka/kipa-plus:latest
+    image: arttukuikka/kisakuikka:latest
     restart: unless-stopped
     build:
       context: .
