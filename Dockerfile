@@ -7,16 +7,16 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
-COPY ["Kipa-plus.csproj", "."]
-RUN dotnet restore "./Kipa-plus.csproj"
+COPY ["Kisa-Kuikka.csproj", "."]
+RUN dotnet restore "./Kisa-Kuikka.csproj"
 COPY . .
 WORKDIR "/src/."
-RUN dotnet build "Kipa-plus.csproj" -c Release -o /app/build
+RUN dotnet build "Kisa-Kuikka.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Kipa-plus.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "Kisa-Kuikka.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Kipa-plus.dll"]
+ENTRYPOINT ["dotnet", "Kisa-Kuikka.dll"]

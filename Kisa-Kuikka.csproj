@@ -4,8 +4,8 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-Kipa_plus-74191932-8261-4834-b0bf-f59eb4a937b2</UserSecretsId>
-    <RootNamespace>Kipa_plus</RootNamespace>
+    <UserSecretsId>aspnet-Kisa_Kuikka-74191932-8261-4834-b0bf-f59eb4a937b2</UserSecretsId>
+    <RootNamespace>Kisa_Kuikka</RootNamespace>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>.</DockerfileContext>
   </PropertyGroup>

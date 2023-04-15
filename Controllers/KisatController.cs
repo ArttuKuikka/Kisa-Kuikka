@@ -1,10 +1,10 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [AllowAllAuthorized]

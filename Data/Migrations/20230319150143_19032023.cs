@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace Kipaplus.Data.Migrations
+namespace KisaKuikka.Data.Migrations
 {
     /// <inheritdoc />
     public partial class _19032023 : Migration

@@ -5,19 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Kipa_plus.Data;
-using Kipa_plus.Models;
-using Kipaplus.Data.Migrations;
-using Kipa_plus.Models.ViewModels;
+using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
+using KisaKuikka.Data.Migrations;
+using Kisa_Kuikka.Models.ViewModels;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
-using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Services;
+using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Services;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [SubController(Group = "Rasti")]

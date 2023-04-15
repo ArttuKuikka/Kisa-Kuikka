@@ -1,4 +1,4 @@
-﻿using Kipa_plus.Models.DynamicAuth;
+﻿using Kisa_Kuikka.Models.DynamicAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
     internal class IdentityService<TDbContext> : IdentityService<TDbContext, IdentityUser, IdentityRole, string>
         where TDbContext : IdentityDbContext

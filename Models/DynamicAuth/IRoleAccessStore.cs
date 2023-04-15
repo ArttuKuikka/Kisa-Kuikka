@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Kipa_plus.Models.DynamicAuth
+namespace Kisa_Kuikka.Models.DynamicAuth
 {
     public interface IRoleAccessStore
     {

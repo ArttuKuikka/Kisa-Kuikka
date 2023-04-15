@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kipa_plus.Models.DynamicAuth
+namespace Kisa_Kuikka.Models.DynamicAuth
 {
     public class UserRoleViewModel
     {

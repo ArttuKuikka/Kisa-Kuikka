@@ -1,7 +1,7 @@
-﻿using Kipa_plus.Models.DynamicAuth.Custom;
+﻿using Kisa_Kuikka.Models.DynamicAuth.Custom;
 using System.ComponentModel.DataAnnotations;
 
-namespace Kipa_plus.Models.DynamicAuth
+namespace Kisa_Kuikka.Models.DynamicAuth
 {
     public class RoleViewModel
     {

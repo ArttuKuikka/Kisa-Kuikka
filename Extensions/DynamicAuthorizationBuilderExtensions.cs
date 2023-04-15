@@ -1,7 +1,7 @@
-﻿using Kipa_plus.Models.DynamicAuth;
-using Kipa_plus.Services;
+﻿using Kisa_Kuikka.Models.DynamicAuth;
+using Kisa_Kuikka.Services;
 
-namespace Kipa_plus.Extensions
+namespace Kisa_Kuikka.Extensions
 {
     public static class DynamicAuthorizationBuilderExtensions
     {

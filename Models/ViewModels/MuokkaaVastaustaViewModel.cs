@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kipa_plus.Models.ViewModels
+namespace Kisa_Kuikka.Models.ViewModels
 {
     public class MuokkaaVastaustaViewModel
     {

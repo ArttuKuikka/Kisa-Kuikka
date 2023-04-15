@@ -1,12 +1,12 @@
-﻿using Kipa_plus.Data;
-using Kipa_plus.Models;
-using Kipaplus.Data.Migrations;
+﻿using Kisa_Kuikka.Data;
+using Kisa_Kuikka.Models;
+using KisaKuikka.Data.Migrations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.ComponentModel;
 
-namespace Kipa_plus.Controllers
+namespace Kisa_Kuikka.Controllers
 {
     [Authorize]
     [Static]

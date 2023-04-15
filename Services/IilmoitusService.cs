@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace Kipa_plus.Services
+namespace Kisa_Kuikka.Services
 {
     public interface IilmoitusService
     {
