@@ -1,6 +1,6 @@
 ﻿@model Kisa_Kuikka.Models.ViewModels.TarkistaTehtäväViewModel
 @inject UserManager<IdentityUser> UserManager
-
+@using Newtonsoft.Json.Linq;
 @{
     ViewData["Title"] = "Tarkista tehtävä";
 }
@@ -35,26 +35,33 @@
                 }
 
                 string? jatkaja = "";
-                var jid = Model.VertausMalli?.JatkajaUserId;
-                if (jid != null)
-                {
-                    var user = await UserManager.FindByIdAsync(jid);
-                    if (user != null)
-                    {
-                        var claims = await UserManager.GetClaimsAsync(user);
-                        jatkaja = "Jatkaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
-                    }
-                }
+
+    if(Model.VertausMalli.JatkajatJson != null)
+    {
+        var jArr = JArray.Parse(Model.VertausMalli.JatkajatJson);
+        foreach(var item in jArr)
+        {
+            var user = await UserManager.FindByIdAsync(item["UserId"].ToString());
+            var claims = await UserManager.GetClaimsAsync(user);
+            var nimi = claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+            var aika = DateTime.Parse(item["Aika"].ToString()).ToString("dd.MM.yyyy HH.mm");
+            if(jatkaja == "")
+            {
+                jatkaja = "Jatkettu (Käyttäjä, Aika): " + $"({nimi}, {aika})";
+            }
+            else
+            {
+                jatkaja += $", ({nimi}, {aika})";
+            }
+        }
+    }
 
             }
             <h5>Täytetty: @Model.VertausMalli?.TäyttämisAika.ToString("dd.MM.yyyy HH.mm")</h5>
             <h5>@tayttaja</h5>
             @if(jatkaja != null || jatkaja != "")
             {
-                @if(Model?.VertausMalli?.JatkamisAika != null)
-                {
-                <h5>Jatkettu: @Model.VertausMalli?.JatkamisAika?.ToString("dd.MM.yyyy HH.mm")</h5>
-                }
+               
                 <h5>@jatkaja</h5>
             }
             <hr />
