@@ -58,7 +58,7 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,Numero,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa,tehtavaPaikat")] Rasti rasti)
+        public async Task<IActionResult> Edit(int? RastiId, [Bind("Id,SarjaId,KisaId,Nimi,Numero,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa,tehtavaPaikat,PiilotaTilanneseurannasta")] Rasti rasti)
         {
             if (RastiId != rasti.Id)
             {
@@ -95,6 +95,7 @@ namespace Kisa_Kuikka.Controllers
                         findrasti.TarkistusKaytossa = rasti.TarkistusKaytossa;
                         findrasti.VaadiKahdenKayttajanTarkistus = rasti.VaadiKahdenKayttajanTarkistus;
                         findrasti.tehtavaPaikat = rasti.tehtavaPaikat;
+                        findrasti.PiilotaTilanneseurannasta = rasti.PiilotaTilanneseurannasta;
                         await _context.SaveChangesAsync();
                     }
                     catch (DbUpdateConcurrencyException)

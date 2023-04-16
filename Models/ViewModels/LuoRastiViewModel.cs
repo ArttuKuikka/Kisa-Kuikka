@@ -9,6 +9,7 @@
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }
         public int? tehtavaPaikat { get; set; }
+        public bool PiilotaTilanneseurannasta { get; set; }
         public IQueryable<Tilanne>? Tilanteet { get; set; }
     }
 }

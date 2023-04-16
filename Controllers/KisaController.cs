@@ -135,7 +135,7 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("LuoRasti")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,Numero,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa,tehtavaPaikat")] LuoRastiViewModel luoRastiViewModel)
+        public async Task<IActionResult> LuoRasti([Bind("KisaId,Nimi,Numero,NykyinenTilanneId,VaadiKahdenKayttajanTarkistus,TarkistusKaytossa,tehtavaPaikat,PiilotaTilanneseurannasta")] LuoRastiViewModel luoRastiViewModel)
         {
             luoRastiViewModel.Tilanteet = _context.Tilanne.Where(x => x.KisaId == luoRastiViewModel.KisaId);
             if (ModelState.IsValid)
@@ -156,7 +156,9 @@ namespace Kisa_Kuikka.Controllers
                     tehtavaPaikat = luoRastiViewModel.tehtavaPaikat,
                     TilanneId = luoRastiViewModel.NykyinenTilanneId,
                     TarkistusKaytossa = luoRastiViewModel.TarkistusKaytossa,
-                    VaadiKahdenKayttajanTarkistus = luoRastiViewModel.VaadiKahdenKayttajanTarkistus};
+                    VaadiKahdenKayttajanTarkistus = luoRastiViewModel.VaadiKahdenKayttajanTarkistus,
+                    PiilotaTilanneseurannasta = luoRastiViewModel.PiilotaTilanneseurannasta,
+                };
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
                 return Redirect("/Kisa/" + luoRastiViewModel.KisaId + "/Rastit");

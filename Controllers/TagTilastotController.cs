@@ -82,7 +82,7 @@ namespace Kisa_Kuikka.Controllers
 
                 //sarjat ja rastit listat
                 var sarjat = _context.Sarja.Where(x => x.KisaId == kisaId).ToList();
-                var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+                var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).Where(x => x.PiilotaTilanneseurannasta == false).ToList();
                 rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
 
                 //rastien nimet
@@ -137,7 +137,7 @@ namespace Kisa_Kuikka.Controllers
 
                         //seuraavan rastin tunnistus
                         //luo lista json perusteella rastien järjestyksestä jossa ne kuuluisi mennä
-                        var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
+                        var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).Where(x => x.PiilotaTilanneseurannasta == false).ToList();
 
                         var rastitJärjestyksessä = new List<Rasti>();
                         if (sarja.RastienJarjestysJSON != null)

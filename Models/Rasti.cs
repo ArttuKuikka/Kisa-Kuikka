@@ -11,6 +11,7 @@ namespace Kisa_Kuikka.Models
         public int TilanneId { get; set; }
         public bool VaadiKahdenKayttajanTarkistus { get; set; }
         public bool TarkistusKaytossa { get; set; }
+        public bool PiilotaTilanneseurannasta { get; set; }
         public int? tehtavaPaikat { get; set; }
 
         [NotMapped]
