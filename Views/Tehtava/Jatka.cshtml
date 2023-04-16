@@ -207,6 +207,13 @@
             function Submittaa(Kesken) {
                 var data = fb.userData;
 
+
+                 //tarkista varoitukset
+                if(varoituslista.length > 0){
+                    alert('korjaa kaikki kentätät jotka ovat yli maksimirajan tai ali minimirajan')
+                    return;
+                }
+
                 //tarkista että kaikkissa required fieldeissä on userdataa
                 for (let i = 0; i < data.length; i++) {
 
