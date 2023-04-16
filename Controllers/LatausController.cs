@@ -102,82 +102,95 @@ namespace Kisa_Kuikka.Controllers
                         var tehtindex = 0;
                         foreach (var tehtava in tehtäväpohjat)
                         {
-                            //lisää pituudet
-                            rastinpituus++;
-                            TehtäväNimiHeaderPituus++;
-                            kokosheetpituus++;
-
-                            //aseta userData joka vartiolle
-                            var vartiovastausrowindex = 0; 
-                            foreach(var vartio in sarjanvartiot)
+                            bool lisääLataukseen = true;
+                            var latausFlag = tehtava["lataa"];
+                            if (latausFlag != null)
                             {
-                                var tehtvastaus = _context.TehtavaVastaus.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).Where(x => x.TehtavaId == item.Id).Where(x => x.VartioId == vartio.Id).Where(x => x.Tarkistettu == true).FirstOrDefault();
-                               if(tehtvastaus!= null)
+                                var val = latausFlag.Value<string>();
+                                if(val == "False")
                                 {
-                                    var formitem = JArray.Parse(tehtvastaus.TehtavaJson)[tehtindex];
+                                    lisääLataukseen = false;
+                                }
+                            }
+                            if (lisääLataukseen)
+                            {
+                                //lisää pituudet
+                                rastinpituus++;
+                                TehtäväNimiHeaderPituus++;
+                                kokosheetpituus++;
 
-                                    var userData = formitem["userData"];
-                                    if(userData != null && formitem != null)
+                                //aseta userData joka vartiolle
+                                var vartiovastausrowindex = 0;
+                                foreach (var vartio in sarjanvartiot)
+                                {
+                                    var tehtvastaus = _context.TehtavaVastaus.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).Where(x => x.TehtavaId == item.Id).Where(x => x.VartioId == vartio.Id).Where(x => x.Tarkistettu == true).FirstOrDefault();
+                                    if (tehtvastaus != null)
                                     {
-                                        var data0 = userData[0];
+                                        var formitem = JArray.Parse(tehtvastaus.TehtavaJson)[tehtindex];
 
-
-                                        var vastausrow = rowlist[vartiovastausrowindex]; //ota vartion oikea row
-                                        var vastauscell = vastausrow.CreateCell(FormItemRowlastindex);
-
-
-                                        if(data0 != null && data0.ToString() != "")
+                                        var userData = formitem["userData"];
+                                        if (userData != null && formitem != null)
                                         {
-                                            switch (formitem["type"].ToString())
+                                            var data0 = userData[0];
+
+
+                                            var vastausrow = rowlist[vartiovastausrowindex]; //ota vartion oikea row
+                                            var vastauscell = vastausrow.CreateCell(FormItemRowlastindex);
+
+
+                                            if (data0 != null && data0.ToString() != "")
                                             {
-                                                case "currentTime":
-                                                    if(DateTime.TryParse(data0.ToString(), out var time))
-                                                    {
-                                                        vastauscell.SetCellValue(time.ToLocalTime());
-                                                    }
-                                                    else
-                                                    {
+                                                switch (formitem["type"].ToString())
+                                                {
+                                                    case "currentTime":
+                                                        if (DateTime.TryParse(data0.ToString(), out var time))
+                                                        {
+                                                            vastauscell.SetCellValue(time.ToLocalTime());
+                                                        }
+                                                        else
+                                                        {
+                                                            vastauscell.SetCellValue(data0.ToString());
+                                                        }
+                                                        break;
+                                                    case "fileUpload":
+                                                        vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
+                                                        break;
+                                                    case "number":
+
+                                                        if (double.TryParse(data0.ToString(), System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
+                                                        {
+                                                            vastauscell.SetCellValue(parsed);
+                                                        }
+                                                        else
+                                                        {
+                                                            vastauscell.SetCellValue(data0.ToString());
+                                                        }
+
+                                                        break;
+                                                    default:
                                                         vastauscell.SetCellValue(data0.ToString());
-                                                    }
-                                                    break;
-                                                case "fileUpload":
-                                                    vastauscell.SetCellValue("https://" + Request.Host + "/Tiedosto/Get?id=" + data0.ToString());
-                                                    break;
-                                                case "number":
+                                                        break;
 
-                                                    if (double.TryParse(data0.ToString(),System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture, out double parsed))
-                                                    {
-                                                        vastauscell.SetCellValue(parsed);
-                                                    }
-                                                    else
-                                                    {
-                                                        vastauscell.SetCellValue(data0.ToString());
-                                                    }
-
-                                                    break;
-                                                default:
-                                                    vastauscell.SetCellValue(data0.ToString());
-                                                    break;
-
+                                                }
                                             }
                                         }
                                     }
-                                }
 
                                     vartiovastausrowindex++;
-                            }
+                                }
 
-                            //luo cell missä lukee form item nimi
-                            var formitemname = FormItemRow.CreateCell(FormItemRowlastindex);
+                                //luo cell missä lukee form item nimi
+                                var formitemname = FormItemRow.CreateCell(FormItemRowlastindex);
 
-                            var label = tehtava["label"];
-                            if (label != null)
-                            {
-                                formitemname.SetCellValue(label.ToString());
+                                var label = tehtava["label"];
+                                if (label != null)
+                                {
+                                    formitemname.SetCellValue(label.ToString());
+                                }
+                                tehtindex++;
+
+                                FormItemRowlastindex++;
                             }
-                            tehtindex++;
-                            
-                            FormItemRowlastindex++;
                         }
 
                         sheet.AddMergedRegion(new CellRangeAddress(1, 1, RastinTehtävätRowlastindex, RastinTehtävätRowlastindex + TehtäväNimiHeaderPituus - 1));
