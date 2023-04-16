@@ -2,7 +2,7 @@
 @using Kisa_Kuikka.Models;
 @using Kisa_Kuikka.Models.ViewModels;
 @inject UserManager<IdentityUser> UserManager
-
+@using Newtonsoft.Json.Linq;
 @{
     ViewData["Title"] = "Rastin Tehtavapohjat";
 }
@@ -161,7 +161,16 @@
                             @if (Model.Rasti.VaadiKahdenKayttajanTarkistus)
                             {
                                 var nykyinenUser = await UserManager.GetUserAsync(User);
-                                @if(item.TäyttäjäUserId == nykyinenUser?.Id|| item.JatkajaUserId == nykyinenUser?.Id)
+                                var jatkajat = new List<(string, DateTime)>();
+                                if (item.JatkajatJson != null)
+                                {
+                                    var arr = JArray.Parse(item.JatkajatJson);
+                                    foreach (var fitem in arr)
+                                    {
+                                        jatkajat.Add((fitem["UserId"].ToString(), DateTime.Parse(fitem["Aika"].ToString())));
+                                    }
+                                }
+                                @if (item.TäyttäjäUserId == nykyinenUser?.Id || jatkajat.Where(x => x.Item1 == nykyinenUser?.Id).Any())
                                 {
                                     <button type="button" disabled class="btn btn-light">Et voi tarkistaa tehtävää jonka olet itse täyttänyt</button>
                                 }

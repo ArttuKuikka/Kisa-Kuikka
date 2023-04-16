@@ -24,7 +24,18 @@ window.fbControls.push(function media(controlClass) {
                 i18n: {
                     default: 'Aika',
                 },
-                
+                defaultAttrs: {
+                    'tarkista': {
+                        label: 'Tarkista',
+                        value: true,
+                        type: 'checkbox'
+                    },
+                    'lataa': {
+                        label: 'Sisällytä lataukseen',
+                        value: true,
+                        type: 'checkbox'
+                    }
+                }
                 
             };
         }

@@ -205,9 +205,26 @@ namespace Kisa_Kuikka.Controllers
                 return BadRequest("Tätä tehtävää ei ole syötetty vielä, joten sitä ei voi tarkistaa");
             }
 
+            
+            int index = 0;
+            var tehtArr = JArray.Parse(Tehtava.TehtavaJson);
+            var vastArr = JArray.Parse(Malli.TehtavaJson) ;
+            foreach (var field in tehtArr)
+            {
+                var tarkistafield = field["tarkista"];
+                if(tarkistafield != null)
+                {
+                    var val = tarkistafield.Value<string>();
+                    if (val == "False")
+                    {
+                        field["userData"] = vastArr[index]["userData"];
+                    }
+                }
+                index++;
+            }
             var vm = new TarkistaTehtäväViewModel();
 
-            vm.TehtavaJson = Tehtava.TehtavaJson;
+            vm.TehtavaJson = tehtArr.ToString();
             vm.VartioId = (int)Vartio.Id;
             vm.VartionNumeroJaNimi = Vartio.NumeroJaNimi;
             vm.VertausMalli = Malli;
@@ -234,7 +251,16 @@ namespace Kisa_Kuikka.Controllers
                     return BadRequest("Ei oikeusia tähän rastiin");
                 }
                 var rasti = await _context.Rasti.FindAsync(aiempitehtva.RastiId);
-                if(aiempitehtva.TäyttäjäUserId == user?.Id || aiempitehtva.JatkajaUserId == user?.Id)
+                var jatkajat = new List<(string, DateTime)>();
+                if(aiempitehtva.JatkajatJson != null)
+                {
+                    var arr = JArray.Parse(aiempitehtva.JatkajatJson);
+                    foreach(var item in arr)
+                    {
+                        jatkajat.Add((item["UserId"].ToString(), DateTime.Parse(item["Aika"].ToString())));
+                    }
+                }
+                if(aiempitehtva.TäyttäjäUserId == user?.Id || jatkajat.Where(x => x.Item1 == user?.Id).Any())
                 {
                     if(rasti != null)
                     {
@@ -398,7 +424,7 @@ namespace Kisa_Kuikka.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Jatka([Bind("TehtäväVastausId, TehtäväJson, RastiId")] JatkaTehtävääViewModel jatkaTehtävääViewModel)
+        public async Task<IActionResult> Jatka([Bind("TehtäväVastausId, TehtäväJson, RastiId, Kesken")] JatkaTehtävääViewModel jatkaTehtävääViewModel)
         {
             if (ModelState.IsValid)
             {
@@ -411,10 +437,18 @@ namespace Kisa_Kuikka.Controllers
 
 
                 tehtvastaus.TehtavaJson = jatkaTehtävääViewModel.TehtäväJson;
-                tehtvastaus.Kesken = false;
+                tehtvastaus.Kesken = jatkaTehtävääViewModel.Kesken;
                 var user = await _userManager.GetUserAsync(User);
-                tehtvastaus.JatkajaUserId = user?.Id;
-                tehtvastaus.JatkamisAika = DateTime.Now;
+
+                if(tehtvastaus.JatkajatJson == null)
+                {
+                    tehtvastaus.JatkajatJson = "[]";
+                }
+                var jatkajat = JArray.Parse(tehtvastaus.JatkajatJson);
+                jatkajat.Add(new JObject() { { "UserId", user?.Id }, { "Aika", DateTime.Now } });
+
+                tehtvastaus.JatkajatJson = jatkajat.ToString();
+
 
                 _context.Update(tehtvastaus);
                 _context.SaveChanges();

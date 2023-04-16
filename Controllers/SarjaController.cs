@@ -58,7 +58,7 @@ namespace Kisa_Kuikka.Controllers
         [HttpGet("Luo")]
         public IActionResult Luo(int kisaId)
         {
-            var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).ToList();
+            var rastit = _context.Rasti.Where(x => x.KisaId == kisaId).Where(x => x.PiilotaTilanneseurannasta == false).ToList();
             rastit.Sort((p1, p2) => p1.Numero.CompareTo(p2.Numero));
             var viewModel = new Models.ViewModels.SarjaViewModel { KisaId = kisaId, Rastit = rastit };
             return View(viewModel);
@@ -99,7 +99,7 @@ namespace Kisa_Kuikka.Controllers
 
             var viewModel = new SarjaViewModel() { Id= sarja.Id, Nimi = sarja.Nimi, KisaId = sarja.KisaId, Numero = sarja.Numero, VartionMaksimiko = sarja.VartionMaksimiko, VartionMinimikoko = sarja.VartionMinimikoko};
 
-            var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).ToList();
+            var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).Where(x => x.PiilotaTilanneseurannasta == false).ToList();
 
             var uusilista = new List<Rasti>();
             if(sarja.RastienJarjestysJSON != null)
@@ -110,7 +110,7 @@ namespace Kisa_Kuikka.Controllers
                     if (success)
                     {
                         var findrasti = await _context.Rasti.FindAsync(parsedid);
-                        if (findrasti != null)
+                        if (findrasti != null && findrasti.PiilotaTilanneseurannasta == false)
                         {
                             uusilista.Add(findrasti);
                             uudetrastit.Remove(findrasti);

@@ -1,4 +1,6 @@
 ﻿@model Kisa_Kuikka.Models.TehtavaVastaus;
+@using Newtonsoft.Json;
+@using Newtonsoft.Json.Linq;
 @inject UserManager<IdentityUser> UserManager
 @{
     ViewData["Title"] = "Nayta tehtävä vastaus";
@@ -24,14 +26,24 @@
     }
 
     string? jatkaja = "";
-    var jid = Model.JatkajaUserId;
-    if (jid != null)
+
+    if(Model.JatkajatJson != null)
     {
-        var user = await UserManager.FindByIdAsync(jid);
-        if (user != null)
+        var jArr = JArray.Parse(Model.JatkajatJson);
+        foreach(var item in jArr)
         {
+            var user = await UserManager.FindByIdAsync(item["UserId"].ToString());
             var claims = await UserManager.GetClaimsAsync(user);
-            jatkaja = "Jatkaja: " + claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+            var nimi = claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+            var aika = DateTime.Parse(item["Aika"].ToString()).ToString("dd.MM.yyyy HH.mm");
+            if(jatkaja == "")
+            {
+                jatkaja = "Jatkettu (Käyttäjä, Aika): " + $"({nimi}, {aika})";
+            }
+            else
+            {
+                jatkaja += $", ({nimi}, {aika})";
+            }
         }
     }
 
@@ -52,10 +64,7 @@
 <h5>@tayttaja</h5>
 @if (jatkaja != null || jatkaja != "")
 {
-    @if(Model?.JatkamisAika != null)
-    {
-        <h5>Jatkettu: @Model?.JatkamisAika?.ToString("dd.MM.yyyy HH.mm")</h5>
-    }
+  
     <h5>@jatkaja</h5>
 }
 @if(Model?.TarkistusAika != null)

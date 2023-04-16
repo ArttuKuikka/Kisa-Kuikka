@@ -14,10 +14,9 @@ namespace Kisa_Kuikka.Models
         public string? TehtavaJson { get; set; }
         public bool Tarkistettu { get; set; }
         public string? TäyttäjäUserId { get; set; }
-        public string? JatkajaUserId { get; set; }
+        public string? JatkajatJson { get; set; }
         public string? TarkistajaUserId { get; set; }
         public DateTime TäyttämisAika { get; set; }
-        public DateTime? JatkamisAika { get; set; }
         public DateTime? TarkistusAika { get; set; }
     }
 }

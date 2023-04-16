@@ -35,6 +35,16 @@ window.fbControls.push(function media(controlClass) {
                         value: 5,
                         type: 'number'
                     },
+                    'tarkista': {
+                        label: 'Tarkista',
+                        value: true,
+                        type: 'checkbox'
+                    },
+                    'lataa': {
+                        label: 'Sisällytä lataukseen',
+                        value: true,
+                        type: 'checkbox'
+                    }
                     }
                 
                 
