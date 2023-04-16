@@ -187,10 +187,11 @@ namespace Kisa_Kuikka.Controllers
                                 {
                                     formitemname.SetCellValue(label.ToString());
                                 }
-                                tehtindex++;
+                                
 
                                 FormItemRowlastindex++;
                             }
+                            tehtindex++;
                         }
 
                         sheet.AddMergedRegion(new CellRangeAddress(1, 1, RastinTehtävätRowlastindex, RastinTehtävätRowlastindex + TehtäväNimiHeaderPituus - 1));
