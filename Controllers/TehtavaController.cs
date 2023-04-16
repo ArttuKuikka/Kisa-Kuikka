@@ -205,7 +205,7 @@ namespace Kisa_Kuikka.Controllers
                 return BadRequest("Tätä tehtävää ei ole syötetty vielä, joten sitä ei voi tarkistaa");
             }
 
-            string jsonWithAnwsers = "[]";
+            
             int index = 0;
             var tehtArr = JArray.Parse(Tehtava.TehtavaJson);
             var vastArr = JArray.Parse(Malli.TehtavaJson) ;
@@ -214,7 +214,8 @@ namespace Kisa_Kuikka.Controllers
                 var tarkistafield = field["tarkista"];
                 if(tarkistafield != null)
                 {
-                    if (tarkistafield.Value<string>() == "true")
+                    var val = tarkistafield.Value<string>();
+                    if (val == "False")
                     {
                         field["userData"] = vastArr[index]["userData"];
                     }
@@ -223,7 +224,7 @@ namespace Kisa_Kuikka.Controllers
             }
             var vm = new TarkistaTehtäväViewModel();
 
-            vm.TehtavaJson = jsonWithAnwsers;
+            vm.TehtavaJson = tehtArr.ToString();
             vm.VartioId = (int)Vartio.Id;
             vm.VartionNumeroJaNimi = Vartio.NumeroJaNimi;
             vm.VertausMalli = Malli;
