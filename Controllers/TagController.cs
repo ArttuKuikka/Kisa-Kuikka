@@ -51,7 +51,7 @@ namespace Kisa_Kuikka.Controllers
                     skannaukset = skannaukset.OrderBy(x => x.Lahto == null).ThenBy(x => x.Tulo == null).ThenBy(x => x.Lahto).ToList();
                     skannaukset.Reverse();
 
-                    return View(new TagIndexViewModel() { RastiId = (int)RastiId, Skannatut = skannaukset, RastiNimi = rasti.Nimi });
+                    return View(new TagIndexViewModel() { RastiId = (int)RastiId, Skannatut = skannaukset, RastiNimi = rasti.NumeroJaNimi });
                 }
             }
             return BadRequest();
