@@ -38,6 +38,12 @@
                 <span asp-validation-for="LahetaIlmoituksiaRastinTilanvaihdosta" class="text-danger"></span>
             </div>
             <br />
+             <div class="form-group">
+                <label class="control-label">Laheta ilmoitus rastin tilanvaihdosta henkilöille joiden roolit sisältävät oikeuden valtuuksia vaativien tilojen vaihtoon</label>
+                <input type="checkbox" asp-for="LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville" class="form-check-input" />
+                <span asp-validation-for="LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville" class="text-danger"></span>
+            </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

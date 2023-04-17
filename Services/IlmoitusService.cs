@@ -66,16 +66,32 @@ namespace Kisa_Kuikka.Services
         /// <param name="title">Otsikko</param>
         /// <param name="message">Viesti</param>
         /// <param name="refurl">URL johon selain vie kun ilmoitusta painetaan</param>
+        /// <param name="ÄläLähetäValtuudetOmaaville">true jos et halua lähettää ilmoitusta oikeuden 'Oikeus valtuuksia tarviviin rasti-tilanteisiin' omaaville rooleille</param>
         /// <returns>
         /// Numeron kuinka monelle käyttäjälle webPush ilmoitus lähetettiin onnistuneesti
         /// </returns>
-        public async Task<int> SendNotifToRastiIdsAsync(int[]? RastiIds, string? title, string? message, string? refurl)
+        public async Task<int> SendNotifToRastiIdsAsync(int[]? RastiIds, string? title, string? message, string? refurl, bool? ÄläLähetäValtuudetOmaaville)
         {
             var roles = new List<string>();
             var rastiIdLista = RastiIds?.ToList();
             foreach (var role in _roleManager.Roles) 
             {
                 var access = await _roleAccessStore.GetRoleAccessAsync(role.Id);
+                if(!ÄläLähetäValtuudetOmaaville ?? false)
+                {
+                    if(access.Controllers != null)
+                    {
+                        var kisaCtrl = access.Controllers.FirstOrDefault(x => x.Name == "Kisa");
+                        if(kisaCtrl != null)
+                        {
+                            var tilanneValtuudetAction = kisaCtrl.Actions.FirstOrDefault(x => x.Name == "TilanneValtuudet");
+                            if(tilanneValtuudetAction != null)
+                            {
+                                continue;
+                            }
+                        }
+                    }
+                }
                 if(access.RastiAccess != null)
                 {
                     foreach (var rooli in access.RastiAccess)

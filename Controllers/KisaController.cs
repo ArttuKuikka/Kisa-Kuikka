@@ -346,7 +346,7 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL,NaytaIlmoitusSuositusEtusivulla,LahetaIlmoituksiaRastinTilanvaihdosta")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL,NaytaIlmoitusSuositusEtusivulla,LahetaIlmoituksiaRastinTilanvaihdosta,LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
@@ -362,6 +362,7 @@ namespace Kisa_Kuikka.Controllers
                     olemassaolevakisa.JaaTagTilastot= kisa.JaaTagTilastot;
                     olemassaolevakisa.TilanneSeurantaKuvaURL = kisa.TilanneSeurantaKuvaURL;
                     olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdosta = kisa.LahetaIlmoituksiaRastinTilanvaihdosta;
+                    olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville = kisa.LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville;
 
                     await _context.SaveChangesAsync();
                 }
