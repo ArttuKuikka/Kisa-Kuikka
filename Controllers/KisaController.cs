@@ -15,6 +15,7 @@ using KisaKuikka.Data.Migrations;
 using Microsoft.AspNetCore.Identity;
 using Kisa_Kuikka.Services;
 using System.Reflection.Metadata.Ecma335;
+using Kisa_Kuikka.Models.DynamicAuth.Custom;
 
 namespace Kisa_Kuikka.Controllers
 {
@@ -161,6 +162,32 @@ namespace Kisa_Kuikka.Controllers
                 };
                 _context.Add(rasti);
                 await _context.SaveChangesAsync();
+
+                //automaattinen rooli gen
+                string roleName = rasti.NumeroJaNimi + " (Automaattisesti luotu)";
+                if (!await _roleManager.RoleExistsAsync(roleName))
+                {
+                    var role = new IdentityRole(roleName);
+                    var result = await _roleManager.CreateAsync(role);
+                    if (result.Succeeded)
+                    {
+                        var actions = new List<Models.DynamicAuth.Custom.Action>() { new Models.DynamicAuth.Custom.Action() { Name = "Tilanne" } };
+                        var tehtavaActions = new List<Models.DynamicAuth.Custom.Action>() { new Models.DynamicAuth.Custom.Action() { Name = "Index" }, new Models.DynamicAuth.Custom.Action() { Name = "Nayta" }, new Models.DynamicAuth.Custom.Action() { Name = "Tayta" }, new Models.DynamicAuth.Custom.Action() { Name = "Tarkista" }, new Models.DynamicAuth.Custom.Action() { Name = "Jatka" } };
+                        var tagActions = new List<Models.DynamicAuth.Custom.Action>() { new Models.DynamicAuth.Custom.Action() { Name = "Index" }, new Models.DynamicAuth.Custom.Action() { Name = "LueLahto" }, new Models.DynamicAuth.Custom.Action() { Name = "LueTulo" } };
+                        var subControllers = new List<SubController>() { new SubController() { Name = "Tehtava", Actions = tehtavaActions.AsEnumerable() }, new SubController() { Name = "Tag", Actions = tagActions.AsEnumerable() } };
+                        var rastiAccess = new List<MainController>() { new MainController() { RastiId = rasti.Id, Name = rasti.Nimi, Actions = actions.AsEnumerable(), SubControllers = subControllers.AsEnumerable() } };
+
+                        var roleAccess = new RoleAccess
+                        {
+                            Controllers = null,
+                            RoleId = role.Id,
+                            RastiAccess = rastiAccess.AsEnumerable(),
+                        };
+                        await _roleAccessStore.AddRoleAccessAsync(roleAccess);
+                    }
+
+                }
+
                 return Redirect("/Kisa/" + luoRastiViewModel.KisaId + "/Rastit");
             }
             return View(luoRastiViewModel);
