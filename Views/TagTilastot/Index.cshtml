@@ -13,7 +13,7 @@
 
 
 <div id="taulukko"></div>
-<p>Vinkki: voit nähdä vartion lähtö ja tuloajan painamalla ruutua hiiren oikealla painikkeella</p>
+<p>Vinkki: voit nähdä lisätietoja painamalla ruutua hiiren oikealla painikkeella</p>
 <br />
 <div id="legend"></div>
 @if(Model.Kisa?.TilanneSeurantaKuvaURL != null)
@@ -49,7 +49,9 @@
 
                 if (value.hasOwnProperty('Nimi')) {
                     td.innerHTML = value.Nimi;
+                    cellProperties.Nimi = value.Nimi;
                     cellProperties.Keskeytetty = value.Keskeytetty;
+                    cellProperties.Lippukunta = value.Lippukunta;
                     return;
                 }
             }
@@ -130,8 +132,17 @@
 
                         var htmlitem = hot.getCellMeta(y, x);
 
+                       console.log(x.toString() + ", " + y.toString());
+
                         let aikastring = "-";
                         if (htmlitem !== null) {
+                            if (x === 0) {
+                                if (htmlitem.hasOwnProperty('Lippukunta')) {
+                                    if (htmlitem.Lippukunta !== null) {
+                                        return ("Lippukunta: " + htmlitem.Lippukunta);
+                                    }
+                                }
+                           }
                             if (htmlitem.hasOwnProperty('Tulo')) {
                                 if (htmlitem.Tulo !== null) {
                                     var aika = new Date(htmlitem.Tulo);
@@ -150,10 +161,19 @@
                         var y = selected[0][0];
                         var x = selected[0][1];
 
+                        
                         var htmlitem = hot.getCellMeta(y, x);
+                        
 
                         let aikastring = "-";
                         if (htmlitem !== null) {
+                            if (x === 0) {
+                                if(htmlitem.hasOwnProperty('Nimi')){
+                                    if(htmlitem.Nimi !== null){
+                                        return("Nimi: " + htmlitem.Nimi);
+                                    }
+                                }
+                            }
                             if (htmlitem.hasOwnProperty('Lahto')) {
                                 if (htmlitem.Lahto !== null) {
                                     var aika = new Date(htmlitem.Lahto);

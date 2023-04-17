@@ -178,7 +178,10 @@ namespace Kisa_Kuikka.Controllers
                                 if (kisa?.LahetaIlmoituksiaRastinTilanvaihdosta ?? false)
                                 {
                                     var rastiIdArray = new int[] {(int)rasti.Id };
-                                    await _IlmoitusService.SendNotifToRastiIdsAsync(rastiIdArray, "Rastisi tilanne vaihdettiin. (" + rasti.NumeroJaNimi + ")", "Uusi tilanne: " + tilanne.Nimi, "https://" + Request.Host.ToString() + "/Rasti/Tilanne?RastiId=" + rasti.Id.ToString());
+                                    var title = "Rastisi tilanne vaihdettiin. (" + rasti.NumeroJaNimi + ")";
+                                    var body = "Uusi tilanne: " + tilanne.Nimi;
+                                    var refUrl = "https://" + Request.Host.ToString() + "/Rasti/Tilanne?RastiId=" + rasti.Id.ToString();
+                                    await _IlmoitusService.SendNotifToRastiIdsAsync(rastiIdArray, title, body, refUrl, kisa.LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville);
                                 }
                                 rasti.TilanneId = tilanne.Id;
                             }

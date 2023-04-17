@@ -14,6 +14,7 @@ namespace Kisa_Kuikka.Models
         public string? TilanneSeurantaKuvaURL { get; set; }
 
         public bool LahetaIlmoituksiaRastinTilanvaihdosta { get; set; }
+        public bool LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville { get; set; }
 
     }
 }
