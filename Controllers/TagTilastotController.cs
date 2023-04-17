@@ -128,7 +128,8 @@ namespace Kisa_Kuikka.Controllers
                         var vartioobject = new JObject
                         {
                             { "Nimi", vartio.NumeroJaNimi },
-                            {"Keskeytetty", vartio.Keskeytetty }
+                            {"Keskeytetty", vartio.Keskeytetty },
+                            {"Lippukunta", vartio.Lippukunta }
                         };
                         var VartionArray = new JArray() { vartioobject };
 
