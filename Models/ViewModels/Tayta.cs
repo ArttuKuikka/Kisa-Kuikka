@@ -8,6 +8,8 @@ namespace Kisa_Kuikka.Models.ViewModels
         public int? TehtavaId { get; set; }
         [NotMapped]
         public int? RastiId { get; set; }
+        [NotMapped]
+        public string? RastiNimi { get; set; }
         public string? Nimi { get; set; }
         public int VartioId { get; set; }
         public bool Kesken { get; set; }

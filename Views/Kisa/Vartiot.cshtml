@@ -9,10 +9,10 @@
 
 <p>
    <secure-content asp-area="" asp-controller="Vartio" asp-action="Luo">
-        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Luo?kisaid=@Model.KisaId';">Luo vartio</button>
+        <button type="button" class="btn btn-primary" onclick="location.href = '/Vartio/Luo?kisaid=@Model.KisaId';">Luo vartio</button>
    </secure-content>
     <secure-content asp-area="" asp-controller="Vartio" asp-action="KenenTag">
-        <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
+        <button type="button" class="btn btn-primary" onclick="location.href = '/Vartio/KenenTag';">Kenen Tag</button>
     </secure-content>
 </p>
 
@@ -31,7 +31,7 @@
                     Nimi ja numero
                 </th>
                 <th>
-                    Sarja ja tilanne
+                    Lippukunta ja tilanne
                 </th>
 
 
@@ -51,7 +51,7 @@
                     </td>
                     <td>
 
-                        <h5>@sarja.Nimi</h5>
+                        <h5>@item.Lippukunta</h5>
                             @if (item.Keskeytetty)
                             {
                                 <h5 class="text-danger">Keskeyttänyt</h5>
@@ -67,12 +67,12 @@
 
                     <td>
                         <secure-content asp-area="" asp-controller="Vartio" asp-action="Edit">
-                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
+                                <button type="button" class="btn btn-warning" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
                         </secure-content>
                            <secure-content asp-area="" asp-controller="Vartio" asp-action="LiitaTag">
                                 @if(item.TagSerial == null || item.TagSerial == string.Empty)
                             {
-                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
+                                <button type="button" class="btn btn-primary" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
                             }
                             else
                             {
@@ -85,7 +85,7 @@
                            <secure-content asp-area="" asp-controller="Vartio" asp-action="Keskeyta">
                                 @if (item.Keskeytetty)
                                 {
-                                    <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Palauta kisaan</button>
+                                    <button type="button" class="btn btn-success" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Palauta kisaan</button>
                                 }
                                 else
                                 {

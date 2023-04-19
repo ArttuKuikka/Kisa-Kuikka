@@ -8,7 +8,7 @@
 
 <p>
      <secure-content asp-area="" asp-controller="Sarja" asp-action="Luo">
-        <button type="button" class="btn btn-light" onclick="location.href = '/Sarja/Luo?kisaid=@ViewBag.KisaId';">Luo Sarja</button>
+        <button type="button" class="btn btn-primary" onclick="location.href = '/Sarja/Luo?kisaid=@ViewBag.KisaId';">Luo Sarja</button>
      </secure-content>
 </p>
 <table class="table" style="color: white">
@@ -35,7 +35,7 @@
                 <td>
                     
                    <secure-content asp-area="" asp-controller="Sarja" asp-action="Edit">
-                        <button type="button" class="btn btn-light" onclick="location.href = '/Sarja/Edit?id=@item.Id';">Muokkaa</button>
+                        <button type="button" class="btn btn-warning" onclick="location.href = '/Sarja/Edit?id=@item.Id';">Muokkaa</button>
                    </secure-content>
                    <secure-content asp-area="" asp-controller="Sarja" asp-action="Delete">
                         <button type="button" class="btn btn-danger" onclick="location.href = '/Sarja/Delete?id=@item.Id';">Poista</button>

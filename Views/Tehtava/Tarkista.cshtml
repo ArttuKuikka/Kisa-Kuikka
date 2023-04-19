@@ -5,7 +5,7 @@
     ViewData["Title"] = "Tarkista tehtävä";
 }
 
-
+<h5>Rasti: @Model.RastiNimi</h5>
 <h4>Tarkista tehtävä</h4>
 <hr />
 
@@ -130,6 +130,17 @@
         jQuery(function ($) {
             var fbeditor = document.getElementById('json-viewer');
             var getdata = document.getElementById('json-input').value;
+
+            //estä pilkut varmasti kaikilla selaimilla
+            document.querySelectorAll("input[type=number]").forEach(function (input) {
+                input.addEventListener("keypress", function (evt) {
+
+                    var char = String.fromCharCode(evt.which);
+                    if (char == "," || input.value.indexOf(".") != -1) {
+                        evt.preventDefault();
+                    }
+                });
+            });
 
             Formi.addEventListener("focusout", () => {
                 let elements = Formi.getElementsByTagName('input');

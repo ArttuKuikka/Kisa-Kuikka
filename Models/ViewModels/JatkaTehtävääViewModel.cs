@@ -8,5 +8,6 @@
         public string TehtäväJson { get; set; }
         public bool Kesken { get; set; }
         public int RastiId { get; set; }
+        public string? RastiNimi { get; set; }
     }
 }
