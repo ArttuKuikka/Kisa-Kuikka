@@ -108,6 +108,8 @@ namespace Kisa_Kuikka.Controllers
 
             vt.VartioList.RemoveAll(x => VIdList.Contains((int)x.Id));
 
+            var rasti = await _context.Rasti.FindAsync(Tehtava.RastiId);
+            vt.RastiNimi = rasti?.NumeroJaNimi;
             vt.RastiId = Tehtava.RastiId;
             return View(vt);
         }
@@ -232,6 +234,9 @@ namespace Kisa_Kuikka.Controllers
             vm.TehtavaId = (int)TehtavaId;
             vm.RastiId = Malli.RastiId;
 
+            var rasti = await _context.Rasti.FindAsync(Malli.RastiId);
+            vm.RastiNimi = rasti?.NumeroJaNimi;
+
 
             return View(vm);
         }
@@ -332,6 +337,7 @@ namespace Kisa_Kuikka.Controllers
             {
                 return BadRequest();
             }
+            var rasti = await _context.Rasti.FindAsync(vastaus.RastiId);
 
             var vm = new MuokkaaVastaustaViewModel();
 
@@ -342,6 +348,7 @@ namespace Kisa_Kuikka.Controllers
             vm.TehtavaNimi = Tehtava.Nimi;
             vm.TehtavaId = (int)vastaus.TehtavaId;
             vm.RastiId = vastaus.RastiId;
+            vm.RastiNimi = rasti?.NumeroJaNimi;
 
 
             return View(vm);
@@ -410,6 +417,7 @@ namespace Kisa_Kuikka.Controllers
                 return NotFound();
             }
             var Tehtava = _context.TehtavaVastaus.First(x => x.Id == TehtavaId);
+            var rasti = await _context.Rasti.FindAsync(Tehtava?.RastiId);
 
             var ViewModel = new JatkaTehtävääViewModel();
             ViewModel.VartioNimi = _context.Vartio.First(x => x.Id == Tehtava.VartioId).Nimi;
@@ -417,6 +425,7 @@ namespace Kisa_Kuikka.Controllers
             ViewModel.TehtäväVastausId = (int)TehtavaId;
             ViewModel.TehtäväJson = Tehtava.TehtavaJson;
             ViewModel.RastiId = Tehtava.RastiId;
+            ViewModel.RastiNimi = rasti?.NumeroJaNimi;
 
 
             return View(ViewModel);
@@ -463,9 +472,10 @@ namespace Kisa_Kuikka.Controllers
 
 
         // GET: Tehtava/Luo
-        public IActionResult Luo(int? KisaId, int? RastiId)
+        public async Task< IActionResult> Luo(int? KisaId, int? RastiId)
         {
-            if (KisaId != null && RastiId != null)
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+            if (KisaId != null && rasti != null)
             {
                 var viewModel = new LuoTehtavaViewModel() { KisaId = (int)KisaId, RastiId = (int)RastiId };
 
@@ -478,6 +488,7 @@ namespace Kisa_Kuikka.Controllers
                     }
                 }
                 viewModel.Sarjat = sarjaList;
+                viewModel.RastiNimi = rasti.NumeroJaNimi;
 
                 return View(viewModel);
             }
