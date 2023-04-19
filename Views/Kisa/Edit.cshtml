@@ -33,14 +33,20 @@
             <br />
            
             <div class="form-group">
-                <label class="control-label">Lahetä ilmoitus kaikille joilla on oikeus rastiin jos rastin tilanne vaihdetaan tilaan jonka vaihdaamiseen tarvitaan valtuuksia</label>
-                <input type="checkbox" asp-for="LahetaIlmoituksiaRastinTilanvaihdosta" class="form-check-input" />
+                <label class="control-label"> 
+                    <input type="checkbox" asp-for="LahetaIlmoituksiaRastinTilanvaihdosta" class="form-check-input" />
+                    Lähetä ilmoitus kaikille joilla on oikeus rastiin jos rastin tilanne vaihdetaan tilaan jonka vaihdaamiseen tarvitaan valtuuksia
+                </label>
+               
                 <span asp-validation-for="LahetaIlmoituksiaRastinTilanvaihdosta" class="text-danger"></span>
             </div>
             <br />
              <div class="form-group">
-                <label class="control-label">Laheta ilmoitus rastin tilanvaihdosta henkilöille joiden roolit sisältävät oikeuden valtuuksia vaativien tilojen vaihtoon</label>
-                <input type="checkbox" asp-for="LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville" class="form-check-input" />
+                <label class="control-label">
+                    <input type="checkbox" asp-for="LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville" class="form-check-input" />
+                    Läheta ilmoitus rastin tilanvaihdosta henkilöille joiden roolit sisältävät oikeuden valtuuksia vaativien tilojen vaihtoon
+                </label>
+               
                 <span asp-validation-for="LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville" class="text-danger"></span>
             </div>
             <br />
