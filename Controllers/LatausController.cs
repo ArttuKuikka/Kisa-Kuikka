@@ -55,7 +55,7 @@ namespace Kisa_Kuikka.Controllers
                 ISheet sheet = workbook.CreateSheet(sarja.Nimi);
                 var kokosheetpituus = 1;
 
-                var sarjanvartiot = _context.Vartio.Where(x => x.SarjaId == sarja.Id);
+                var sarjanvartiot = _context.Vartio.Where(x => x.SarjaId == sarja.Id).OrderBy(x => x.Numero).ToList();
 
                 //aseta vartioiden nimet
                 var vartionnimiindex = 3;
@@ -64,7 +64,7 @@ namespace Kisa_Kuikka.Controllers
                 {
                     IRow vartioRow = sheet.CreateRow(vartionnimiindex);
                     var nimicell = vartioRow.CreateCell(0);
-                    nimicell.SetCellValue(vartio.Nimi);
+                    nimicell.SetCellValue(vartio.NumeroJaNimi);
 
                     rowlist.Add(vartioRow);
 
@@ -80,7 +80,8 @@ namespace Kisa_Kuikka.Controllers
                 var FormItemRowlastindex = 1;
 
                 //etsi joka rasti kisasta
-                foreach (var rasti in _context.Rasti.Where(x => x.KisaId == Kisa.Id))
+                var rastilista = _context.Rasti.Where(x => x.KisaId == Kisa.Id).OrderBy(x => x.Numero).ToList();
+                foreach (var rasti in rastilista)
                 {
                     //hae kaikki rastin tehtäväpohjat
                     var SarjanTehtävätrastisssa = _context.Tehtava.Where(x => x.SarjaId == sarja.Id).Where(x => x.RastiId == rasti.Id).ToList();
