@@ -33,19 +33,19 @@
 
                     <td>
                         <secure-content asp-controller="Tag" asp-action="Index" asp-rastiid="@item.Id" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
+                            <button type="button" class="btn btn-primary" onclick="location.href = '/Tag?RastiId=@item.Id';">Skannaa tag</button>
                         </secure-content>
 
                         <secure-content asp-controller="Rasti" asp-action="Edit" asp-rastiid="@item.Id" asp-controllertype="1" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
+                            <button type="button" class="btn btn-warning" onclick="location.href = '/Rasti/Edit?RastiId=@item.Id';">Muokkaa</button>
                         </secure-content>
 
                         <secure-content asp-controller="Rasti" asp-action="Tilanne" asp-rastiid="@item.Id" asp-controllertype="1" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Rasti/Tilanne?RastiId=@item.Id';">Tilanne</button>
+                            <button type="button" class="btn btn-primary" onclick="location.href = '/Rasti/Tilanne?RastiId=@item.Id';">Tilanne</button>
                         </secure-content>
 
                         <secure-content asp-controller="Tehtava" asp-action="Index" asp-rastiid="@item.Id" asp-controllertype="2" asp-controllergroup="Rasti">
-                            <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtävät</button>
+                            <button type="button" class="btn btn-primary" onclick="location.href = '/Tehtava/?RastiId=@item.Id';">Tehtävät</button>
                         </secure-content>
                        
                         <secure-content asp-controller="Kisa" asp-action="PoistaRasti">
