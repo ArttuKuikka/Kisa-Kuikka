@@ -8,69 +8,72 @@
 
 <h2>Roolit</h2>
 
-<a asp-action="Create">Luo rooli</a>
-<div class="row">
-    <div class="col-md-4">
-        <table class="table table-bordered" style="color:white">
-            <thead>
-                <tr>
-                    <th scope="col"> Nimi </th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (!Model.Any())
-                {
-                <tr>
-                    <td colspan="2">Rooleja ei ole</td>
-                </tr>
-                }
-                @foreach (var role in Model)
-                {
-                <tr>
-                    <td>@role.Name</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@role.Id">Muokkaa</a> |
-                        <a asp-action="Delete" asp-route-id="@role.Id" class="delete-item">Poista</a>
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-</div>
+<a asp-action="Create" class="btn btn-primary">Luo rooli</a>
+<table class="table" style="color:white">
+    <thead>
+        <tr>
+            <th scope="col"> Nimi </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="2">Rooleja ei ole</td>
+            </tr>
+        }
+        @foreach (var role in Model)
+        {
+            <tr>
+                <td><h4>@role.Name</h4></td>
+                <td>
+                    <a asp-action="Edit" class="btn btn-primary" asp-route-id="@role.Id">Muokkaa</a> 
+                    <a asp-action="Delete" asp-route-id="@role.Id" class="delete-item btn btn-danger">Poista</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
 
                  <script>
     $(function () {
         $(".delete-item").click(function (e) {
-            confirm("Oletko varma että haluat poistaa tämän roolin ?");
-            e.preventDefault();
-            const anchor = $(this);
-            const url = $(anchor).attr("href");
-            $.ajax({
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                processData: false,
-                type: "DELETE",
-                url: url,
-                success: function () {
-                    $(anchor).parent("td").parent("tr").fadeOut("slow",
-                        function () {
-                            $(this).remove();
-                        });
-                },
-                error: function (xmlHttpRequest, textStatus, errorThrown) {
-                    let message = `${textStatus} ${xmlHttpRequest.status} ${errorThrown}`;
-                    if (xmlHttpRequest.responseText !== null) {
-                        const response = JSON.parse(xmlHttpRequest.responseText);
-                        for (let error of response["Error"]) {
-                            message += `\n${error}`;
+            if (confirm("Oletko varma että haluat poistaa tämän roolin ?")){
+                e.preventDefault();
+                const anchor = $(this);
+                const url = $(anchor).attr("href");
+                $.ajax({
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    processData: false,
+                    type: "DELETE",
+                    url: url,
+                    success: function () {
+                        $(anchor).parent("td").parent("tr").fadeOut("slow",
+                            function () {
+                                $(this).remove();
+                            });
+                    },
+                    error: function (xmlHttpRequest, textStatus, errorThrown) {
+                        let message = `${textStatus} ${xmlHttpRequest.status} ${errorThrown}`;
+                        if (xmlHttpRequest.responseText !== null) {
+                            const response = JSON.parse(xmlHttpRequest.responseText);
+                            for (let error of response["Error"]) {
+                                message += `\n${error}`;
+                            }
                         }
-                    }
 
-                    alert(message);
-                }
-            });
+                        alert(message);
+                    }
+                });
+            }
+            else{
+                e.preventDefault();
+                
+            }
+            
+           
         });
 
        
