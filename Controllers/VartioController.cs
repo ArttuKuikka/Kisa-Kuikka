@@ -251,6 +251,11 @@ namespace Kisa_Kuikka.Controllers
                 {
                     _context.TehtavaVastaus.Remove(vastaus);
                 }
+
+                foreach(var skannaus in _context.TagSkannaus.Where(x => x.VartioId == vartio.Id))
+                {
+                    _context.TagSkannaus.Remove(skannaus);
+                }
             }
             
             await _context.SaveChangesAsync();

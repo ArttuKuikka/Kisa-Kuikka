@@ -200,6 +200,20 @@ namespace Kisa_Kuikka.Controllers
                 {
                     _context.Tehtava.Remove(tehtpohja);
                 }
+
+                foreach(var vartio in _context.Vartio.Where(x => x.SarjaId == sarja.Id))
+                {
+                    foreach (var vastaus in _context.TehtavaVastaus.Where(x => x.VartioId == vartio.Id))
+                    {
+                        _context.TehtavaVastaus.Remove(vastaus);
+                    }
+
+                    foreach (var skannaus in _context.TagSkannaus.Where(x => x.VartioId == vartio.Id))
+                    {
+                        _context.TagSkannaus.Remove(skannaus);
+                    }
+                    _context.Vartio.Remove(vartio);
+                }
             }
             
             await _context.SaveChangesAsync();
