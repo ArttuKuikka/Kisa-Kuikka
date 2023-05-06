@@ -194,3 +194,11 @@ input[type="checkbox"] {
     margin: 5px !important;
 }
 
+
+.userRole-rolespan {
+    background-color: #404040;
+    border-radius: 0.3em;
+    padding: 0.2em;
+    margin-top: 0.3em;
+    display: inline-block;
+}
