@@ -58,34 +58,39 @@ namespace Kisa_Kuikka.Controllers
         }
 
         [DisplayName("Lue lähtö")]
-        public IActionResult LueLahto(int RastiId)
+        public async Task<IActionResult> LueLahto(int RastiId)
         {
-            ViewBag.Rastit = _context.Rasti.ToArray();
-            return View(new TagSkannaus() { RastiId = RastiId});
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+            if(rasti != null)
+            {
+                return View(new TagSkannausViewModel() { RastiId = RastiId, RastiNimi = rasti.NumeroJaNimi  });
+            }
+            return BadRequest("Virheellinen RastiID");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LueLahto([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
+        public async Task<IActionResult> LueLahto([Bind("RastiId, TagSerial")] TagSkannausViewModel viewModel)
         {
             bool HyvaSkannusTulos = false;
             if(ModelState.IsValid)
             {
-                if (tagSkannaus != null)
+                if (viewModel != null)
                 {
 
-                    if (!await _roleAccessStore.OikeudetRastiIdhen(tagSkannaus.RastiId, User?.Identity?.Name))
+                    if (!await _roleAccessStore.OikeudetRastiIdhen(viewModel.RastiId, User?.Identity?.Name))
                     {
                         return BadRequest("Ei oikeusia tähän rastiin");
                     }
 
-                    ViewBag.RastiId = tagSkannaus.RastiId;
-                    if (tagSkannaus.TagSerial != null)
+                    ViewBag.RastiId = viewModel.RastiId;
+                    if (viewModel.TagSerial != null)
                     {
+                        var tagSkannaus = new TagSkannaus();
                         tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = false;
 
-                        var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == tagSkannaus.TagSerial);
+                        var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == viewModel.TagSerial);
 
                         if (vartio == null)
                         {
@@ -103,7 +108,7 @@ namespace Kisa_Kuikka.Controllers
                             {
                                 return View("SkannausTulos", HyvaSkannusTulos);
                             }
-                            item.TagSerial = tagSkannaus.TagSerial;
+                            
                             item.TimeStamp = tagSkannaus.TimeStamp;
 
                         }
@@ -126,61 +131,66 @@ namespace Kisa_Kuikka.Controllers
         }
 
         [DisplayName("Lue tulo")]
-        public IActionResult LueTulo(int RastiId)
+        public async Task<IActionResult> LueTulo(int RastiId)
         {
-            ViewBag.Rastit = _context.Rasti.ToArray();
-            return View(new TagSkannaus() { RastiId = RastiId });
+            var rasti = await _context.Rasti.FindAsync(RastiId);
+            if (rasti != null)
+            {
+                return View(new TagSkannausViewModel() { RastiId = RastiId, RastiNimi = rasti.NumeroJaNimi });
+            }
+            return BadRequest("Virheellinen RastiID");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LueTulo([Bind("RastiId, TagSerial")] TagSkannaus tagSkannaus)
+        public async Task<IActionResult> LueTulo([Bind("RastiId, TagSerial")] TagSkannausViewModel viewModel)
         {
             bool HyvaSkannusTulos = false;
             if (ModelState.IsValid)
             {
-                if (tagSkannaus != null)
+                if (viewModel != null)
                 {
-                    if (!await _roleAccessStore.OikeudetRastiIdhen(tagSkannaus.RastiId, User?.Identity?.Name))
+
+                    if (!await _roleAccessStore.OikeudetRastiIdhen(viewModel.RastiId, User?.Identity?.Name))
                     {
                         return BadRequest("Ei oikeusia tähän rastiin");
                     }
 
-                    ViewBag.RastiId = tagSkannaus.RastiId;
-                    if (tagSkannaus.TagSerial != null)
+                    ViewBag.RastiId = viewModel.RastiId;
+                    if (viewModel.TagSerial != null)
                     {
+                        var tagSkannaus = new TagSkannaus();
                         tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = true;
 
-                        var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == tagSkannaus.TagSerial);
+                        var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == viewModel.TagSerial);
 
                         if (vartio == null)
                         {
-                            return View("SkannausTulos", HyvaSkannusTulos); 
+                            return View("SkannausTulos", HyvaSkannusTulos);
                         }
 
                         tagSkannaus.VartioId = vartio.Id;
 
-
                         var find = _context.TagSkannaus.Where(x => x.RastiId == tagSkannaus.RastiId).Where(x => x.VartioId == tagSkannaus.VartioId).Where(x => x.isTulo == tagSkannaus.isTulo);
                         if (find.FirstOrDefault() != null)
                         {
-                            
+
                             var item = find.FirstOrDefault();
-                            if(item == null)
+                            if (item == null)
                             {
                                 return View("SkannausTulos", HyvaSkannusTulos);
                             }
-                            item.TagSerial = tagSkannaus.TagSerial;
+
                             item.TimeStamp = tagSkannaus.TimeStamp;
-                            
+
                         }
                         else
                         {
                             _context.Add(tagSkannaus);
                         }
-                            
-                        
+
+
                         _context.SaveChanges();
 
                         HyvaSkannusTulos = true;
@@ -201,7 +211,8 @@ namespace Kisa_Kuikka.Controllers
             {
                 ViewBag.Rastit = _context.Rasti.ToArray();
                 var vartiot = _context.Vartio.Where(x => x.KisaId == rasti.KisaId);
-                return View(new ManuaalinenTagSkannausViewModel() { RastiId = RastiId, Vartiot = vartiot });
+                
+                return View(new ManuaalinenTagSkannausViewModel() { RastiId = RastiId, Vartiot = vartiot, RastiNimi = rasti.NumeroJaNimi });
             }
             return BadRequest("Virheellinen RastiId");
         }
@@ -247,7 +258,7 @@ namespace Kisa_Kuikka.Controllers
                         {
                             return View("SkannausTulos", HyvaSkannusTulos);
                         }
-                        item.TagSerial = "";
+                        
                         item.TimeStamp = tagSkannaus.TimeStamp;
 
                     }

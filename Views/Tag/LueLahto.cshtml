@@ -1,24 +1,25 @@
-﻿@model Kisa_Kuikka.Models.TagSkannaus
+﻿@model Kisa_Kuikka.Models.ViewModels.TagSkannausViewModel
 @{
     ViewData["Title"] = "Lue Lähtö";
 }
 
 <h2>Lue Lähtö tag</h2>
+<h5>Rasti: @Model.RastiNimi</h5>
 <hr />
 <div class="row">
 
     <form action="/Tag/LueLahto?RastiId=@Model.RastiId" method="post" id="Formi">
         @Html.AntiForgeryToken()
         <div class="form-group">
-            
+
             <input asp-for="RastiId" class="form-control" hidden="hidden" />
             <span asp-validation-for="RastiId" class="text-danger"></span>
         </div>
-             <div class="form-group" hidden="hidden">
-                <label asp-for="TagSerial" class="control-label"></label>
-                <input asp-for="TagSerial" id="serialinput" class="form-control" />
-                <span asp-validation-for="TagSerial" class="text-danger"></span>
-            </div>
+        <div class="form-group" hidden="hidden">
+            <label asp-for="TagSerial" class="control-label"></label>
+            <input asp-for="TagSerial" id="serialinput" class="form-control" />
+            <span asp-validation-for="TagSerial" class="text-danger"></span>
+        </div>
     </form>
 
     <h1 id="statustext">Ei lupaa lukea NFC-tageja tai selain ei tue NFC-tagien lukemista</h1>
@@ -33,48 +34,48 @@
     document.getElementById('tryagain').addEventListener('click', () => { nfc(); })
 
 
-navigator.permissions.query({ name: "nfc" }).then(res => {
-    if(res.state == "granted"){
-        if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    nfc();
-} else {
-    document.addEventListener('DOMContentLoaded', nfc);
-}
-    }
-    else{
-      document.getElementById('tryagain').removeAttribute('hidden');
-      document.getElementById('tryagain').setAttribute('value', 'Anna NFC lupa');
-      document.getElementById('statustext').innerHTML = "Odotetaan NFC-lupaa";
-      }
-});
+    navigator.permissions.query({ name: "nfc" }).then(res => {
+        if (res.state == "granted") {
+            if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                nfc();
+            } else {
+                document.addEventListener('DOMContentLoaded', nfc);
+            }
+        }
+        else {
+            document.getElementById('tryagain').removeAttribute('hidden');
+            document.getElementById('tryagain').setAttribute('value', 'Anna NFC lupa');
+            document.getElementById('statustext').innerHTML = "Odotetaan NFC-lupaa";
+        }
+    });
 
-    
 
-    async function nfc(){
-         try {
-    const ndef = new NDEFReader();
-    await ndef.scan();
-    console.log("> Scan started");
-    document.getElementById('statustext').innerHTML = "Odotetaan tagin luentaa...";
+
+    async function nfc() {
+        try {
+            const ndef = new NDEFReader();
+            await ndef.scan();
+            console.log("> Scan started");
+            document.getElementById('statustext').innerHTML = "Odotetaan tagin luentaa...";
             document.getElementById('tryagain').setAttribute('hidden', 'hidden');
 
-    ndef.addEventListener("readingerror", () => {
-      alert("Virhe lukiessa Tagia, yritä uudelleen");
-    });
+            ndef.addEventListener("readingerror", () => {
+                alert("Virhe lukiessa Tagia, yritä uudelleen");
+            });
 
-    ndef.addEventListener("reading", ({serialNumber }) => { 
+            ndef.addEventListener("reading", ({ serialNumber }) => {
 
-        //lähetä form tag skannauksen jälkeen
-        document.getElementById("serialinput").value = serialNumber;
-        document.getElementById("Formi").submit();
+                //lähetä form tag skannauksen jälkeen
+                document.getElementById("serialinput").value = serialNumber;
+                document.getElementById("Formi").submit();
 
-        
-    });
-  } catch (error) {
-    alert("Virhe aloittessa NFC lukua, kai käytät chromea androidilla ja annoit sivustolle luvan käyttää NFC sensoria" );
-    document.getElementById('statustext').innerHTML = "Virhe aloittaessa NFC lukua";
-    document.getElementById('tryagain').removeAttribute('hidden');
-  }
+
+            });
+        } catch (error) {
+            alert("Virhe aloittessa NFC lukua, kai käytät chromea androidilla ja annoit sivustolle luvan käyttää NFC sensoria");
+            document.getElementById('statustext').innerHTML = "Virhe aloittaessa NFC lukua";
+            document.getElementById('tryagain').removeAttribute('hidden');
+        }
     }
 
 
