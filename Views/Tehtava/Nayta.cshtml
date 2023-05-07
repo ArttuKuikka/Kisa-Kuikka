@@ -33,16 +33,19 @@
         foreach(var item in jArr)
         {
             var user = await UserManager.FindByIdAsync(item["UserId"].ToString());
-            var claims = await UserManager.GetClaimsAsync(user);
-            var nimi = claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
-            var aika = DateTime.Parse(item["Aika"].ToString()).ToString("dd.MM.yyyy HH.mm");
-            if(jatkaja == "")
+            if(user != null)
             {
-                jatkaja = "Jatkettu (Käyttäjä, Aika): " + $"({nimi}, {aika})";
-            }
-            else
-            {
-                jatkaja += $", ({nimi}, {aika})";
+                var claims = await UserManager.GetClaimsAsync(user);
+                var nimi = claims?.FirstOrDefault(x => x.Type == "KokoNimi")?.Value ?? user.UserName;
+                var aika = DateTime.Parse(item["Aika"].ToString()).ToString("dd.MM.yyyy HH.mm");
+                if (jatkaja == "")
+                {
+                    jatkaja = "Jatkettu (Käyttäjä, Aika): " + $"({nimi}, {aika})";
+                }
+                else
+                {
+                    jatkaja += $", ({nimi}, {aika})";
+                }
             }
         }
     }

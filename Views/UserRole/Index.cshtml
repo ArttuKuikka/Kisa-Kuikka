@@ -27,10 +27,11 @@
                 </td>
                 
                 <td>
-                    @for (var i = 0; i < user.Roles.Count(); i++)
+                    @for (var i = 0; i < user.Roles?.Count(); i++)
                     {
                         var element = user.Roles.ElementAt(i);
-                        <span style="background-color:#404040; border-radius: 0.3em; padding: 0.2em;">@Html.DisplayFor(_ => element)</span>
+                        <span class="userRole-rolespan">@Html.DisplayFor(_ => element)</span>
+                        
                     }
                 </td>
                 <td>
