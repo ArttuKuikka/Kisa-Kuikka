@@ -33,7 +33,6 @@ Kisa-Kuikka tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoid
 - Tuki tuloksien automaattiselli viennille normaaliin kipaan, jossa ne voidaan laskea (tällä hetkellä tulosten lataus excel muodossa on ainut vaihtoehto)
 - Tuki monelle kisalle yhdessä järjestelmässä (tällä hetkellä järjestelmä toimii vain yhdellä kisalla vaikka monta kisaa voikin luoda)
 - vartioiden tuonti csv tiedostosta
-- Automaattisesti generoituvat roolit
 - järjestelmä logi jossa näkyy kaikki tärkeät tapahtumat
 - PALJON pieniä korjailuja ja lisäilyjä
 - Live tulosten jakaminen linkin kautta (saman lailla kuin Tilanneseuranta nyt)
