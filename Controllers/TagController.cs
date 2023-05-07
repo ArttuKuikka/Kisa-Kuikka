@@ -89,6 +89,7 @@ namespace Kisa_Kuikka.Controllers
                         var tagSkannaus = new TagSkannaus();
                         tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = false;
+                        tagSkannaus.RastiId = viewModel.RastiId;
 
                         var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == viewModel.TagSerial);
 
@@ -162,6 +163,7 @@ namespace Kisa_Kuikka.Controllers
                         var tagSkannaus = new TagSkannaus();
                         tagSkannaus.TimeStamp = DateTime.Now;
                         tagSkannaus.isTulo = true;
+                        tagSkannaus.RastiId = viewModel.RastiId;
 
                         var vartio = _context.Vartio.FirstOrDefault(x => x.TagSerial == viewModel.TagSerial);
 
