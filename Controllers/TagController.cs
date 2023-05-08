@@ -42,7 +42,7 @@ namespace Kisa_Kuikka.Controllers
                         var tulo = skannatut.Where(x => x.VartioId == vartio.Id).FirstOrDefault(x => x.isTulo == true);
                         var lähtö = skannatut.Where(x => x.VartioId == vartio.Id).FirstOrDefault(x => x.isTulo == false);
 
-                        var scan = new SkannatutViewModel() { Lahto = lähtö?.TimeStamp, Tulo = tulo?.TimeStamp, Vartio = vartio };
+                        var scan = new SkannatutViewModel() { Lahto = lähtö?.TimeStamp, Tulo = tulo?.TimeStamp, Vartio = vartio, TuloId = tulo?.Id, LahtoId = lähtö?.Id };
 
                         skannaukset.Add(scan);
                     }
@@ -279,6 +279,21 @@ namespace Kisa_Kuikka.Controllers
             }
 
             return View("SkannausTulos", HyvaSkannusTulos);
+        }
+
+        [DisplayName("Poista skannaus")]
+        public async Task<IActionResult> Poista(int SkannausId)
+        {
+            var skannaus = await _context.TagSkannaus.FindAsync(SkannausId);
+            if (skannaus != null)
+            {
+                
+                _context.TagSkannaus.Remove(skannaus);
+                _context.SaveChanges();
+
+                return Redirect("/Tag?RastiId=" + skannaus.RastiId);
+            }
+            return BadRequest("Virheellinen SkannausId");
         }
     }
 }
