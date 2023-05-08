@@ -5,6 +5,8 @@
 
 - !!HUOM!! Kisa-Kuikka on vielä teon alle, eikä sisällä kaikkia ominaisuuksia joita siihen on tarkoitus lisätä, käytä ainoastaan testaamiseen!!
 
+[![Build latest](https://github.com/ArttuKuikka/Kisa-Kuikka/actions/workflows/PublishPackage.yml/badge.svg)](https://github.com/ArttuKuikka/Kisa-Kuikka/actions/workflows/PublishPackage.yml)
+
 Kisa-Kuikka on asp.net core pohjainen ohjelmiston partitaitokisojen pisteiden laskuun ja vartioiden paikantamiseen NFC-tagien avulla. Kisa-Kuikka vähentää kisoissa tarvittavien papereiden määrää antamalla rastityöntekijöille mahdollisuuden syöttää rastien arvioinnit suoraan rastilta käsin puhelimen välityksessä.
 
 Kisa-Kuikka tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoida kisojen toimintaa muuten. Kisa-Kuikka tukee täysin digitaalista sekä paperista arviointia([Mitä eroa on "täysin digitaalisella" ja "paperisella" arvioinnilla](https://github.com/ArttuKuikka/Kisa-Kuikka/wiki/Mit%C3%A4-eroa-on-%22t%C3%A4ysin-digitaalisella%22-ja-%22paperisella%22-arvioinnilla)).

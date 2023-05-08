@@ -75,7 +75,7 @@ else
 
 //app.UseHttpsRedirection();
 
-
+app.UseDirectoryBrowser();
 app.UseStaticFiles();
 
 app.UseRouting();
