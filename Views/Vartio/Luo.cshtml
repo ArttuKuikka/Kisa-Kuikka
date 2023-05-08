@@ -1,5 +1,5 @@
-﻿@model Kisa_Kuikka.Models.Vartio
-
+﻿@model Kisa_Kuikka.Models.ViewModels.LuoVartioViewModel
+@using Newtonsoft.Json
 @{
     ViewData["Title"] = "Luo";
 }
@@ -19,7 +19,7 @@
             </div>  
             <div class="col-md-10">  
                 <label class="control-label">Sarja</label>
-                @Html.DropDownListFor(model => model.SarjaId,new SelectList(ViewBag.Sarjat, "Id", "NimiJaKokoNumero"),  new { @class = "form-control"} )
+                @Html.DropDownListFor(model => model.SarjaId,new SelectList(Model.Sarjat, "Id", "NimiJaKokoNumero"),  new { @class = "form-control", @id = "dropdown"} )
                 @Html.ValidationMessageFor(model => model.SarjaId, "", new { @class = "text-danger" })  
             </div>  
             <div class="form-group">
@@ -29,7 +29,10 @@
             </div>
             <div class="form-group">
                 <label asp-for="Numero" class="control-label"></label>
-                <input asp-for="Numero" class="form-control" />
+                <input hidden id="numeroInput" asp-for="Numero" class="form-control" />
+                <select class="form-control" id="numeroselect">
+                   
+                </select>
                 <span asp-validation-for="Numero" class="text-danger"></span>
             </div>
             
@@ -54,3 +57,59 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+<script>
+    let sarjat = @Html.Raw(JsonConvert.SerializeObject(Model.Sarjat.Select(x => new { x.Id, x.Nimi, x.Numero }).ToList()))
+    let olemassaOlevatvartiot = @Html.Raw(Model.olemassaOlevatVartiot)
+
+    let numeroinput = document.getElementById('numeroInput');
+    let dropdown = document.getElementById('dropdown');
+    let numerodropdown = document.getElementById('numeroselect');
+
+    
+    change();
+
+    dropdown.addEventListener('change', function(){
+        change();
+    });
+
+    //luo numero vaihtoehdot
+    function change() {
+        let selectedOption = sarjat[dropdown.selectedIndex];
+        let numero = selectedOption.Numero;
+        
+        numerodropdown.options.length = 0;
+
+        //0 - 10 esim. 100, 101, 102, 109
+        for (let i = 0; i < 10; i++) {
+             let option = document.createElement('option');
+             let teksti = numero.toString() + "0" + i.toString();
+             if(olemassaOlevatvartiot.includes(parseInt(teksti))){
+                 continue;
+        }
+             option.text = teksti;
+            numerodropdown.add(option);
+            }
+    
+            //loput esim. 110, 111,112,199
+     for (let i = 10; i < 100; i++) {
+             let option = document.createElement('option');
+             let teksti = numero.toString() + i.toString();
+             if(olemassaOlevatvartiot.includes(parseInt(teksti))){
+                 continue;
+        }
+             option.text = teksti;
+            numerodropdown.add(option);
+            }
+
+    numeroinput.value = numerodropdown.options[numerodropdown.selectedIndex].value.toString();
+    };
+
+    
+
+    numerodropdown.addEventListener('change', function(selected){
+        
+        numeroinput.value = numerodropdown.options[numerodropdown.selectedIndex].value.toString();
+    });
+
+    
+</script>
