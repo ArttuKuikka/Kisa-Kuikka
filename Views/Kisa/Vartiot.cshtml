@@ -41,7 +41,7 @@
         </thead>
         <tbody>
 
-            @foreach (var item in Model.Vartiot.Where(x => x.SarjaId == sarja.Id))
+            @foreach (var item in Model.Vartiot.Where(x => x.SarjaId == sarja.Id).OrderBy(x => x.Numero))
             {
                 <tr>
                     <td>
