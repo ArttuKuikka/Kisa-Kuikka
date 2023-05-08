@@ -9,6 +9,8 @@ using Kisa_Kuikka.Data;
 using Kisa_Kuikka.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
+using Kisa_Kuikka.Models.ViewModels;
+using Newtonsoft.Json;
 
 namespace Kisa_Kuikka.Controllers
 {
@@ -140,9 +142,15 @@ namespace Kisa_Kuikka.Controllers
         // GET: Vartio/Luo
         public IActionResult Luo(int kisaId, int SarjaId)
         {
-            ViewBag.Sarjat = _context.Sarja.Where(k => k.KisaId== kisaId).ToList();
-            ViewBag.Kisat = _context.Kisa.ToList(); //check mihkä oikeudet
-            return View(new Vartio() { KisaId = kisaId, SarjaId = SarjaId});
+            var sarjat = _context.Sarja.Where(k => k.KisaId == kisaId).ToList();
+            var numerolista = new List<int>();
+            foreach(var vartio in _context.Vartio.Where(x => x.KisaId == kisaId))
+            {
+                numerolista.Add(vartio.Numero);
+            }
+
+            var jsonolemassaOlevatVartiot = JsonConvert.SerializeObject(numerolista);
+            return View(new LuoVartioViewModel() { KisaId = kisaId, SarjaId = SarjaId, Sarjat = sarjat, olemassaOlevatVartiot = jsonolemassaOlevatVartiot});
         }
 
         // POST: Vartio/Luo
@@ -150,16 +158,17 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Luo([Bind("Id,Nimi,Numero,SarjaId,KisaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Luo([Bind("Nimi,Numero,SarjaId,KisaId,Lippukunta")] LuoVartioViewModel viewModel)
         {
             
             if (ModelState.IsValid)
             {
+                var vartio = new Vartio() { Nimi = viewModel.Nimi, Numero = viewModel.Numero, SarjaId = viewModel.SarjaId, KisaId = viewModel.KisaId, Lippukunta = viewModel.Lippukunta};
                 _context.Add(vartio);
                 await _context.SaveChangesAsync();
                 return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
             }
-            return View(vartio);
+            return View(viewModel);
         }
 
         // GET: Vartio/Edit/5

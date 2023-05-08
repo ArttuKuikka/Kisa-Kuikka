@@ -189,6 +189,9 @@
                         <secure-content asp-controller="Tehtava" asp-action="Nayta" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
                             <button type="button" class="btn btn-light" onclick="location.href = '/Tehtava/Nayta?TehtavaVastausId=@item.Id&RastiId=@Model.Rasti.Id';">Näytä aiempi vastaus</button>
                         </secure-content>
+                        <secure-content asp-controller="Tehtava" asp-action="PoistaVastaus" asp-rastiid="@Model.Rasti.Id" asp-controllertype="2" asp-controllergroup="Rasti">
+                            <button type="button" class="btn btn-danger" onclick="location.href = '/Tehtava/PoistaVastaus?id=@item.Id&RastiId=@Model.Rasti.Id';">Poista</button>
+                        </secure-content>
 
                         
                         

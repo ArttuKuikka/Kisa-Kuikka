@@ -38,6 +38,7 @@
                 <th>
                     Vartio, tulo, lähtö
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -69,6 +70,18 @@
                             }
                         }
 
+                    </td>
+                    <td>
+                        <secure-content asp-controller="Tag" asp-action="Poista" asp-rastiid="@Model.RastiId" asp-controllertype="2" asp-controllergroup="Rasti">
+                            @if(skannaus.TuloId != null)
+                            {
+                                <a class="btn btn-danger" href="/Tag/Poista?SkannausId=@skannaus.TuloId">Poista tulo</a>
+                            }
+                            @if (skannaus.LahtoId != null)
+                            {
+                                <a class="btn btn-danger" href="/Tag/Poista?SkannausId=@skannaus.LahtoId">Poista lähtö</a>
+                            }
+                        </secure-content>
                     </td>
                 </tr>
             }

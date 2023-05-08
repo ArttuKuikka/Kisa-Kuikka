@@ -75,10 +75,8 @@ else
 
 //app.UseHttpsRedirection();
 
-//lisää lupa .lang tiedostojen jakoo palvelimella formbuilderia varten
-var provider = new FileExtensionContentTypeProvider();
-provider.Mappings[".lang"] = "language";
-app.UseStaticFiles(new StaticFileOptions { ContentTypeProvider = provider});
+
+app.UseStaticFiles();
 
 app.UseRouting();
 
