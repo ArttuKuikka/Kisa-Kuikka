@@ -202,3 +202,7 @@ input[type="checkbox"] {
     margin-top: 0.3em;
     display: inline-block;
 }
+
+.btn {
+    margin-top: 0.3em;
+}
