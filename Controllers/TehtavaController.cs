@@ -27,14 +27,16 @@ namespace Kisa_Kuikka.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IRoleAccessStore _roleAccessStore;
-        
+        private readonly DynamicAuthorizationOptions _authorizationOptions;
 
-        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IRoleAccessStore roleAccessStore)
+
+        public TehtavaController(ApplicationDbContext context, UserManager<IdentityUser> userManager, IRoleAccessStore roleAccessStore, DynamicAuthorizationOptions authorizationOptions)
         {
             _context = context;
             _roleAccessStore = roleAccessStore;
             _userManager = userManager;
-            
+            _authorizationOptions = authorizationOptions;
+
         }
 
 
@@ -63,7 +65,32 @@ namespace Kisa_Kuikka.Controllers
             ViewModel.Rasti = rasti;
             ViewModel.Sarjat = _context.Sarja.ToList();
             ViewModel.Vartiot = _context.Vartio;
-            
+            ViewModel.OikeusOverrideTarkistusEsto = false;
+
+
+            var nykyinenKayttaja = await _userManager.GetUserAsync(User);
+            //tarkista onko oikeudet ohittaa tarkitus esto
+            if (nykyinenKayttaja.UserName.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase))
+            {
+                ViewModel.OikeusOverrideTarkistusEsto = true;
+            }
+            else
+            {
+                var roles = await (
+         from usr in _context.Users
+         join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+         join role in _context.Roles on userRole.RoleId equals role.Id
+         where usr.UserName == nykyinenKayttaja.UserName
+         select role.Id.ToString()
+     ).ToArrayAsync();
+
+                if(await _roleAccessStore.HasAccessToActionAsync(":Kisa:TilanneValtuudet", roles))
+                {
+                    ViewModel.OikeusOverrideTarkistusEsto = true;
+                }
+            }
+
+
 
 
 
@@ -265,16 +292,45 @@ namespace Kisa_Kuikka.Controllers
                         jatkajat.Add((item["UserId"].ToString(), DateTime.Parse(item["Aika"].ToString())));
                     }
                 }
-                if(aiempitehtva.TäyttäjäUserId == user?.Id || jatkajat.Where(x => x.Item1 == user?.Id).Any())
+                //tarkista onko oikeudet overridee tarkistus
+                var nykyinenKayttaja = await _userManager.GetUserAsync(User);
+                bool OikeusOverrideTarkistusEsto = false;
+                //tarkista onko oikeudet ohittaa tarkitus esto
+                if (nykyinenKayttaja.UserName.Equals(_authorizationOptions.DefaultAdminUser, StringComparison.CurrentCultureIgnoreCase))
                 {
-                    if(rasti != null)
+                    OikeusOverrideTarkistusEsto = true;
+                }
+                else
+                {
+                    var roles = await (
+             from usr in _context.Users
+             join userRole in _context.UserRoles on usr.Id equals userRole.UserId
+             join role in _context.Roles on userRole.RoleId equals role.Id
+             where usr.UserName == nykyinenKayttaja.UserName
+             select role.Id.ToString()
+         ).ToArrayAsync();
+
+                    if (await _roleAccessStore.HasAccessToActionAsync(":Kisa:TilanneValtuudet", roles))
                     {
-                        if (rasti.VaadiKahdenKayttajanTarkistus)
+                        OikeusOverrideTarkistusEsto = true;
+                    }
+                }
+
+                //tarkista onko tarkistaja sama kuin syöttäjä tai jatkaja
+                if (!OikeusOverrideTarkistusEsto)
+                {
+                    if (aiempitehtva.TäyttäjäUserId == user?.Id || jatkajat.Where(x => x.Item1 == user?.Id).Any())
+                    {
+                        if (rasti != null)
                         {
-                            return BadRequest("Et voi tarkistaa tehtävää jonka olet itse täyttänyt");
+                            if (rasti.VaadiKahdenKayttajanTarkistus)
+                            {
+                                return BadRequest("Et voi tarkistaa tehtävää jonka olet itse täyttänyt");
+                            }
                         }
                     }
                 }
+                
 
 
                 var json = JArray.Parse(ViewModel.TehtavaJson);
