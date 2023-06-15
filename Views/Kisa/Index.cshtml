@@ -58,7 +58,7 @@
         <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Edit'"><img class="grid-item-image" alt="Hallitse tietoja" src="/images/edit.png"><p class="grid-item-text">Hallitse tietoja</p></div>
     </secure-content>
     
-        <div class="grid-item" onClick="location.href='/TagTilastot?kisaId=@Model.Kisa.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/nfc.png"><p class="grid-item-text">Tilanne-seuranta</p></div>
+        <div class="grid-item" onClick="location.href='/Tilanneseuranta?kisaId=@Model.Kisa.Id'"><img class="grid-item-image" alt="Tag tilastot" src="/images/tilanneseuranta.png"><p class="grid-item-text">Tilanne-seuranta</p></div>
     
     <secure-content asp-area="" asp-controller="Kisa" asp-action="Lataukset">
         <div class="grid-item" onClick="location.href='@Model.Kisa.Id/Lataukset'"><img class="grid-item-image" alt="Lataa tietoja" src="/images/download.png"><p class="grid-item-text">Lataa tietoja</p></div>

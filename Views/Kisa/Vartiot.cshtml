@@ -28,15 +28,15 @@
             <tr>
                 <th>
                         <h2>@sarja.NimiJaKokoNumero -sarja</h2>
-                    Nimi ja numero
+                    Nimi, numero, lippukunta ja tilanne
                 </th>
                 <th>
-                    Lippukunta ja tilanne
+                    
                 </th>
 
 
 
-                <th></th>
+               
             </tr>
         </thead>
         <tbody>
@@ -45,13 +45,10 @@
             {
                 <tr>
                     <td>
-                        <h3>@item.Nimi</h3>
-                        <h5>@item.Numero</h5>
+                        <h3>@item.NumeroJaNimi</h3>
+                        
 
-                    </td>
-                    <td>
-
-                        <h5>@item.Lippukunta</h5>
+                            <h5>@item.Lippukunta</h5>
                             @if (item.Keskeytetty)
                             {
                                 <h5 class="text-danger">Keskeyttänyt</h5>
@@ -60,29 +57,29 @@
                             {
                                 <h5 class="text-success">Kisassa</h5>
                             }
-
+                            
                     </td>
-
-
-
                     <td>
-                        <secure-content asp-area="" asp-controller="Vartio" asp-action="Edit">
+
+                            <secure-content asp-area="" asp-controller="Vartio" asp-action="Edit">
                                 <button type="button" class="btn btn-warning" onclick="location.href = '/Vartio/Edit?id=@item.Id';">Muokkaa</button>
-                        </secure-content>
-                           <secure-content asp-area="" asp-controller="Vartio" asp-action="LiitaTag">
-                                @if(item.TagSerial == null || item.TagSerial == string.Empty)
-                            {
-                                <button type="button" class="btn btn-primary" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
-                            }
-                            else
-                            {
-                                <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Vaihda tag</button>
-                            }
-                           </secure-content>
-                           <secure-content asp-area="" asp-controller="Vartio" asp-action="Delete">
+                            </secure-content>
+
+                            <secure-content asp-area="" asp-controller="Vartio" asp-action="LiitaTag">
+                                @if (item.TagSerial == null || item.TagSerial == string.Empty)
+                                {
+                                    <button type="button" class="btn btn-primary" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Lisaa tag</button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-light" onclick="location.href = '/Vartio/LiitaTag?VartioId=@item.Id';">Vaihda tag</button>
+                                }
+                            </secure-content>
+
+                            <secure-content asp-area="" asp-controller="Vartio" asp-action="Delete">
                                 <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Delete?id=@item.Id';">Poista</button>
-                           </secure-content>
-                           <secure-content asp-area="" asp-controller="Vartio" asp-action="Keskeyta">
+                            </secure-content>
+                            <secure-content asp-area="" asp-controller="Vartio" asp-action="Keskeyta">
                                 @if (item.Keskeytetty)
                                 {
                                     <button type="button" class="btn btn-success" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Palauta kisaan</button>
@@ -91,10 +88,17 @@
                                 {
                                     <button type="button" class="btn btn-danger" onclick="location.href = '/Vartio/Keskeyta?id=@item.Id';">Keskeytä</button>
                                 }
-                                
-                           </secure-content>
-                            
+
+                            </secure-content>
+
+                        
+                           
+
                     </td>
+
+
+
+                   
                 </tr>
             }
             <br />

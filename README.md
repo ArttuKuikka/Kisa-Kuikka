@@ -3,7 +3,7 @@
 
 
 
-- !!HUOM!! Kisa-Kuikka on vielä teon alle, eikä sisällä kaikkia ominaisuuksia joita siihen on tarkoitus lisätä, käytä ainoastaan testaamiseen!!
+- !!HUOM!! Kisa-Kuikka on vielä teon alla, eikä sisällä kaikkia ominaisuuksia joita siihen on tarkoitus lisätä, käytä ainoastaan testaamiseen!!
 
 [![Build latest](https://github.com/ArttuKuikka/Kisa-Kuikka/actions/workflows/PublishPackage.yml/badge.svg)](https://github.com/ArttuKuikka/Kisa-Kuikka/actions/workflows/PublishPackage.yml)
 
@@ -31,7 +31,7 @@ Kisa-Kuikka tarkoitus on tehdä tulostoimiston toiminnasta helpompaa ja digitoid
 
 
 
-## Tulevavia ominaisuuksia
+## Tulevia ominaisuuksia
 - Tuki tuloksien automaattiselli viennille normaaliin kipaan, jossa ne voidaan laskea (tällä hetkellä tulosten lataus excel muodossa on ainut vaihtoehto)
 - Tuki monelle kisalle yhdessä järjestelmässä (tällä hetkellä järjestelmä toimii vain yhdellä kisalla vaikka monta kisaa voikin luoda)
 - vartioiden tuonti csv tiedostosta

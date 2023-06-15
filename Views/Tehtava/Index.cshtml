@@ -170,7 +170,11 @@
                                         jatkajat.Add((fitem["UserId"].ToString(), DateTime.Parse(fitem["Aika"].ToString())));
                                     }
                                 }
-                                @if (item.TäyttäjäUserId == nykyinenUser?.Id || jatkajat.Where(x => x.Item1 == nykyinenUser?.Id).Any())
+                                @if (Model.OikeusOverrideTarkistusEsto)
+                                {
+                                    <button type="button" class="btn btn-primary" onclick="location.href = '/Tehtava/Tarkista?TehtavaId=@item.TehtavaId&VartioId=@item.VartioId&RastiId=@Model.Rasti.Id';">Tarkista</button>
+                                }
+                                else if (item.TäyttäjäUserId == nykyinenUser?.Id || jatkajat.Where(x => x.Item1 == nykyinenUser?.Id).Any())
                                 {
                                     <button type="button" disabled class="btn btn-light">Et voi tarkistaa tehtävää jonka olet itse täyttänyt</button>
                                 }

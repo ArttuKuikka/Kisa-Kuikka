@@ -57,7 +57,7 @@ namespace Kisa_Kuikka.Controllers
 
             }
 
-            return View(usersRoles);
+            return View(usersRoles.OrderBy(o => o.Nimi).ToList());
         }
 
         // GET: Access/Edit

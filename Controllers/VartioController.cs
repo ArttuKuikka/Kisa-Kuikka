@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.ComponentModel;
 using Kisa_Kuikka.Models.ViewModels;
 using Newtonsoft.Json;
+using KisaKuikka.Data.Migrations;
 
 namespace Kisa_Kuikka.Controllers
 {
@@ -185,7 +186,31 @@ namespace Kisa_Kuikka.Controllers
             {
                 return NotFound();
             }
-            return View(vartio);
+
+            var sarjat = _context.Sarja.Where(k => k.KisaId == vartio.KisaId).ToList();
+            var numerolista = new List<int>();
+            foreach (var olemassaOlevaVartio in _context.Vartio.Where(x => x.KisaId == vartio.KisaId))
+            {
+                if(olemassaOlevaVartio.Id != id)
+                {
+                    numerolista.Add(olemassaOlevaVartio.Numero);
+                }
+                
+            }
+
+            var jsonolemassaOlevatVartiot = JsonConvert.SerializeObject(numerolista);
+
+            var viewModel = new MuokkaaVartiotaViewModel()
+            {
+                Id = (int)vartio.Id,
+                Nimi = vartio.Nimi,
+                Numero = vartio.Numero,
+                SarjaId= vartio.SarjaId,
+                Lippukunta = vartio.Lippukunta,
+                Sarjat = sarjat,
+                olemassaOlevatVartiot = jsonolemassaOlevatVartiot
+            };
+            return View(viewModel);
         }
 
         // POST: Vartio/Edit/5
@@ -193,34 +218,54 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id, [Bind("Id,KisaId,Nimi,Numero,SarjaId,Lippukunta,Tilanne")] Vartio vartio)
+        public async Task<IActionResult> Edit(int? id, [Bind("Id,Nimi,Numero,SarjaId,Lippukunta")] MuokkaaVartiotaViewModel viewModel)
         {
-            if (id != vartio.Id)
+            if (id != viewModel.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            var muokattavaVartio = await _context.Vartio.FindAsync(viewModel.Id);
+            if(muokattavaVartio != null)
             {
-                try
+                if(muokattavaVartio.SarjaId != viewModel.SarjaId)
                 {
-                    _context.Update(vartio);
+                    _context.TehtavaVastaus.Where(x => x.VartioId == muokattavaVartio.Id).ToList().ForEach(x => _context.TehtavaVastaus.Remove(x));
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                if (ModelState.IsValid)
                 {
-                    if (!VartioExists(vartio.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+
+                    muokattavaVartio.Nimi = viewModel.Nimi;
+                    muokattavaVartio.Numero = viewModel.Numero;
+                    muokattavaVartio.SarjaId = viewModel.SarjaId;
+                    muokattavaVartio.Lippukunta = viewModel.Lippukunta;
+
+                    _context.SaveChanges();
+                    return Redirect("/Kisa/" + muokattavaVartio.KisaId + "/Vartiot");
                 }
-                return Redirect("/Kisa/" + vartio.KisaId + "/Vartiot");
+                else
+                {
+                    var sarjat = _context.Sarja.Where(k => k.KisaId == muokattavaVartio.KisaId).ToList();
+                    var numerolista = new List<int>();
+                    foreach (var olemassaOlevaVartio in _context.Vartio.Where(x => x.KisaId == muokattavaVartio.KisaId))
+                    {
+                        if (olemassaOlevaVartio.Id != id)
+                        {
+                            numerolista.Add(olemassaOlevaVartio.Numero);
+                        }
+                    }
+
+                    var jsonolemassaOlevatVartiot = JsonConvert.SerializeObject(numerolista);
+
+
+                    viewModel.Sarjat = sarjat;
+                    viewModel.olemassaOlevatVartiot = jsonolemassaOlevatVartiot;
+                    return View(viewModel);
+                }
+
+               
             }
-            return View(vartio);
+            return NotFound("Vartiota tällä ID llä ei ole olemassa");
         }
 
         // GET: Vartio/Delete/5
