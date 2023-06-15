@@ -12,11 +12,11 @@ namespace Kisa_Kuikka.Controllers
     [Route("[controller]")]
     [DisplayName("Tilanneseuranta")]
     [Static]
-    public class TagTilastotController : Controller
+    public class TilanneseurantaController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TagTilastotController(ApplicationDbContext context)
+        public TilanneseurantaController(ApplicationDbContext context)
         {
             _context = context;
         }

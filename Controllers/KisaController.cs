@@ -311,7 +311,7 @@ namespace Kisa_Kuikka.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Luo([Bind("Id,Nimi")] Kisa kisa)
         {
-            kisa.JaaTagTilastot = false;
+            kisa.JaaTilanneSeuranta = false;
             kisa.LahetaIlmoituksiaRastinTilanvaihdosta = true;
             if (ModelState.IsValid)
             {
@@ -346,7 +346,7 @@ namespace Kisa_Kuikka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost("{kisaId:int}/Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTagTilastot,TilanneSeurantaKuvaURL,NaytaIlmoitusSuositusEtusivulla,LahetaIlmoituksiaRastinTilanvaihdosta,LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville")] Kisa kisa)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Nimi,JaaTilanneSeuranta,TilanneSeurantaKuvaURL,NaytaIlmoitusSuositusEtusivulla,LahetaIlmoituksiaRastinTilanvaihdosta,LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville")] Kisa kisa)
         {
             if (id != kisa.Id)
             {
@@ -359,7 +359,7 @@ namespace Kisa_Kuikka.Controllers
                 {
                     var olemassaolevakisa = await _context.Kisa.FindAsync(kisa.Id);
                     olemassaolevakisa.Nimi = kisa.Nimi;
-                    olemassaolevakisa.JaaTagTilastot= kisa.JaaTagTilastot;
+                    olemassaolevakisa.JaaTilanneSeuranta = kisa.JaaTilanneSeuranta;
                     olemassaolevakisa.TilanneSeurantaKuvaURL = kisa.TilanneSeurantaKuvaURL;
                     olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdosta = kisa.LahetaIlmoituksiaRastinTilanvaihdosta;
                     olemassaolevakisa.LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville = kisa.LahetaIlmoituksiaRastinTilanvaihdostaValtuudetOmaaville;

@@ -9,7 +9,7 @@ namespace Kisa_Kuikka.Models
        
         public string? LiittymisId { get; set; }
 
-        public bool JaaTagTilastot { get; set; }
+        public bool JaaTilanneSeuranta { get; set; }
 
         public string? TilanneSeurantaKuvaURL { get; set; }
 

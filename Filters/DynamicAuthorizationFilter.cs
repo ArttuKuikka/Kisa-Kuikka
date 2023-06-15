@@ -103,12 +103,12 @@ namespace Kisa_Kuikka.Filters
                     var ctrname = context.RouteData?.Values?["controller"];
                     if (ctrname != null)
                     {
-                        if (ctrname.ToString() == "TagTilastot")
+                        if (ctrname.ToString() == "Tilanneseuranta")
                         {
                             var kisa = await _context.Kisa.FindAsync(1); //lisää tähän että hakee kisan oikeasti
                             if (kisa != null)
                             {
-                                if (!kisa.JaaTagTilastot)
+                                if (!kisa.JaaTilanneSeuranta)
                                 {
                                     context.Result = new ForbidResult();
                                     return;
