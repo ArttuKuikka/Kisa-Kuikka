@@ -337,27 +337,46 @@ namespace Kisa_Kuikka.Controllers
                             var dataelement = new JObject();
                             // !!!!!!!!! RASTEILLA VOI OLLA MONTA TEHTÄVÄÄ, korjaa
                             //tee ehk 4 numero ja joku muu väri ja laita sitten ruutun kuinka monta monesta on tehty esim 2/4 + context menuu joka tehtävälle oma, mutta pitää tää nykyinen jos on vaan yks teht
-                            var vastaus = _context.TehtavaVastaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id).FirstOrDefault();
-                            if (vastaus != null)
+                            var vastauskset = _context.TehtavaVastaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id).ToList();
+                            if (vastauskset != null)
                             {
+                                if(vastauskset.Count == 1)
+                                {
 
-                                //0 - ei mitään
-                                //1 - tulos odottaa jatkamista
-                                //2 - tulos odottaa tarkistusta
-                                //3 - tulos tarkistettu
+                                    //0 - ei mitään
+                                    //1 - tulos odottaa jatkamista
+                                    //2 - tulos odottaa tarkistusta
+                                    //3 - tulos tarkistettu
+                                    
+                                    var vastaus = vastauskset.First();
 
-                                
-                                if (vastaus.Tarkistettu)
-                                {
-                                    dataelement.Add("Numero", 3);
+                                    if (vastaus.Tarkistettu)
+                                    {
+                                        dataelement.Add("Numero", 3);
+                                    }
+                                    else if (!vastaus.Tarkistettu && !vastaus.Kesken)
+                                    {
+                                        dataelement.Add("Numero", 2);
+                                    }
+                                    else if (vastaus.Kesken)
+                                    {
+                                        dataelement.Add("Numero", 1);
+                                    }
+                                    else
+                                    {
+                                        dataelement.Add("Numero", 0);
+                                    }
                                 }
-                                else if (!vastaus.Tarkistettu && !vastaus.Kesken)
+                                else if(vastauskset.Count > 1)
                                 {
-                                    dataelement.Add("Numero", 2);
-                                }
-                                else if (vastaus.Kesken)
-                                {
-                                    dataelement.Add("Numero", 1);
+                                    var tarkistettuCount = 0;
+                                    foreach(var vastaus in vastauskset)
+                                    {
+                                        if (vastaus.Tarkistettu)
+                                        {
+                                            tarkistettuCount++;
+                                        }
+                                    }
                                 }
                                 else
                                 {
