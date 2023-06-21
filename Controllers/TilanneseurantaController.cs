@@ -419,10 +419,10 @@ namespace Kisa_Kuikka.Controllers
                                 else
                                 {
                                     //0 - ei mitään
-                                    //1 - pelkkä lähtö
-                                    //2 - pelkkä tulo
-                                    //3 - lähtö ja tulo
-                                    //4 - seuraava rasti
+                                    //1 - tulos odottaa jatkamista
+                                    //2 - tulos syötetty
+                                    //3 - tulos tarkistettu
+                                    
                                     var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
                                     var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
                                     if (tulo != null && lähtö != null)
