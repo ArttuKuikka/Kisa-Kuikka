@@ -336,7 +336,7 @@ namespace Kisa_Kuikka.Controllers
                         {
                             var dataelement = new JObject();
                             // !!!!!!!!! RASTEILLA VOI OLLA MONTA TEHTÄVÄÄ, korjaa
-                            //tee ehk 4 numero ja joku muu väri ja laita sitten ruutun kuinka monta monesta on tehty esim 2/4 
+                            //tee ehk 4 numero ja joku muu väri ja laita sitten ruutun kuinka monta monesta on tehty esim 2/4 + context menuu joka tehtävälle oma, mutta pitää tää nykyinen jos on vaan yks teht
                             var vastaus = _context.TehtavaVastaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id).FirstOrDefault();
                             if (vastaus != null)
                             {
