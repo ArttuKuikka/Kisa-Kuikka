@@ -332,120 +332,37 @@ namespace Kisa_Kuikka.Controllers
                         };
                         var VartionArray = new JArray() { vartioobject };
 
-
-
-
-                        //seuraavan rastin tunnistus
-                        //luo lista json perusteella rastien järjestyksestä jossa ne kuuluisi mennä
-                        var uudetrastit = _context.Rasti.Where(x => x.KisaId == sarja.KisaId).Where(x => x.PiilotaTilanneseurannasta == false).ToList();
-
-                        var rastitJärjestyksessä = new List<Rasti>();
-                        if (sarja.RastienJarjestysJSON != null)
-                        {
-                            foreach (var Jrasti in JArray.Parse(sarja.RastienJarjestysJSON))
-                            {
-                                var success = int.TryParse(Jrasti["id"]?.ToString(), out var parsedid);
-                                if (success)
-                                {
-                                    var findrasti = await _context.Rasti.FindAsync(parsedid);
-                                    if (findrasti != null)
-                                    {
-                                        rastitJärjestyksessä.Add(findrasti);
-                                        uudetrastit.Remove(findrasti);
-                                    }
-                                }
-                            }
-                        }
-                        //jos puuttuu uusia rasteja lisää ne loppuun
-                        uudetrastit.ForEach(x => rastitJärjestyksessä.Add(x));
-
-
-
-                        //rastit jotka vartio on suorittanu 
-                        var suoritetutrastitSkannaukset = _context.TagSkannaus.Where(x => x.VartioId == vartio.Id).ToList();
-                        suoritetutrastitSkannaukset = suoritetutrastitSkannaukset.OrderByDescending(x => x.TimeStamp).ToList();
-                        var suoritetutRastit = new List<Rasti>();
-                        foreach (var suoritus in suoritetutrastitSkannaukset)
-                        {
-                            var findrasti = await _context.Rasti.FindAsync(suoritus.RastiId);
-                            if (findrasti != null)
-                            {
-                                suoritetutRastit.Add(findrasti);
-                            }
-                        }
-                        suoritetutRastit.Reverse();
-
-                        Rasti? seuraavaRasti = null;
-                        //poista duplicatet
-                        suoritetutRastit = suoritetutRastit.Distinct().ToList();
-                        var eka = suoritetutRastit.FirstOrDefault();
-                        if (eka != null)
-                        {
-                            var ekaindex = rastitJärjestyksessä.IndexOf(eka);
-
-                            var lista = new List<Rasti>();
-                            for (int i = ekaindex; i < suoritetutRastit.Count; i++)
-                            {
-                                lista.Add(rastitJärjestyksessä[i]);
-                            }
-                            //tarkista onko järjestys sama
-                            if (lista.SequenceEqual(suoritetutRastit))
-                            {
-                                var pos = ekaindex + suoritetutRastit.Count;
-                                if (rastitJärjestyksessä.ElementAtOrDefault(pos) != null)
-                                {
-                                    seuraavaRasti = rastitJärjestyksessä[pos];
-                                }
-                            }
-
-                        }
-
-
-
-
-
-
                         foreach (var rasti in rastit)
                         {
                             var dataelement = new JObject();
-                            var skannaukset = _context.TagSkannaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id);
-                            if (skannaukset != null)
+                            // !!!!!!!!! RASTEILLA VOI OLLA MONTA TEHTÄVÄÄ, korjaa
+                            var vastaus = _context.TehtavaVastaus.Where(x => x.RastiId == rasti.Id)?.Where(x => x.VartioId == vartio.Id).FirstOrDefault();
+                            if (vastaus != null)
                             {
 
-                                if (seuraavaRasti != null && seuraavaRasti == rasti)
+                                //0 - ei mitään
+                                //1 - tulos odottaa jatkamista
+                                //2 - tulos odottaa tarkistusta
+                                //3 - tulos tarkistettu
+
+                                
+                                if (vastaus.Tarkistettu)
                                 {
-                                    dataelement.Add("Numero", 4);
+                                    dataelement.Add("Numero", 3);
+                                }
+                                else if (!vastaus.Tarkistettu && !vastaus.Kesken)
+                                {
+                                    dataelement.Add("Numero", 2);
+                                }
+                                else if (vastaus.Kesken)
+                                {
+                                    dataelement.Add("Numero", 1);
                                 }
                                 else
                                 {
-                                    //0 - ei mitään
-                                    //1 - tulos odottaa jatkamista
-                                    //2 - tulos syötetty
-                                    //3 - tulos tarkistettu
-                                    
-                                    var tulo = skannaukset.Where(x => x.isTulo == true).FirstOrDefault();
-                                    var lähtö = skannaukset.Where(x => x.isTulo == false).FirstOrDefault();
-                                    if (tulo != null && lähtö != null)
-                                    {
-                                        dataelement.Add("Numero", 3);
-                                    }
-                                    else if (tulo != null)
-                                    {
-                                        dataelement.Add("Numero", 2);
-                                    }
-                                    else if (lähtö != null)
-                                    {
-                                        dataelement.Add("Numero", 1);
-                                    }
-                                    else
-                                    {
-                                        dataelement.Add("Numero", 0);
-                                    }
-                                    dataelement.Add("Tulo", tulo?.TimeStamp);
-                                    dataelement.Add("Lahto", lähtö?.TimeStamp);
+                                    dataelement.Add("Numero", 0);
                                 }
-
-
+                               
                             }
                             else
                             {
